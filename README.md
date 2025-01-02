@@ -1,4 +1,4 @@
-This is a simple Stable Diffusion XL notebook made in Google Colab made by a high school student from Indonesia.
+This is a simple Google Colab notebook made by a high school student for generating images using Stable Diffusion XL.
 
 • This notebook uses Transformers and Diffusers as the major parts to generate images, as well as ControlNet, Inpainting, and IP-Adapter.
 
