@@ -3,7 +3,7 @@ This is a simple Stable Diffusion XL notebook made in Google Colab made by a hig
 
 • This notebook also has the ability to download and load images, LoRA weights, and VAE using URLs, but make sure the links are the direct ones.
 
-•**This notebook also has the ability to connect to your Google Drive**. 
+• **This notebook also has the ability to connect to your Google Drive**. 
 
 • I made this notebook as user-friendly as possible, simplifying its complexity and making the UI easy to understand.
 
