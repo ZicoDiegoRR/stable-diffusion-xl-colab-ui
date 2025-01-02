@@ -1,4 +1,5 @@
 This is a simple Stable Diffusion XL notebook made in Google Colab made by a high school student from Indonesia.
+
 • This notebook uses Transformers and Diffusers as the major parts to generate images, as well as ControlNet, Inpainting, and IP-Adapter.
 
 • This notebook also has the ability to download and load images, LoRA weights, and VAE using URLs, but make sure the links are the direct ones.
