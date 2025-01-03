@@ -4,7 +4,7 @@ This is a simple Google Colab notebook made by a high school student for generat
 
 • This notebook also has the ability to download and load images, LoRA weights, and VAE using URLs, but make sure the links are the direct ones.
 
-• **This notebook also has the ability to connect to your Google Drive**. 
+• **This notebook also has the ability to connect to your Google Drive**. (can be disabled)
 
 • I made this notebook as user-friendly as possible, simplifying its complexity and making the UI easy to understand.
 
