@@ -8,7 +8,7 @@ This is a simple Google Colab notebook made by a high school student for generat
 - **Google Drive Integration:** Can connect to your Google Drive (optional, can be disabled).
 - **User-Friendly UI:** Simplified complexity with an easy-to-understand user interface.
 - **CivitAI Token Support:** Pass your CivitAI token for additional functionality, but remember **never share it with anyone.**
-- **Simplicity:** Only two cells are made.
+- **Simplicity:** Consists of two cells only.
 - **Written Guide:** Can keep you on track with the flow of this notebook.
 
 ## Usage
