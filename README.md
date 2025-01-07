@@ -4,7 +4,7 @@ This is a simple Google Colab notebook made by a high school student for generat
 
 ## Features
 - **Image Generation:** Uses Transformers and Diffusers as the major components for image generation, along with ControlNet, Inpainting, and IP-Adapter.
-- **Download and Load:** Ability to download and load images, LoRA weights, and VAE using direct URLs.
+- **Download and Load:** Ability to download and load images, checkpoint, LoRA weights, and VAE using direct URLs.
 - **Google Drive Integration:** Can connect to your Google Drive (optional, can be disabled).
 - **User-Friendly UI:** Simplified complexity with an easy-to-understand user interface.
 - **CivitAI Token Support:** Pass your CivitAI token for additional functionality, but remember **never share it with anyone.**
@@ -23,3 +23,5 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 This project is open-source and free to use under the MIT License.
 
 ---
+
+This README was made by ChatGPT. (I suck at creating markdown)
