@@ -1,4 +1,4 @@
-# Google Colab Stable Diffusion XL Image Generator
+# Google Colab Non WebUI Stable Diffusion XL Image Generator
 
 This is a simple Google Colab notebook made by a high school student for generating images using Stable Diffusion XL.
 
