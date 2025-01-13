@@ -7,7 +7,7 @@ This is a simple Google Colab notebook made by a high school student for generat
 - **Download and Load:** Ability to download and load images, checkpoint, LoRA weights, and VAE using direct URLs.
 - **Google Drive Integration:** Can connect to your Google Drive (optional, can be disabled).
 - **User-Friendly UI:** Simplified complexity with an easy-to-understand user interface.
-- **IPyWidgets:** Simplified UI so that you don't need to scroll up and down. (under development)
+- **IPyWidgets:** Simplified UI so that you don't need to scroll up and down. (under development in V2 version)
 - **CivitAI Token Support:** Pass your CivitAI token for additional functionality, but remember **never share it with anyone.**
 - **Simplicity:** Consists of two cells only.
 - **Written Guide:** Can keep you on track with the flow of this notebook.
