@@ -22,7 +22,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 - This tool is intended for creating art and exploring creative image generation.
 - **Use responsibly.** Please refrain from using it for any malicious or harmful activities.
 - NSFW generation is supported, but do it at your own risk.
-- It's **recommended** to watch or use the original notebook first before using the V2.
+- It's **recommended** to watch or use the V1 notebook first before using the V2.
 
 ## License
 This project is open-source and free to use under the MIT License.
