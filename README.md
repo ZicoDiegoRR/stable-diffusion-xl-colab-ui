@@ -8,7 +8,7 @@ This is a simple Google Colab notebook made by a high school student for generat
 - **Google Drive Integration:** Can connect to your Google Drive or disable it.
 - **User-Friendly UI:** Simplified complexity with an easy-to-understand user interface.
 - **IPyWidgets:** Simplified UI so that you don't need to scroll up and down. (V2 and above only)
-- **Built-in History System:** Can load all of your previously generated images in Google Drive without opening it, just with a few simple clicks. (V2.5 and above only)
+- **Built-in History System:** Can show all of your previously generated images in Google Drive without opening it, just with a few simple clicks. (V2.5 and above only)
 - **CivitAI Token Support:** Pass your CivitAI token for additional functionality, but remember **never share it with anyone.**
 - **Simplicity:** Consists of two cells only.
 - **Written Guide:** Can keep you on track with the flow of this notebook.
