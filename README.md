@@ -17,7 +17,7 @@ This is a simple Google Colab notebook made by a learning junior programmer for 
 This notebook is designed for artistic purposes and to spark inspiration. **Please use it responsibly.** Creating deepfakes and uploading them online are strictly prohibited.
 
 ## Installation
-Simply open the notebook on Google Colab to start using it. No installation is needed. Debugging and editing the code might be difficult due to the complex structure.
+Simply open the notebook on Google Colab to start using it. No installation is needed. Debugging and editing the code might be difficult due to the complex structure and my lack of knowledge in modular programming.
 
 ## Preview
 ### V2.5:
