@@ -30,12 +30,12 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 
 ## Preview
 ### V2:
-![general_settings](docs/v2/general_settings.png)
-![advanced_settings](docs/v2/advanced_settings.png)
+![general_settings_v2](docs/v2/general_settings.png)
+![advanced_settings_v2](docs/v2/advanced_settings.png)
 ### V2.5:
-![general_settings](docs/v2.5/general_settings.png)
-![advanced_settings](docs/v2.5/advanced_settings.png)
-![history](docs/v2.5/history.png)
+![general_settings_v2.5](docs/v2.5/general_settings.png)
+![advanced_settings_v2.5](docs/v2.5/advanced_settings.png)
+![history_v2.5](docs/v2.5/history.png)
 
 ## License
 This project is open-source and free to use under the MIT License.
