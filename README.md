@@ -29,6 +29,8 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 - It's **recommended** to watch or use the V1 notebook first before using the V2.
 
 ## Preview
+### V1:
+The ratio is too big. [Consider checking it manually.](docs/v1/v1.png)
 ### V2:
 ![general_settings_v2](docs/v2/general_settings.png)
 ![advanced_settings_v2](docs/v2/advanced_settings.png)
