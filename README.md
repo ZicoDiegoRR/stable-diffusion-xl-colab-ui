@@ -19,6 +19,12 @@ This notebook is designed for artistic purposes and to spark inspiration. **Plea
 ## Installation
 Simply open the notebook on Google Colab to start using it. No installation is needed. Debugging and editing the code might be difficult due to the complex structure.
 
+## Preview
+### V2.5:
+![general_settings](docs/v2.5/general_settings.png)
+![advanced_settings](docs/v2.5/advanced_settings.png)
+![history](docs/v2.5/history.png)
+
 ## Disclaimer
 - This tool is intended for creating art and exploring creative image generation.
 - **Use responsibly.** Please refrain from using it for any malicious or harmful activities.
