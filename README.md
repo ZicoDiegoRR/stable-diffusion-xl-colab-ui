@@ -22,17 +22,17 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 ### V2: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/my-sdxl-notebook-colab/blob/main/stable_diffusion_xl_v2.ipynb)
 ### V2.5: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/my-sdxl-notebook-colab/blob/main/stable_diffusion_xl_v2.5.ipynb)
 
-## Preview
-### V2.5:
-![general_settings](docs/v2.5/general_settings.png)
-![advanced_settings](docs/v2.5/advanced_settings.png)
-![history](docs/v2.5/history.png)
-
 ## Disclaimer
 - This tool is intended for creating art and exploring creative image generation.
 - **Use responsibly.** Please refrain from using it for any malicious or harmful activities.
 - NSFW generation is supported, but do it at your own risk.
 - It's **recommended** to watch or use the V1 notebook first before using the V2.
+
+## Preview
+### V2.5:
+![general_settings](docs/v2.5/general_settings.png)
+![advanced_settings](docs/v2.5/advanced_settings.png)
+![history](docs/v2.5/history.png)
 
 ## License
 This project is open-source and free to use under the MIT License.
