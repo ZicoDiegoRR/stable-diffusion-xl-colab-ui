@@ -29,6 +29,9 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 - It's **recommended** to watch or use the V1 notebook first before using the V2.
 
 ## Preview
+### V2:
+![general_settings](docs/v2/general_settings.png)
+![advanced_settings](docs/v2/advanced_settings.png)
 ### V2.5:
 ![general_settings](docs/v2.5/general_settings.png)
 ![advanced_settings](docs/v2.5/advanced_settings.png)
