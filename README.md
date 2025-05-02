@@ -1,6 +1,6 @@
 # Google Colab Non WebUI Stable Diffusion XL Image Generator
 
-This is a simple Google Colab notebook made by a high school student for generating images using Stable Diffusion XL.
+This is a simple Google Colab notebook made by a learning junior programmer for generating images using Stable Diffusion XL.
 
 ## Features
 - **Image Generation:** Uses Transformers and Diffusers as the major components for image generation, along with ControlNet, Inpainting, and IP-Adapter.
