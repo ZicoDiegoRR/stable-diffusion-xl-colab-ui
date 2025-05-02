@@ -18,6 +18,7 @@ This notebook is designed for artistic purposes and to spark inspiration. **Plea
 
 ## Installation
 Simply open the notebook on Google Colab to start using it. No installation is needed. Debugging and editing the code might be difficult due to the complex structure and my lack of knowledge in modular programming.
+### V1: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/my-sdxl-notebook-colab/blob/main/stable_diffusion_xl_v1.ipynb)
 
 ## Preview
 ### V2.5:
