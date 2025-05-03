@@ -39,7 +39,7 @@ The resolution is too big. [Consider checking it manually.](docs/v1/v1.png)
 ![advanced_settings_v2.5](docs/v2.5/advanced_settings.png)
 ![history_v2.5](docs/v2.5/history.png)
 
-# To-do List
+## To-do List
 - Adding textual inversion
 - Implementing Inpainting using IPyCanvas
 - Adding Hugging Face's token integration
