@@ -22,15 +22,17 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 - **V2:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/stable_diffusion_xl_v2.ipynb)
 - **V2.5:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/stable_diffusion_xl_v2.5.ipynb)
 
-|        Features                       | V1 | V2 | V2.5 |
-|-------------------------------|----|----|------|
-| Base pipelines (ControlNet, Inpainting, IP-Adapter)                    | ✅  | ✅  | ✅    |
-| IPyWidgets                    | ❌  | ✅  | ✅    |
-| Saving and loading parameters | ❌  | ✅  | ✅    |
-| Interactive UI                | ❌  | ✅  | ✅    |
-| Linking widgets               | ❌  | ❌  | ✅    |
-| History system                | ❌  | ❌  | ✅    |
-| Upload images directly        | ❌  | ❌  | ✅    |
+| Features                                               | V1 | V2 | V2.5 |
+|--------------------------------------------------------|----|----|------|
+| Base pipelines (ControlNet, VAE, Inpainting, Text2Img) | ✅  | ✅  | ✅    |
+| Base adapters (LoRA, IP-Adapter)                       | ✅  | ✅  | ✅    |
+| IPyWidgets                                             | ❌  | ✅  | ✅    |
+| Saving and loading parameters                          | ❌  | ✅  | ✅    |
+| Interactive UI                                         | ❌  | ✅  | ✅    |
+| Linking widgets                                        | ❌  | ❌  | ✅    |
+| History system                                         | ❌  | ❌  | ✅    |
+| Upload images directly                                 | ❌  | ❌  | ✅    |
+
 
 ## Disclaimer
 - This tool is intended for creating art and exploring creative image generation.
