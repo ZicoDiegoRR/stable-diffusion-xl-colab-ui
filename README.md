@@ -24,7 +24,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 
 |        Features                       | V1 | V2 | V2.5 |
 |-------------------------------|----|----|------|
-| Base logic                    | ✅  | ✅  | ✅    |
+| Base pipelines (ControlNet, Inpainting, IP-Adapter)                    | ✅  | ✅  | ✅    |
 | IPyWidgets                    | ❌  | ✅  | ✅    |
 | Saving and loading parameters | ❌  | ✅  | ✅    |
 | Interactive UI                | ❌  | ✅  | ✅    |
