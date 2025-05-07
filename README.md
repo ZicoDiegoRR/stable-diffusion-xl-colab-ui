@@ -22,7 +22,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 - **V2:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/stable_diffusion_xl_v2.ipynb)
 - **V2.5:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/stable_diffusion_xl_v2.5.ipynb)
 
-|                               | V1 | V2 | V2.5 |
+|        Features                       | V1 | V2 | V2.5 |
 |-------------------------------|----|----|------|
 | Base logic                    | ✅  | ✅  | ✅    |
 | IPyWidgets                    | ❌  | ✅  | ✅    |
