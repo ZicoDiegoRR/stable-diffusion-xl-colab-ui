@@ -54,7 +54,7 @@ The resolution is too big. [Consider checking it manually.](docs/v1/v1.png)
 - Adding textual inversion
 - Implementing Inpainting using IPyCanvas
 - Adding Hugging Face's token integration
-- Implementing Img2Img pipeline
+- Implementing Img2Img pipeline ✅ (beta V3)
 ## License
 This project is open-source and free to use under the MIT License.
 
