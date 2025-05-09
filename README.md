@@ -22,6 +22,13 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 - **V2:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/stable_diffusion_xl_v2.ipynb)
 - **V2.5:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/stable_diffusion_xl_v2.5.ipynb)
 
+## Disclaimer
+- This tool is intended for creating art and exploring creative image generation.
+- **Use responsibly.** Please refrain from using it for any malicious or harmful activities.
+- NSFW generation is supported, but do it at your own risk.
+
+## Feature Table
+
 | Features                                                                              | V1 | V2 | V2.5 |  Beta V3 |
 |---------------------------------------------------------------------------------------|----|----|------|----------|
 | Base pipelines (ControlNet, VAE, Inpainting, Text2Img)                                | ✅ | ✅ | ✅  | ✅       |
@@ -36,12 +43,6 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | Textual inversion or embeddings                                                       | ❌ | ❌ | ❌  | ✅       |
 | Send images from history to Image-to-image, ControlNet, Inpainting, and/or IP-Adapter | ❌ | ❌ | ❌  | ✅       |
 | Reset button (defaulting the parameters)                                              | ❌ | ❌ | ❌  | ✅       |
-
-
-## Disclaimer
-- This tool is intended for creating art and exploring creative image generation.
-- **Use responsibly.** Please refrain from using it for any malicious or harmful activities.
-- NSFW generation is supported, but do it at your own risk.
 
 ## Preview
 ### V1:
