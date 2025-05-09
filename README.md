@@ -35,7 +35,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | Image-to-image                                                                        | ❌ | ❌ | ❌  | ✅       |
 | Textual inversion or embeddings                                                       | ❌ | ❌ | ❌  | ✅       |
 | Send images from history to Image-to-image, ControlNet, Inpainting, and/or IP-Adapter | ❌ | ❌ | ❌  | ✅       |
-
+| Reset button (defaulting the parameters)                                              | ❌ | ❌ | ❌  | ✅       |
 
 
 ## Disclaimer
