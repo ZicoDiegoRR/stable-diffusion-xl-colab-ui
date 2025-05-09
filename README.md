@@ -33,6 +33,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | History system                                         | ❌  | ❌  | ✅    | ✅       |
 | Upload images directly                                 | ❌  | ❌  | ✅    | ✅       |
 | Image-to-image                                         | ❌  | ❌  | ❌    | ✅       |
+| Textual inversion or embeddings                        | ❌  | ❌  | ❌    | ✅       |
 
 
 
@@ -53,7 +54,7 @@ The resolution is too big. [Consider checking it manually.](docs/v1/v1.png)
 ![history_v2.5](docs/v2.5/history.png)
 
 ## To-do List
-- Adding textual inversion
+- Adding textual inversion ✅ (beta V3)
 - Implementing Inpainting using IPyCanvas
 - Adding Hugging Face's token integration
 - Implementing Img2Img pipeline ✅ (beta V3)
