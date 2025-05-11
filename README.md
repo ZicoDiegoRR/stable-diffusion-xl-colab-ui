@@ -47,6 +47,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | Reset button (defaulting the parameters)                                              | ❌ | ❌ | ❌  |    ✅    |
 | Compatibility with saved parameters from previous versions                            | ❌ | ❌ | ❌  |    ✅    |
 | Preset system (saving and loading custom parameters)                                  | ❌ | ❌ | ❌  |    ✅    |
+| GPT-2 prompt generator                                                                | ❌ | ❌ | ❌  |    ✅    |
 
 ## Preview
 ### V1:
