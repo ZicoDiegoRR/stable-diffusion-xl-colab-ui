@@ -5,6 +5,8 @@ This is a simple Google Colab notebook made by a junior programmer for generatin
 ## Features
 - **Image Generation:** Uses Transformers and Diffusers as the major components for image generation, along with ControlNet, Inpainting, and IP-Adapter.
 - **Download and Load:** Ability to download and load images, checkpoint, LoRA weights, and VAE using direct URLs.
+- **Textual Inversion:** Ability to load embeddings for more output control. (V3 and above only)
+- **Image-to-Image:** Turn your images into something more creative and unique. (V3 and above only)
 - **Google Drive Integration:** Can connect to your Google Drive or disable it.
 - **User-Friendly UI:** Simplified complexity with an easy-to-understand user interface.
 - **IPyWidgets:** Simplified UI so that you don't need to scroll up and down. (V2 and above only)
