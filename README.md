@@ -31,20 +31,20 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 
 | Features                                                                              | V1 | V2 | V2.5 |  Beta V3 |
 |---------------------------------------------------------------------------------------|----|----|------|----------|
-| Base pipelines (ControlNet, VAE, Inpainting, Text2Img)                                | ✅ | ✅ | ✅  | ✅       |
-| Base adapters (LoRA, IP-Adapter)                                                      | ✅ | ✅ | ✅  | ✅       |
-| IPyWidgets                                                                            | ❌ | ✅ | ✅  | ✅       |
-| Saving and loading parameters                                                         | ❌ | ✅ | ✅  | ✅       |
-| Interactive UI                                                                        | ❌ | ✅ | ✅  | ✅       |
-| Linking widgets                                                                       | ❌ | ❌ | ✅  | ✅       |
-| History system                                                                        | ❌ | ❌ | ✅  | ✅       |
-| Upload images directly                                                                | ❌ | ❌ | ✅  | ✅       |
-| Image-to-image                                                                        | ❌ | ❌ | ❌  | ✅       |
-| Textual inversion or embeddings                                                       | ❌ | ❌ | ❌  | ✅       |
-| Send images from history to Image-to-image, ControlNet, Inpainting, and/or IP-Adapter | ❌ | ❌ | ❌  | ✅       |
-| Reset button (defaulting the parameters)                                              | ❌ | ❌ | ❌  | ✅       |
-| Compatibility with saved parameters from previous versions                            | ❌ | ❌ | ❌  | ✅       |
-| Preset system (saving and loading custom parameters)                                  | ❌ | ❌ | ❌  | ✅       |
+| Base pipelines (ControlNet, VAE, Inpainting, Text2Img)                                | ✅ | ✅ | ✅  |    ✅    |
+| Base adapters (LoRA, IP-Adapter)                                                      | ✅ | ✅ | ✅  |    ✅    |
+| IPyWidgets                                                                            | ❌ | ✅ | ✅  |    ✅    |
+| Saving and loading parameters                                                         | ❌ | ✅ | ✅  |    ✅    |
+| Interactive UI                                                                        | ❌ | ✅ | ✅  |    ✅    |
+| Linking widgets                                                                       | ❌ | ❌ | ✅  |    ✅    |
+| History system                                                                        | ❌ | ❌ | ✅  |    ✅    |
+| Upload images directly                                                                | ❌ | ❌ | ✅  |    ✅    |
+| Image-to-image                                                                        | ❌ | ❌ | ❌  |    ✅    |
+| Textual inversion or embeddings                                                       | ❌ | ❌ | ❌  |    ✅    |
+| Send images from history to Image-to-image, ControlNet, Inpainting, and/or IP-Adapter | ❌ | ❌ | ❌  |    ✅    |
+| Reset button (defaulting the parameters)                                              | ❌ | ❌ | ❌  |    ✅    |
+| Compatibility with saved parameters from previous versions                            | ❌ | ❌ | ❌  |    ✅    |
+| Preset system (saving and loading custom parameters)                                  | ❌ | ❌ | ❌  |    ✅    |
 
 ## Preview
 ### V1:
