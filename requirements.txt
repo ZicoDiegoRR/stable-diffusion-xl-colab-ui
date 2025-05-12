@@ -1,0 +1,11 @@
+diffusers
+torch
+torchvision
+torchaudio
+transformers
+accelerate
+opencv-python
+peft
+huggingface_hub
+compel
+controlnet-aux
