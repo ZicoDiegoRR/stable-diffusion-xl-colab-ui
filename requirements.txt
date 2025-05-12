@@ -1,15 +1,11 @@
---index-url https://download.pytorch.org/whl/cu124
-
-xformers
 torch
 torchvision
 torchaudio
-
 diffusers
 transformers
 accelerate
 opencv-python
 peft
 huggingface_hub
-compel==2.0.3
+compel==2.0.2
 controlnet-aux
