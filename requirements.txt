@@ -1,7 +1,11 @@
-diffusers
+--index-url https://download.pytorch.org/whl/cu124
+
+xformers
 torch
 torchvision
 torchaudio
+
+diffusers
 transformers
 accelerate
 opencv-python
