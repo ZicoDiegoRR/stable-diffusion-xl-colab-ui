@@ -13,6 +13,7 @@ This is a simple Google Colab notebook made by a junior programmer for generatin
 - **IPyWidgets:** Simplified UI so that you don't need to scroll up and down. (V2 and above only)
 - **Built-in History System:** Can show all of your previously generated images in Google Drive without opening it, just with a few simple clicks. (V2.5 and above only)
 - **CivitAI Token Support:** Pass your CivitAI token for additional functionality, but remember **never share it with anyone.**
+- **Hugging Face Token Support:** Pass your Hugging Face token for accessing private files, but remember **never share it with anyone.**
 - **Simplicity:** Consists of two cells only.
 - **Written Guide:** Can keep you on track with the flow of this notebook.
 
@@ -49,6 +50,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | Compatibility with saved parameters from previous versions                            | ❌ | ❌ | ❌  |    ✅    |
 | Preset system (saving and loading custom parameters)                                  | ❌ | ❌ | ❌  |    ✅    |
 | GPT-2 prompt generator                                                                | ❌ | ❌ | ❌  |    ✅    |
+| Hugging Face token integration                                                        | ❌ | ❌ | ❌  |    ✅    |
 
 ## Preview
 ### V1:
