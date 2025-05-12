@@ -4,5 +4,5 @@ accelerate
 opencv-python
 peft
 huggingface_hub
-compel==2.0.2
+compel==2.0.3
 controlnet-aux
