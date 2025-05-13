@@ -53,12 +53,12 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | Hugging Face token integration                                                        | ❌ | ❌ | ❌  |    ✅    |
 
 ## Preview
-<details> <summary> **V1:** </summary>
+<details> <summary> <b>V1:</b> </summary> <br>
 The resolution is too big. [Consider checking it manually.](docs/v1/v1.png) </details>
-<details> <summary> **V2:** </summary>
+<details> <summary> <b>V2:</b> </summary> <br>
 ![general_settings_v2](docs/v2/general_settings.png)
 ![advanced_settings_v2](docs/v2/advanced_settings.png) </details>
-<details> <summary> **V2.5:** </summary>
+<details> <summary> <b>V2.5:</b> </summary> <br>
 ![general_settings_v2.5](docs/v2.5/general_settings.png)
 ![advanced_settings_v2.5](docs/v2.5/advanced_settings.png)
 ![history_v2.5](docs/v2.5/history.png) </details>
