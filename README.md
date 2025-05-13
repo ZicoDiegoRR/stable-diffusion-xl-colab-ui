@@ -81,4 +81,4 @@ This project is open-source and free to use under the MIT License.
 
 ---
 
-This README was mostly made by ChatGPT. (I suck at creating markdown)
+This README was partially made by ChatGPT. (I suck at creating markdown)
