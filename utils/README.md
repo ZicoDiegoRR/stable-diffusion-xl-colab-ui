@@ -1,4 +1,4 @@
-This folder contains the functions inside of the `submit_button()` function.
+This folder contains the functions inside of the `submit_button()` function. (work in progress)
 
 - `downloader.py`: To download stuff obviously
 - `lora_loader.py`: To add the weight of LoRAs into the model
