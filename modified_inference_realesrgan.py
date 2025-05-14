@@ -114,7 +114,7 @@ def run_upscaling(
         model_name=model_name, 
         denoise_strength=denoise_strength,
         outscale=outscale, 
-        model_path=model_path
+        model_path=model_path,
         tile=tile, 
         tile_pad=tile_pad, 
         pre_pad=pre_pad,
