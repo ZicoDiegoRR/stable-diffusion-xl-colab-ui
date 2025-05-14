@@ -12,13 +12,14 @@ from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 class ESRGANWidget:
+    # upload handler
     def input_upload_handler(self, change):
-            if not os.path.exists("/content/upscale"):
-                os.mkdir("/content/upscale")
-            for filename, file_info in self.input_upload.value.items():
-                with open(f"/content/upscale/{filename}", "wb") as up:
-                    up.write(file_info["content"])
-                self.input_link.value = f"/content/upscale/{filename_final}"
+        if not os.path.exists("/content/upscale"):
+            os.mkdir("/content/upscale")
+        for filename, file_info in self.input_upload.value.items():
+            with open(f"/content/upscale/{filename}", "wb") as up:
+                up.write(file_info["content"])
+            self.input_link.value = f"/content/upscale/{filename_final}"
                 
     #creating widgets
     def __init__(self):
