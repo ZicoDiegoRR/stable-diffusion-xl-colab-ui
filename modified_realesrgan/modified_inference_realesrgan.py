@@ -19,7 +19,7 @@ class ESRGANWidget:
         for filename, file_info in self.input_upload.value.items():
             with open(f"/content/upscale/{filename}", "wb") as up:
                 up.write(file_info["content"])
-            self.input_link.value = f"/content/upscale/{filename_final}"
+            self.input_link.value = f"/content/upscale/{filename}"
                 
     #creating widgets
     def __init__(self):
