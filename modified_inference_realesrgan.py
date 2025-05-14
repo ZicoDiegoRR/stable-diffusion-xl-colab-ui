@@ -25,7 +25,7 @@ class ESRGANWidget:
                 with open(f"/content/upscale/{filename}", "wb") as up:
                     up.write(file_info["content"])
                 self.input_link.value = f"/content/upscale/{filename_final}"
-        self.input_upload.observe(input_upload_handler, names="value")
+        self.input_upload.observe(self.input_upload_handler, names="value")
         
         self.model_name = widgets.Dropdown(options=["RealESRGAN_x4plus", "RealESRNet_x4plus", "RealESRGAN_x4plus_anime_6B", "RealESRGAN_x2plus",
             "realesr-animevideov3", "realesr-general-x4v3"], description="Model")
