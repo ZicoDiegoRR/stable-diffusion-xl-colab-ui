@@ -116,6 +116,7 @@ def run_upscaling(
     args = VariableHandlerESRGAN.variable_constructor(
         input=input, 
         model_name=model_name, 
+        output=output,
         denoise_strength=denoise_strength,
         outscale=outscale, 
         model_path=model_path,
