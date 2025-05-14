@@ -12,7 +12,7 @@ from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 class ESRGANWidget:
-    def __init(self):
+    def __init__(self):
         self.input_link = widgets.Text(placeholder="Image link or path")
         self.input_upload = widgets.FileUpload(accept="image/*", multiple=False)
         self.ersgan_input = widgets.HBox([self.input, self.input_upload])
@@ -59,7 +59,7 @@ class ESRGANWidget:
 
 #too lazy to edit the main() function
 class VariableHandlerESRGAN:
-    def __init__(self, 
+    def variable_constructor(self, 
         input, 
         model_name, 
         output, 
@@ -109,7 +109,7 @@ def run_upscaling(
     ext="auto",
     gpu_id=None):
              
-    args = VariableHandlerESRGAN(
+    args = VariableHandlerESRGAN.variable_constructor(
         input, 
         model_name, 
         output, 
