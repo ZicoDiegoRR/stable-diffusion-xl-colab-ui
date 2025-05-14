@@ -3,7 +3,7 @@
 
 import cv2
 import glob
-import os
+import os, os.path
 import ipywidgets as widgets
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
@@ -15,8 +15,12 @@ class ESRGANWidget:
     def __init(self):
         self.input_link = widgets.Text(placeholder="Image link or path")
         self.input_upload = widgets.FileUpload(accept="image/*", multiple=False)
-        self.input_esrgan = widgets.HBox([self.input, self.input_upload])
+        self.ersgan_input = widgets.HBox([self.input, self.input_upload])
 
+        self.input_upload.observe(input_upload_handler, names="value")
+        
+        self.model_name = widgets.Dropdown(options=["RealESRGAN_x4plus", "RealESRNet_x4plus", "RealESRGAN_x4plus_anime_6B", "RealESRGAN_x2plus",
+            "realesr-animevideov3", "realesr-general-x4v3"], description="Model")
         self.denoising = widgets.FloatSlider(min=0.1, max=1.0, step=0.01, description="Denoising Strength")
         self.upscale_factor = widgets.IntSlider(min=1, max=4, step=1, description="Upscale Factor")
         self.tile_size = widgets.IntText(description="Tile Size")
@@ -24,7 +28,23 @@ class ESRGANWidget:
         self.pre_padding = widgets.IntText(description="Pre-padding Size")
         self.face = widgets.Boolean(description="Face Enhance")
         self.upsampler = widgets.Dropdown(options=["realesrgan", "bicubic"], description="")
+        self.ersgan_settings = widgets.VBox([
+            self.model_name,
+            widgets.HBox([self.denoising, self.upscale_factor]),
+            widgets.HBox([self.tile_size, self.tile_padding, self.pre_padding]),
+            self.face,
+            self.upsampler
+        ])
         
+    def input_upload_handler(self, change):
+        if not os.path.exists("/content/upscale"):
+            os.mkdir("/content/upscale")
+        filename_final = "temp.png"
+        for filename, file_info in self.input_upload.value.items():
+            filename_final = filename
+            with open(f"/content/upscale/{filename}", "wb") as up:
+                up.write(file_info["content"])
+        self.input_link.value = f"/content/upscale/{filename_final}"
 
 #too lazy to edit the main() function
 class VariableHandlerESRGAN:
