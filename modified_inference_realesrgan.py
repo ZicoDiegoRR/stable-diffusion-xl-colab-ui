@@ -8,8 +8,8 @@ import ipywidgets as widgets
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
 
-from realesrgan import RealESRGANer
-from realesrgan.archs.srvgg_arch import SRVGGNetCompact
+from Real-ESRGAN.realesrgan import RealESRGANer
+from Real-ESRGAN.realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 class ESRGANWidget:
     def __init__(self):
