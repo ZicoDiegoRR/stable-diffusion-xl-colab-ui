@@ -164,9 +164,9 @@ def run_upscaling(
     if args.model_path is not None:
         model_path = args.model_path
     else:
-        model_path = os.path.join('/content/Real_ESRGAN/weights', args.model_name + '.pth')
+        model_path = os.path.join('/content/RealESRGAN/weights', args.model_name + '.pth')
         if not os.path.isfile(model_path):
-            ROOT_DIR = "/content/Real_ESRGAN"
+            ROOT_DIR = "/content/RealESRGAN"
             for url in file_url:
                 # model_path will be updated
                 model_path = load_file_from_url(
