@@ -1,3 +1,5 @@
+# A modified version of inference_realesrgan.py from https://github.com/xinntao/Real-ESRGAN/blob/master/inference_realesrgan.py for project purpose
+
 import cv2
 import glob
 import os
@@ -31,8 +33,8 @@ class VariableHandlerESRGAN:
         self.output = output
         self.denoise_strength = denoise_strength
         self.outscale = outscale
-        self.model_path = mode_path
-        self.suffix = "",
+        self.model_path = model_path
+        self.suffix = ""
         self.tile = tile
         self.tile_pad = tile_pad
         self.pre_pad = pre_pad
@@ -154,7 +156,6 @@ def main(
 
     for idx, path in enumerate(paths):
         imgname, extension = os.path.splitext(os.path.basename(path))
-        print('Testing', idx, imgname)
 
         img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
         if len(img.shape) == 3 and img.shape[2] == 4:
@@ -169,7 +170,6 @@ def main(
                 output, _ = upsampler.enhance(img, outscale=args.outscale)
         except RuntimeError as error:
             print('Error', error)
-            print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
         else:
             if args.ext == 'auto':
                 extension = extension[1:]
