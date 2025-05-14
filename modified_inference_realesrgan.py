@@ -12,6 +12,7 @@ from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 class ESRGANWidget:
+    # creating widgets
     def __init__(self):
         self.input_link = widgets.Text(placeholder="Image link or path")
         self.input_upload = widgets.FileUpload(accept="image/*", multiple=False)
@@ -33,7 +34,7 @@ class ESRGANWidget:
         self.tile_size = widgets.IntText(description="Tile Size", value=0)
         self.tile_padding = widgets.IntText(description="Tile Padding", value=10)
         self.pre_padding = widgets.IntText(description="Pre-padding Size", value=0)
-        self.face = widgets.Boolean(description="Face Enhance", value=False)
+        self.face = widgets.Checkbox(description="Face Enhance", value=False)
         self.upsampler = widgets.Dropdown(options=["realesrgan", "bicubic"], description="Alpha Upsampler")
         self.ersgan_settings = widgets.VBox([
             self.ersgan_input,
@@ -43,7 +44,7 @@ class ESRGANWidget:
             self.face,
             self.upsampler
         ])
-        
+    # execute
     def execute_realesrgan(self):
         run_upscaling(
             input=self.input_link.value,
