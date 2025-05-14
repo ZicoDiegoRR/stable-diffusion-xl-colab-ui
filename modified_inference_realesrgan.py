@@ -23,11 +23,11 @@ class ESRGANWidget:
             "realesr-animevideov3", "realesr-general-x4v3"], description="Model")
         self.denoising = widgets.FloatSlider(min=0.1, max=1.0, step=0.01, description="Denoising Strength")
         self.upscale_factor = widgets.IntSlider(min=1, max=4, step=1, description="Upscale Factor")
-        self.tile_size = widgets.IntText(description="Tile Size")
-        self.tile_padding = widgets.IntText(description="Tile Padding")
-        self.pre_padding = widgets.IntText(description="Pre-padding Size")
-        self.face = widgets.Boolean(description="Face Enhance")
-        self.upsampler = widgets.Dropdown(options=["realesrgan", "bicubic"], description="")
+        self.tile_size = widgets.IntText(description="Tile Size", value=0)
+        self.tile_padding = widgets.IntText(description="Tile Padding", value=10)
+        self.pre_padding = widgets.IntText(description="Pre-padding Size", value=0)
+        self.face = widgets.Boolean(description="Face Enhance", value=False)
+        self.upsampler = widgets.Dropdown(options=["realesrgan", "bicubic"], description="Alpha Upsampler")
         self.ersgan_settings = widgets.VBox([
             self.model_name,
             widgets.HBox([self.denoising, self.upscale_factor]),
@@ -39,12 +39,23 @@ class ESRGANWidget:
     def input_upload_handler(self, change):
         if not os.path.exists("/content/upscale"):
             os.mkdir("/content/upscale")
-        filename_final = "temp.png"
         for filename, file_info in self.input_upload.value.items():
-            filename_final = filename
             with open(f"/content/upscale/{filename}", "wb") as up:
                 up.write(file_info["content"])
-        self.input_link.value = f"/content/upscale/{filename_final}"
+            self.input_link.value = f"/content/upscale/{filename_final}"
+
+    def execute_realesrgan(self):
+        run_upscaling(
+            input=self.input_link.value,
+            model_name=self.model_name.value,
+            denoise_strength=self.denoising.value,
+            outscale=self.upscale_factor.value,
+            tile=self.tile_size.value,
+            tile_pad=self.tile_padding.value,
+            pre_pad=self.pre_padding.value,
+            face_enhance=self.face.value,
+            alpha_upsampler=self.upsampler.value
+        )
 
 #too lazy to edit the main() function
 class VariableHandlerESRGAN:
@@ -81,10 +92,10 @@ class VariableHandlerESRGAN:
         self.ext = ext
         self.gpu_id = gpu_id
         
-def main(
+def run_upscaling(
     input, 
     model_name, 
-    output, 
+    output="/content/Upscaled/" if not os.path.exists("/content/gdrive/MyDrive") else "/content/gdrive/MyDrive/Upscaled", 
     denoise_strength,
     outscale, 
     model_path="/content/Real_ESRGAN", 
