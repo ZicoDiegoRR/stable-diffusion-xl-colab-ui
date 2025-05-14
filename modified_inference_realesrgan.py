@@ -15,7 +15,7 @@ class ESRGANWidget:
     def __init__(self):
         self.input_link = widgets.Text(placeholder="Image link or path")
         self.input_upload = widgets.FileUpload(accept="image/*", multiple=False)
-        self.ersgan_input = widgets.HBox([self.input, self.input_upload])
+        self.ersgan_input = widgets.HBox([self.input_link, self.input_upload])
 
         self.input_upload.observe(input_upload_handler, names="value")
         
@@ -29,6 +29,7 @@ class ESRGANWidget:
         self.face = widgets.Boolean(description="Face Enhance", value=False)
         self.upsampler = widgets.Dropdown(options=["realesrgan", "bicubic"], description="Alpha Upsampler")
         self.ersgan_settings = widgets.VBox([
+            self.ersgan_input,
             self.model_name,
             widgets.HBox([self.denoising, self.upscale_factor]),
             widgets.HBox([self.tile_size, self.tile_padding, self.pre_padding]),
