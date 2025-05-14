@@ -66,6 +66,8 @@ class ESRGANWidget:
 
 #too lazy to edit the run_upscaling() function
 class VariableHandlerESRGAN:
+    
+    self.path_saved_image = ""
     def variable_constructor(self, 
         input, 
         model_name, 
@@ -98,11 +100,6 @@ class VariableHandlerESRGAN:
         self.alpha_upsampler = alpha_upsampler
         self.ext = ext
         self.gpu_id = gpu_id
-        self.path_saved_image = ""
-
-    def return_path_for_display(self, input_path, output_path):
-        clear_output()
-        display(make_image_grid([load_image(input_path), load_image(output_path)], rows=1, cols=2))
         
 def run_upscaling(
     input, 
@@ -242,4 +239,4 @@ def run_upscaling(
             else:
                 save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
             cv2.imwrite(save_path, output)
-            args.return_path_for_display(input, save_path)
+            args.path_saved_image = save_path
