@@ -110,21 +110,17 @@ def run_upscaling(
     gpu_id=None):
              
     args = VariableHandlerESRGAN.variable_constructor(
-        input, 
-        model_name, 
-        output, 
-        denoise_strength,
-        outscale, 
-        model_path, 
-        suffix,
-        tile, 
-        tile_pad, 
-        pre_pad,
-        face_enhance, 
-        fp32,
-        alpha_upsampler,
-        ext,
-        gpu_id)
+        input=input, 
+        model_name=model_name, 
+        denoise_strength=denoise_strength,
+        outscale=outscale, 
+        model_path=model_path
+        tile=tile, 
+        tile_pad=tile_pad, 
+        pre_pad=pre_pad,
+        face_enhance=face_enhance, 
+        alpha_upsampler=alpha_upsampler
+        )
 
     # determine models according to model names
     args.model_name = args.model_name.split('.')[0]
