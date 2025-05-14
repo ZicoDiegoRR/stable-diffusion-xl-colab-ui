@@ -6,7 +6,9 @@ import glob
 import os, os.path
 import ipywidgets as widgets
 from basicsr.archs.rrdbnet_arch import RRDBNet
+from diffusers.utils import load_image, make_image_grid
 from basicsr.utils.download_util import load_file_from_url
+from IPython.display import display, clear_output
 
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
@@ -98,8 +100,9 @@ class VariableHandlerESRGAN:
         self.gpu_id = gpu_id
         self.path_saved_image = ""
 
-    def return_path_for_display(self, path):
-        return self.path_saved_image
+    def return_path_for_display(self, input_path, output_path):
+        clear_output()
+        display(make_image_grid([load_image(input_path), load_image(output_path)], rows=1, cols=2))
         
 def run_upscaling(
     input, 
@@ -239,4 +242,4 @@ def run_upscaling(
             else:
                 save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
             cv2.imwrite(save_path, output)
-            args.path_saved_image = save_path
+            args.return_path_for_display(input, save_path)
