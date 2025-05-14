@@ -112,8 +112,10 @@ def run_upscaling(
     alpha_upsampler="realesrgan",
     ext="auto",
     gpu_id=None):
-             
-    args = VariableHandlerESRGAN.variable_constructor(
+
+    args = VariableHandlerESRGAN()
+        
+    args.variable_constructor(
         input=input, 
         model_name=model_name, 
         output=output,
@@ -125,7 +127,7 @@ def run_upscaling(
         pre_pad=pre_pad,
         face_enhance=face_enhance, 
         alpha_upsampler=alpha_upsampler
-        )
+    )
 
     # determine models according to model names
     args.model_name = args.model_name.split('.')[0]
