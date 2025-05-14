@@ -67,7 +67,6 @@ class ESRGANWidget:
 #too lazy to edit the run_upscaling() function
 class VariableHandlerESRGAN:
     
-    self.path_saved_image = ""
     def variable_constructor(self, 
         input, 
         model_name, 
@@ -240,3 +239,6 @@ def run_upscaling(
                 save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
             cv2.imwrite(save_path, output)
             args.path_saved_image = save_path
+
+def display_upscaler(input_path, output_path):
+    widget()
