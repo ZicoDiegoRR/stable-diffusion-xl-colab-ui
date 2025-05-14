@@ -104,7 +104,7 @@ def run_upscaling(
     outscale,
     denoise_strength,
     output="/content/Upscaled/" if not os.path.exists("/content/gdrive/MyDrive") else "/content/gdrive/MyDrive/Upscaled", 
-    model_path="/content/RealESRGAN", 
+    model_path=None, 
     suffix="",
     pre_pad=0,
     face_enhance=False, 
