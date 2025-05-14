@@ -8,7 +8,7 @@ import ipywidgets as widgets
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from diffusers.utils import load_image, make_image_grid
 from basicsr.utils.download_util import load_file_from_url
-from IPython.display import display, clear_output
+from IPython.display import display
 
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
@@ -238,7 +238,4 @@ def run_upscaling(
             else:
                 save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
             cv2.imwrite(save_path, output)
-            args.path_saved_image = save_path
-
-def display_upscaler(input_path, output_path):
-    widget()
+            display(make_image_grid([load_image(input), load_image(save_path)], rows=1, cols=2))
