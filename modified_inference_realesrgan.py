@@ -1,13 +1,30 @@
 # A modified version of inference_realesrgan.py from https://github.com/xinntao/Real-ESRGAN/blob/master/inference_realesrgan.py for project purpose
+# The libraries will be downloaded after running the first cell 
 
 import cv2
 import glob
 import os
+import ipywidgets as widgets
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
 
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
+
+class ESRGANWidget:
+    def __init(self):
+        self.input_link = widgets.Text(placeholder="Image link or path")
+        self.input_upload = widgets.FileUpload(accept="image/*", multiple=False)
+        self.input_esrgan = widgets.HBox([self.input, self.input_upload])
+
+        self.denoising = widgets.FloatSlider(min=0.1, max=1.0, step=0.01, description="Denoising Strength")
+        self.upscale_factor = widgets.IntSlider(min=1, max=4, step=1, description="Upscale Factor")
+        self.tile_size = widgets.IntText(description="Tile Size")
+        self.tile_padding = widgets.IntText(description="Tile Padding")
+        self.pre_padding = widgets.IntText(description="Pre-padding Size")
+        self.face = widgets.Boolean(description="Face Enhance")
+        self.upsampler = widgets.Dropdown(options=["realesrgan", "bicubic"], description="")
+        
 
 #too lazy to edit the main() function
 class VariableHandlerESRGAN:
@@ -50,7 +67,7 @@ def main(
     output, 
     denoise_strength,
     outscale, 
-    model_path, 
+    model_path="/content/Real_ESRGAN", 
     suffix="",
     tile, 
     tile_pad, 
@@ -80,29 +97,30 @@ def main(
 
     # determine models according to model names
     args.model_name = args.model_name.split('.')[0]
+    netscale = args.outscale
     if args.model_name == 'RealESRGAN_x4plus':  # x4 RRDBNet model
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
-        netscale = 4
+        # netscale = 4
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth']
     elif args.model_name == 'RealESRNet_x4plus':  # x4 RRDBNet model
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
-        netscale = 4
+        # netscale = 4
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/RealESRNet_x4plus.pth']
     elif args.model_name == 'RealESRGAN_x4plus_anime_6B':  # x4 RRDBNet model with 6 blocks
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=6, num_grow_ch=32, scale=4)
-        netscale = 4
+        # netscale = 4
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth']
     elif args.model_name == 'RealESRGAN_x2plus':  # x2 RRDBNet model
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=2)
-        netscale = 2
+        # netscale = 2
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth']
     elif args.model_name == 'realesr-animevideov3':  # x4 VGG-style model (XS size)
         model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=16, upscale=4, act_type='prelu')
-        netscale = 4
+        # netscale = 4
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-animevideov3.pth']
     elif args.model_name == 'realesr-general-x4v3':  # x4 VGG-style model (S size)
         model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=32, upscale=4, act_type='prelu')
-        netscale = 4
+        # netscale = 4
         file_url = [
             'https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-wdn-x4v3.pth',
             'https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-x4v3.pth'
@@ -112,9 +130,9 @@ def main(
     if args.model_path is not None:
         model_path = args.model_path
     else:
-        model_path = os.path.join('weights', args.model_name + '.pth')
+        model_path = os.path.join('/content/Real_ESRGAN/weights', args.model_name + '.pth')
         if not os.path.isfile(model_path):
-            ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+            ROOT_DIR = "/content/Real_ESRGAN"
             for url in file_url:
                 # model_path will be updated
                 model_path = load_file_from_url(
