@@ -23,9 +23,9 @@ This notebook is designed for artistic purposes and to spark inspiration. **Plea
 
 ## Installation
 Simply open the notebook on Google Colab to start using it. No installation is needed. Debugging and editing the code might be difficult due to the complex structure and my lack of knowledge in modular programming.
-- **V1:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/stable_diffusion_xl_v1.ipynb)
-- **V2:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/stable_diffusion_xl_v2.ipynb)
-- **V2.5:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/stable_diffusion_xl_v2.5.ipynb)
+- **V1:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/18cUHh7H1c4qUijSD50uQUNl0Fq8wq7nY)
+- **V2:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1CQeZADunh6tEZCBOleDkZY96osYkRk5I)
+- **V2.5:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/13sfGKPhbCvNon0rpVvImUwVpZ3lkcuit?authuser=0)
 
 ## Disclaimer
 - This tool is intended for creating art and exploring creative image generation.
