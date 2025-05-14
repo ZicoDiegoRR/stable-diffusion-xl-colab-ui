@@ -1,6 +1,6 @@
 # A modified version of inference_realesrgan.py from https://github.com/xinntao/Real-ESRGAN/blob/master/inference_realesrgan.py for project purpose
 # The libraries will be downloaded after running the first cell 
-
+   
 import cv2
 import glob
 import os, os.path
@@ -104,7 +104,7 @@ def run_upscaling(
     outscale,
     denoise_strength,
     output="/content/Upscaled/" if not os.path.exists("/content/gdrive/MyDrive") else "/content/gdrive/MyDrive/Upscaled", 
-    model_path="/content/Real_ESRGAN", 
+    model_path="/content/RealESRGAN", 
     suffix="",
     pre_pad=0,
     face_enhance=False, 
