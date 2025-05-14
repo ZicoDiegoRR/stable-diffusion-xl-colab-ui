@@ -16,7 +16,14 @@ class ESRGANWidget:
         self.input_link = widgets.Text(placeholder="Image link or path")
         self.input_upload = widgets.FileUpload(accept="image/*", multiple=False)
         self.ersgan_input = widgets.HBox([self.input_link, self.input_upload])
-
+        
+        def input_upload_handler(self, change):
+            if not os.path.exists("/content/upscale"):
+                os.mkdir("/content/upscale")
+            for filename, file_info in self.input_upload.value.items():
+                with open(f"/content/upscale/{filename}", "wb") as up:
+                    up.write(file_info["content"])
+                self.input_link.value = f"/content/upscale/{filename_final}"
         self.input_upload.observe(input_upload_handler, names="value")
         
         self.model_name = widgets.Dropdown(options=["RealESRGAN_x4plus", "RealESRNet_x4plus", "RealESRGAN_x4plus_anime_6B", "RealESRGAN_x2plus",
@@ -37,14 +44,6 @@ class ESRGANWidget:
             self.upsampler
         ])
         
-    def input_upload_handler(self, change):
-        if not os.path.exists("/content/upscale"):
-            os.mkdir("/content/upscale")
-        for filename, file_info in self.input_upload.value.items():
-            with open(f"/content/upscale/{filename}", "wb") as up:
-                up.write(file_info["content"])
-            self.input_link.value = f"/content/upscale/{filename_final}"
-
     def execute_realesrgan(self):
         run_upscaling(
             input=self.input_link.value,
