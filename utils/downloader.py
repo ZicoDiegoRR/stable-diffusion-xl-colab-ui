@@ -20,7 +20,7 @@ def download_file(url, type, hf_token, civit_token):
             download_url = url
     elif "huggingface.co" in url:
         if hf_token:
-            download_header = f"Authorization: Bearer {hf_token}"
+            download_header = {"Authorization:" f"Bearer {hf_token}"}
         else:
             download_header = ""
         download_url = url
@@ -39,7 +39,7 @@ def download_file(url, type, hf_token, civit_token):
         if filename_content_disposition:
             filename_find = re.search(r"filename='(.+)'", filename_content_disposition)
             if filename_find:
-                download_filename = match.group(1)
+                download_filename = filename_find.group(1)
             else:
                 download_filename = os.path.basename(url) + ".safetensors"
         else:
@@ -47,9 +47,9 @@ def download_file(url, type, hf_token, civit_token):
 
         # Save
         with open(f"{download_path}/{download_filename}", "wb") as f:
-            for chunk in download_req.iter_content(chunk_size=8192)
+            for chunk in download_req.iter_content(chunk_size=8192):
                 if chunk:
-                    f.write(download_req.content)
+                    f.write(download_req.chunk)
 
     # Return the path
     return f"{download_path}/{download_filename}"
