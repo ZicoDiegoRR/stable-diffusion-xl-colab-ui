@@ -33,7 +33,8 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 - **Use responsibly.** Please refrain from using it for any malicious or harmful activities.
 - NSFW generation is supported, but do it at your own risk.
 
-<details> <summary>Feature Table</summary>
+## Feature Table
+<details> <summary>Click here</summary>
   
 | Features                                                                              | V1 | V2 | V2.5 |  Beta V3 |
 |---------------------------------------------------------------------------------------|----|----|------|----------|
