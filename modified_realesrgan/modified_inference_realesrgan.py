@@ -234,7 +234,7 @@ def run_upscaling(
             if img_mode == 'RGBA':  # RGBA images should be saved in png format
                 extension = 'png'
             img_filename_with_prompt = f"[Upscaled] {imgname}"
-            if (len(img_filename_with_prompt) + len(extension)) > 255:
+            if (len(img_filename_with_prompt) + len(extension) + 1) > 255:
                 truncated_length = len(img_filename_with_prompt) - (len(extension) + 256)
                 img_filename = img_filename_with_prompt[:(255 - truncated_length)]
                
