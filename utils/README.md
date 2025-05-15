@@ -6,3 +6,4 @@ This folder contains the functions inside of the `submit_button()` function. (wo
 - `embeddings_loader.py`: To load embeddings or textual inversion
 - `pipeline_selector.py`: To pick the correct pipeline based on the selected pipeline from the UI
 - `run_generation.py`: To start the generation process
+- `vae_loader.py`: To load VAE model to the pipeline
