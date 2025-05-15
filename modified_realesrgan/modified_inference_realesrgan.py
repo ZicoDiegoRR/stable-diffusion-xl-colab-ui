@@ -235,12 +235,10 @@ def run_upscaling(
                 extension = 'png'
             img_filename_with_prompt = f"[Upscaled] {imgname}"
             if (len(img_filename_with_prompt) + len(extension)) > 255:
-                truncated_length = len(img_filename_with_prompt) - (len(extension) + 1)
-                img_filename = img_filename_with_prompt[:truncated_length]
-            if args.suffix == '':
-                save_path = os.path.join(args.output, f'[Upscaled] {imgname}.{extension}')
-            else:
-                save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
+                truncated_length = len(img_filename_with_prompt) - (len(extension) + 256)
+                img_filename = img_filename_with_prompt[:(255 - truncated_length)]
+               
+            save_path = os.path.join(args.output, f'[Upscaled] {imgname}.{extension}')
             cv2.imwrite(save_path, output)
             input_width, input_height = load_image(input).size
             display(make_image_grid([load_image(input), load_image(save_path).resize((input_width, input_height))], rows=1, cols=2))
