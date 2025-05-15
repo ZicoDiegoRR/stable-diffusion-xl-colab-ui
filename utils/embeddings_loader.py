@@ -18,6 +18,7 @@ def download_textual_inversion(pipe, link, token, hf_token, civit_token):
     # Download and handle duplication
     ti_list = []
     ti_path = []
+    tokens = []
     unique_ti_urls = []
     
     for i, url in enumerate(link):
@@ -31,8 +32,7 @@ def download_textual_inversion(pipe, link, token, hf_token, civit_token):
 
             split_filename, _ = os.path.splitext(os.path.basename(textual_inversion_path))
             ti_list.append(split_filename)
-        else:
-            token.pop(i)
+            tokens.append(token[i])
 
     load_textual_inversion_from_link(pipe, ti_path, token, ti_list)
         
