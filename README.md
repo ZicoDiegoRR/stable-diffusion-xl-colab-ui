@@ -33,8 +33,8 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 - **Use responsibly.** Please refrain from using it for any malicious or harmful activities.
 - NSFW generation is supported, but do it at your own risk.
 
-## Feature Table
-
+<details> <summary>Feature Table</summary>
+  
 | Features                                                                              | V1 | V2 | V2.5 |  Beta V3 |
 |---------------------------------------------------------------------------------------|----|----|------|----------|
 | Base pipelines (ControlNet, VAE, Inpainting, Text2Img)                                | ✅ | ✅ | ✅  |    ✅    |
@@ -54,6 +54,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | GPT-2 Prompt Generator                                                                | ❌ | ❌ | ❌  |    ✅    |
 | Hugging Face token integration                                                        | ❌ | ❌ | ❌  |    ✅    |
 | Real-ESRGAN Image Upscaling                                                           | ❌ | ❌ | ❌  |    ✅    |
+</details>
 
 ## Preview
 <details> <summary> <b>V1:</b> </summary> <br>
