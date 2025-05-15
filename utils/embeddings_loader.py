@@ -34,7 +34,7 @@ def download_textual_inversion(pipe, link, token, hf_token, civit_token):
             ti_list.append(split_filename)
             tokens.append(token[i])
 
-    load_textual_inversion_from_link(pipe, ti_path, token, ti_list)
+    load_textual_inversion_from_link(pipe, ti_path, tokens, ti_list)
         
 def process(pipe, link, token, hf_token, civit_token):
     # Preprocessing the urls and weight before downloading
