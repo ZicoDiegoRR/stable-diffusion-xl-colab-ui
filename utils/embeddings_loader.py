@@ -8,8 +8,8 @@ def load_textual_inversion_from_link(pipe, link, token, name):
         ti_dict = load_file(f"embed")
         try:
             print(f"Loading {name}...")
-            pipeline.load_textual_inversion(ti_dict["clip_g"], token=tag, text_encoder=pipeline.text_encoder_2, tokenizer=pipeline.tokenizer_2)
-            pipeline.load_textual_inversion(ti_dict["clip_l"], token=tag, text_encoder=pipeline.text_encoder, tokenizer=pipeline.tokenizer)
+            pipe.load_textual_inversion(ti_dict["clip_g"], token=tag, text_encoder=pipeline.text_encoder_2, tokenizer=pipeline.tokenizer_2)
+            pipe.load_textual_inversion(ti_dict["clip_l"], token=tag, text_encoder=pipeline.text_encoder, tokenizer=pipeline.tokenizer)
         except Exception as e:
             print(f"Skipping {name}. Reason: {e}")
     
