@@ -22,17 +22,16 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 - **V2:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/stable_diffusion_xl_v2.ipynb)
 - **V2.5:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/stable_diffusion_xl_v2.5.ipynb)
 
-| Features                                               | V1 | V2 | V2.5 | Beta V3 |
-|--------------------------------------------------------|----|----|------|---------|
-| Base pipelines (ControlNet, VAE, Inpainting, Text2Img) | ✅  | ✅  | ✅    | ✅       |
-| Base adapters (LoRA, IP-Adapter)                       | ✅  | ✅  | ✅    | ✅       |
-| IPyWidgets                                             | ❌  | ✅  | ✅    | ✅       |
-| Saving and loading parameters                          | ❌  | ✅  | ✅    | ✅       |
-| Interactive UI                                         | ❌  | ✅  | ✅    | ✅       |
-| Linking widgets                                        | ❌  | ❌  | ✅    | ✅       |
-| History system                                         | ❌  | ❌  | ✅    | ✅       |
-| Upload images directly                                 | ❌  | ❌  | ✅    | ✅       |
-| Image-to-image                                         | ❌  | ❌  | ❌    | ✅       |
+| Features                                               |  V1 |  V2  |  V2.5 |
+|--------------------------------------------------------|-----|------|-------|
+| Base pipelines (ControlNet, VAE, Inpainting, Text2Img) | ✅  | ✅  | ✅    | 
+| Base adapters (LoRA, IP-Adapter)                       | ✅  | ✅  | ✅    | 
+| IPyWidgets                                             | ❌  | ✅  | ✅    | 
+| Saving and loading parameters                          | ❌  | ✅  | ✅    | 
+| Interactive UI                                         | ❌  | ✅  | ✅    | 
+| Linking widgets                                        | ❌  | ❌  | ✅    | 
+| History system                                         | ❌  | ❌  | ✅    | 
+| Upload images directly                                 | ❌  | ❌  | ✅    | 
 
 
 
@@ -52,11 +51,6 @@ The resolution is too big. [Consider checking it manually.](docs/v1/v1.png)
 ![advanced_settings_v2.5](docs/v2.5/advanced_settings.png)
 ![history_v2.5](docs/v2.5/history.png)
 
-## To-do List
-- Adding textual inversion
-- Implementing Inpainting using IPyCanvas
-- Adding Hugging Face's token integration
-- Implementing Img2Img pipeline ✅ (beta V3)
 ## License
 This project is open-source and free to use under the MIT License.
 
