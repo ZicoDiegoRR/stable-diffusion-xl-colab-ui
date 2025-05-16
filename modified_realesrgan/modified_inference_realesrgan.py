@@ -3,7 +3,7 @@
    
 import cv2
 import glob
-import os, os.path
+import os
 import ipywidgets as widgets
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from diffusers.utils import load_image, make_image_grid
@@ -236,7 +236,9 @@ def run_upscaling(
             img_filename_with_prompt = f"[Upscaled] {imgname}"
             if (len(img_filename_with_prompt) + len(extension) + 1) > 255:
                 truncated_length = len(img_filename_with_prompt) - (len(extension) + 256)
-                img_filename = img_filename_with_prompt[:(255 - truncated_length)]
+                img_filename = f"{img_filename_with_prompt[:(255 - truncated_length)]}.{extension}"
+            else:
+                img_filename = f"{img_filename_with_prompt}.{extension}"
                
             save_path = os.path.join(args.output, img_filename)
             cv2.imwrite(save_path, output)
