@@ -79,6 +79,7 @@ The resolution is too big. [Consider checking it manually.](docs/v1/v1.png) </de
 ## To-do List
 - Adding textual inversion ✅ (beta V3)
 - Implementing Inpainting using IPyCanvas
+- Modularizing the code (in progress)
 - Adding Hugging Face's token integration ✅ (beta V3)
 - Implementing Img2Img pipeline ✅ (beta V3)
 ## License
