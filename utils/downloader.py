@@ -5,8 +5,7 @@ import re
 def download_file(url, type, hf_token, civit_token):
     # Folder creation if not exist
     download_folder = f"/content/{type}"
-    if not os.path.exists(download_folder):
-        os.makedirs(download_folder)
+    os.makedirs(download_folder, exist_ok=True)
 
     # Handling the url based on the given server
     if "civitai.com" in url:
