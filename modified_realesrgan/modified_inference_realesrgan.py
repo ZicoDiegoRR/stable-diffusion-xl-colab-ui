@@ -235,8 +235,7 @@ def run_upscaling(
                 extension = 'png'
             img_filename_with_prompt = f"[Upscaled] {imgname}"
             if (len(img_filename_with_prompt) + len(extension) + 1) > 255:
-                truncated_length = len(img_filename_with_prompt) - (len(extension) + 256)
-                img_filename = f"{img_filename_with_prompt[:(255 - truncated_length)]}.{extension}"
+                img_filename = f"{img_filename_with_prompt[:245]}.{extension}"
             else:
                 img_filename = f"{img_filename_with_prompt}.{extension}"
                
