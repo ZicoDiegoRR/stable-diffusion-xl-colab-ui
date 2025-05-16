@@ -1,5 +1,0 @@
-from StableDiffusionXLColabUI.utils import downloader
-from diffusers import AutoencoderKL
-
-def load_vae():
-
