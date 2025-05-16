@@ -19,6 +19,7 @@ def generate(
     ref_image=None,
     Denoising_Strength=None
 ):
+    # Main arguments
     generation_arguments = {
         "prompt_embeds": conditioning[0:1],
         "pooled_prompt_embeds": pooled[0:1],
@@ -31,6 +32,8 @@ def generate(
         "clip_skip": Clip_Skip,
         "generator": generator
     }
+
+    # Argument validation based on the pipeline and adapter
     if IP_Adapter != "None": # If IP-Adapter is turned on
         generation_arguments["ip_adapter_image"] = image_embeds
         
