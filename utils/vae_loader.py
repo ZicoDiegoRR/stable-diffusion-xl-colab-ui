@@ -13,10 +13,10 @@ def autoencoderkl_load(vae_path):
             return AutoencoderKL.from_single_file(vae_path[0], config=vae_path[1], torch_dtype=torch.float16, local_files_only=True)
         else:
             return AutoencoderKL.from_pretrained(vae_path[0], torch_dtype=torch.float16)
-        except Exception as e:
-            print(f"Error when loading the VAE. Reason: {e}")
-            print("Skipped VAE.")
-            return None
+    except Exception as e:
+        print(f"Error when loading the VAE. Reason: {e}")
+        print("Skipped VAE.")
+        return None
 
 
 def load_vae(model_path, config_path, hf_token, civit_token):
