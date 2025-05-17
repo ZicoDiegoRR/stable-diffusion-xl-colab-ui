@@ -54,7 +54,7 @@ class Img2ImgSettings:
 
     # Function to handle image upload
     def reference_image_upload_handler(self, change):
-        for file_info in reference_image_upload_widget.value.items():
+        for file_info in self.reference_image_upload_widget.value.items():
             ref_uploaded_image = file_info[1]["content"]
             with open("/content/img2img/temp.png", "wb") as up:
                 up.write(ref_uploaded_image)
@@ -119,7 +119,7 @@ class Img2ImgSettings:
 
         self.freeze_widget = widgets.Checkbox(description="Use the same seed", value=cfg[15] if cfg else False)
 
-        self.reference_image_link_widget = widgets.Text(placeholder="Img2Img reference link", description="Reference Image", value=cfg[16] if cfg and (not cfg[37].startswith("/content/img2img/") or os.path.exists("/content/img2img/")) else "")
+        self.reference_image_link_widget = widgets.Text(placeholder="Img2Img reference link", description="Reference Image", value=cfg[16] if cfg else "")
         self.reference_image_upload_widget = widgets.FileUpload(accept="image/*", multiple=False)
         self.denoising_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.01, description="Denoising Strength", value=cfg[17] if cfg else 0.3)
         self.reference_image_section = widgets.VBox([widgets.HBox([self.reference_image_link_widget, self.reference_image_upload_widget]), widgets.HBox([self.denoising_strength_slider, widgets.HTML(value="Low value means similar to the original image.")])])
