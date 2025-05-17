@@ -1,4 +1,4 @@
-# Google Colab Non WebUI Stable Diffusion XL Image Generator
+# Google Colab Non WebUI Stable Diffusion XL Image Generator (Legacy Version)
 
 This is a simple Google Colab notebook made by an 18-years-old junior programmer for generating images using Stable Diffusion XL.
 
