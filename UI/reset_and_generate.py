@@ -4,7 +4,7 @@ import ipywidgets as widgets
 class ResetGenerate:
     def reset_evaluate(self, result): # Function to set every parameter into the default value
         if result == "yes":
-            cfg_reset = param_default()
+            cfg_reset = param_default.import_values()
             every_widgets = all_widgets.import_widgets()
         for :
             every_widgets.children[i].value = cfg_reset[i]
