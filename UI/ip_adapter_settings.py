@@ -65,6 +65,7 @@ class IPAdapterLoader:
         self.ip_settings.children = [self.ip_adapter_dropdown, self.ip_image_link_widget, self.ip_image_upload, self.ip_adapter_strength_slider, self.ip_grid_image_html, self.ip_grid_image, self.ip_grid_button_html, self.ip_grid_button]
 
     def __init__(self, cfg):
+        os.makedirs("/content/ip_adapter", exist_ok=True)
         self.collected_uploaded_ip_image = ""
         initial_ip_image = [word for word in re.split(r"\s*,\s*", cfg[0]) if word] if cfg else ""
         filtered_ip_image_during_initial_load = []
