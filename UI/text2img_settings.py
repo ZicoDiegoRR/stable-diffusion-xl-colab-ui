@@ -1,4 +1,4 @@
-from StableDiffusionXLColabUI.interface import generate_prompt
+from StableDiffusionXLColabUI.UI.generate_prompt import generate_prompt
 import ipywidgets as widgets
 
 class Text2ImgSettings:
