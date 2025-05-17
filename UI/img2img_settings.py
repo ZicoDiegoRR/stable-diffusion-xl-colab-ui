@@ -18,7 +18,30 @@ class Img2ImgSettings:
             widgets.HTML(value="For safety reason, your tokens <b>won't be saved</b>.")
         ])
 
-        def validation(self, value):
+    def return_widgets(self):
+        return [
+            self.prompt_widget,
+            self.negative_prompt_widget,
+            self.model_widget,
+            self.width_slider,
+            self.height_slider,
+            self.steps_slider,
+            self.scale_slider,
+            self.clip_skip_slider,
+            self.scheduler_dropdown,
+            self.karras_bool,
+            self.vpred_bool,
+            self.sgmuniform_bool,
+            self.res_betas_zero_snr,
+            self.vae_link_widget,
+            self.vae_config,
+            self.freeze_widget,
+            self.reference_image_link_widget,
+            self.denoising_strength_slider
+        ]
+    
+    # Validate the path to check if it's exist
+    def validation(self, value):
         root_dir_list = os.listdir("/content")
         for folder in root_dir_list:
             file_in_folder = os.lisdir(f"/content/{folder}")
