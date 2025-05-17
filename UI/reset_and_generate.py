@@ -5,7 +5,7 @@ class ResetGenerate:
     def reset_evaluate(self, result): # Function to set every parameter into the default value
         if result == "yes":
             cfg_reset = param_default()
-            every_widgets = all_widgets.import()
+            every_widgets = all_widgets.import_widgets()
         for :
             every_widgets.children[i].value = cfg_reset[i]
         self.reset_display.children = [self.reset_button]
