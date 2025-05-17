@@ -48,8 +48,10 @@ class ControlNetSettings:
             self.scheduler_settings.children = [self.scheduler_dropdown, self.karras_bool, self.vpred_bool, self.sgmuniform_bool, self.res_betas_zero_snr, widgets.HTML(value="Rescaling the betas to have zero terminal SNR helps to achieve vibrant color, but not necessary.")]
         else:
             self.scheduler_settings.children = [self.scheduler_dropdown]
+    # ________________________________________________________________________________________________________________________________________________________
 
-    def controlnet_preset_ref(self, value):
+    # Parent
+    def controlnet_preset_ref(self, value): # Function to return values based on the dropdown values below "Upload"
         if value == "Last Generated Text2Img":
             return ""
         elif value == "Last Generated ControlNet":
@@ -94,6 +96,17 @@ class ControlNetSettings:
         else:
             self.openpose_settings.children = tuple(controlnet_children)
 
+    def dropdown_selector_upon_starting(self, value):
+        if value == "":
+            return self.controlnet_dropdown_choice[2]
+        elif value == "controlnet": 
+            return self.controlnet_dropdown_choice[3] 
+        elif value == "inpaint": 
+            return self.controlnet_dropdown_choice[4] 
+        else: 
+            return self.controlnet_dropdown_choice[0]
+    # ________________________________________________________________________________________________________________________________________________________
+
     # Canny
     def canny_popup(self, change): # Function to display canny settings if true
         if change["new"]:
@@ -104,7 +117,7 @@ class ControlNetSettings:
     def canny_dropdown_handler(self, change): # Function to attach the canny dropdown to the controlnet dropdown handler
         self.controlnet_dropdown_handler("canny", change["new"])
 
-    def canny_upload_handler(change): # Function to load the path of the uploaded image to the image link
+    def canny_upload_handler(self, change): # Function to load the path of the uploaded image to the image link
         os.makedirs("/content/canny", exist_ok=True)
         for file_info in self.canny_upload.value.items():
             canny_uploaded_image = file_info[1]["content"]
@@ -123,7 +136,7 @@ class ControlNetSettings:
     def depthmap_dropdown_handler(self, change): # Function to attach the canny dropdown to the controlnet dropdown handler
         self.controlnet_dropdown_handler("depth", change["new"])
 
-    def depthmap_upload_handler(change): # Function to load the path of the uploaded image to the image link
+    def depthmap_upload_handler(self, change): # Function to load the path of the uploaded image to the image link
         os.makedirs("/content/depthmap/", exist_ok=True)
         for file_info in self.depth_upload.value.items():
             depth_uploaded_image = file_info[1]["content"]
@@ -140,18 +153,16 @@ class ControlNetSettings:
           else:
             self.openpose_settings.children = [self.openpose_toggle]
 
-def openpose_dropdown_handler(change): # Function to attach the canny dropdown to the controlnet dropdown handler
-  controlnet_dropdown_handler("openpose", change["new"])
+    def openpose_dropdown_handler(self, change): # Function to attach the canny dropdown to the controlnet dropdown handler
+        self.controlnet_dropdown_handler("openpose", change["new"])
 
-def openpose_upload_handler(change): # Function to load the path of the uploaded image to the image link
-  print(openpose_upload.value)
-  if not os.path.exists("/content/openpose/"):
-    os.mkdir("/content/openpose/")
-  for file_info in openpose_upload.value.items():
-    openpose_uploaded_image = file_info[1]["content"]
-    with open("/content/openpose/temp.png", "wb") as up:
-      up.write(openpose_uploaded_image)
-  openpose_link_widget.value = "/content/openpose/temp.png"
+    def openpose_upload_handler(self, change): # Function to load the path of the uploaded image to the image link
+        os.makedirs("/content/openpose", exist_ok=True)
+        for file_info in self.openpose_upload.value.items():
+            openpose_uploaded_image = file_info[1]["content"]
+            with open("/content/openpose/temp.png", "wb") as up:
+                up.write(openpose_uploaded_image)
+            self.openpose_link_widget.value = "/content/openpose/temp.png"
     # ________________________________________________________________________________________________________________________________________________________
     # Initialize widgets creation
     def __init__(self, cfg, ideas_line):
@@ -211,53 +222,52 @@ def openpose_upload_handler(change): # Function to load the path of the uploaded
 
         self.freeze_widget = widgets.Checkbox(description="Use the same seed", value=cfg[15] if cfg else False)
 
-        self.controlnet_dropdown_choice = ["Link", "Upload", "Last Generated Text2Img", "Last Generated ControlNet", "Last Generated Inpainting"]
-        
+        self.controlnet_dropdown_choice = ["Link", "Upload", "Last Generated Text2Img", "Last Generated ControlNet", "Last Generated Inpainting"]        
 
-canny_upload = widgets.FileUpload(accept="image/*", multiple=False)
-canny_link_widget = widgets.Text(value=cfg[15] if cfg and (not cfg[15].startswith("/content/canny/") or os.path.exists("/content/canny/")) else "", description="Canny Link", placeholder="Image link")
+        self.canny_upload = widgets.FileUpload(accept="image/*", multiple=False)
+        self.canny_link_widget = widgets.Text(value=cfg[16] if cfg else "", description="Canny Link", placeholder="Image link")
 
-canny_dropdown = widgets.Dropdown(options=controlnet_dropdown_choice, value=controlnet_dropdown_choice[2] if canny_link_widget.value == "" else controlnet_dropdown_choice[3] if canny_link_widget.value == "controlnet" else controlnet_dropdown_choice[4] if canny_link_widget.value == "inpaint" else controlnet_dropdown_choice[0], disabled=False, description="Reference Image")
-canny_min_slider = widgets.IntSlider(min=10, max=500, step=5, value=cfg[13] if cfg else 100, description="Min Threshold")
-canny_max_slider = widgets.IntSlider(min=100, max=750, step=5, value=cfg[14] if cfg else 240, description="Max Threshold")
-canny_toggle = widgets.Checkbox(value=cfg[16] if cfg else False, description="Enable Canny")
-canny_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[17] if cfg else 0.7, description="Canny Strength")
-canny_settings = widgets.VBox([canny_toggle])
+        self.canny_dropdown = widgets.Dropdown(options=self.controlnet_dropdown_choice, value=self.dropdown_selector_upon_starting(canny_link_widget.value), disabled=False, description="Reference Image")
+        self.canny_min_slider = widgets.IntSlider(min=10, max=500, step=5, value=cfg[18] if cfg else 100, description="Min Threshold")
+        self.canny_max_slider = widgets.IntSlider(min=100, max=750, step=5, value=cfg[19] if cfg else 240, description="Max Threshold")
+        self.canny_toggle = widgets.Checkbox(value=cfg[20] if cfg else False, description="Enable Canny")
+        self.canny_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[21] if cfg else 0.7, description="Canny Strength")
+        self.canny_settings = widgets.VBox([self.canny_toggle])
 
-canny_popup({"new": canny_toggle.value})
-canny_upload.observe(canny_upload_handler, names="value")
+        self.canny_popup({"new": self.canny_toggle.value})
+        self.canny_upload.observe(self.canny_upload_handler, names="value")
 
-depth_upload = widgets.FileUpload(accept="image/*", multiple=False)
-depth_map_link_widget = widgets.Text(value=cfg[18] if cfg and (not cfg[18].startswith("/content/depthmap/") or os.path.exists("/content/depthmap/")) else "", description="DepthMap Link", placeholder="Image link")
+        self.depth_upload = widgets.FileUpload(accept="image/*", multiple=False)
+        self.depth_map_link_widget = widgets.Text(value=cfg[22] if cfg else "", description="DepthMap Link", placeholder="Image link")
 
-depthmap_dropdown = widgets.Dropdown(options=controlnet_dropdown_choice, value=controlnet_dropdown_choice[2] if depth_map_link_widget.value == "" else controlnet_dropdown_choice[3] if depth_map_link_widget.value == "controlnet" else controlnet_dropdown_choice[4] if depth_map_link_widget.value == "inpaint" else controlnet_dropdown_choice[0], disabled=False, description="Reference Image")
-depth_map_toggle = widgets.Checkbox(value=cfg[19] if cfg else False, description="Enable Depth Map")
-depth_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[20] if cfg else 0.7, description="Depth Strength")
-depth_settings = widgets.VBox([depth_map_toggle])
+        self.depthmap_dropdown = widgets.Dropdown(options=self.controlnet_dropdown_choice, value=self.dropdown_selector_upon_starting(depth_map_link_widget.value), disabled=False, description="Reference Image")
+        self.depth_map_toggle = widgets.Checkbox(value=cfg[23] if cfg else False, description="Enable Depth Map")
+        self.depth_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[24] if cfg else 0.7, description="Depth Strength")
+        self.depth_settings = widgets.VBox([self.depth_map_toggle])
 
-depthmap_popup({"new": depth_map_toggle.value})
-depth_upload.observe(depthmap_upload_handler, names="value")
+        self.depthmap_popup({"new": self.depth_map_toggle.value})
+        self.depth_upload.observe(self.depthmap_upload_handler, names="value")
 
-openpose_upload = widgets.FileUpload(accept="image/*", multiple=False)
-openpose_link_widget = widgets.Text(value=cfg[21] if cfg and (not cfg[21].startswith("/content/openpose/") or os.path.exists("/content/openpose/")) else "", description="OpenPose Link", placeholder="Image link")
+        self.openpose_upload = widgets.FileUpload(accept="image/*", multiple=False)
+        self.openpose_link_widget = widgets.Text(value=cfg[25] if cfg else "", description="OpenPose Link", placeholder="Image link")
 
-openpose_dropdown = widgets.Dropdown(options=controlnet_dropdown_choice, value=controlnet_dropdown_choice[2] if openpose_link_widget.value == "" else controlnet_dropdown_choice[3] if openpose_link_widget.value == "controlnet" else controlnet_dropdown_choice[4] if openpose_link_widget.value == "inpaint" else controlnet_dropdown_choice[0], disabled=False, description="Reference Image")
-openpose_toggle = widgets.Checkbox(value=cfg[22] if cfg else False, description="Enable OpenPose")
-openpose_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[23] if cfg else 0.7, description="OpenPose Strength")
-openpose_settings = widgets.VBox([openpose_toggle])
+        self.openpose_dropdown = widgets.Dropdown(options=self.controlnet_dropdown_choice, value=self.dropdown_selector_upon_starting(openpose_link_widget.value), disabled=False, description="Reference Image")
+        self.openpose_toggle = widgets.Checkbox(value=cfg[26] if cfg else False, description="Enable OpenPose")
+        self.openpose_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[27] if cfg else 0.7, description="OpenPose Strength")
+        self.openpose_settings = widgets.VBox([self.openpose_toggle])
 
-openpose_popup({"new": openpose_toggle.value})
-openpose_upload.observe(openpose_upload_handler, names="value")
+        self.openpose_popup({"new": self.openpose_toggle.value})
+        self.openpose_upload.observe(self.openpose_upload_handler, names="value")
 
-canny_dropdown_handler({"new": canny_dropdown.value})
-depthmap_dropdown_handler({"new": depthmap_dropdown.value})
-openpose_dropdown_handler({"new": openpose_dropdown.value})
+        self.canny_dropdown_handler({"new": self.canny_dropdown.value})
+        self.depthmap_dropdown_handler({"new": self.depthmap_dropdown.value})
+        self.openpose_dropdown_handler({"new": self.openpose_dropdown.value})
 
-canny_dropdown.observe(canny_dropdown_handler, names="value")
-depthmap_dropdown.observe(depthmap_dropdown_handler, names="value")
-openpose_dropdown.observe(openpose_dropdown_handler, names="value")
+        self.canny_dropdown.observe(self.canny_dropdown_handler, names="value")
+        self.depthmap_dropdown.observe(self.depthmap_dropdown_handler, names="value")
+        self.openpose_dropdown.observe(self.openpose_dropdown_handler, names="value")
 
-canny_toggle.observe(canny_popup, names="value")
-depth_map_toggle.observe(depthmap_popup, names="value")
-openpose_toggle.observe(openpose_popup, names="value")
+        self.canny_toggle.observe(self.canny_popup, names="value")
+        self.depth_map_toggle.observe(self.depthmap_popup, names="value")
+        self.openpose_toggle.observe(self.openpose_popup, names="value")
 
