@@ -16,9 +16,19 @@ class Text2ImgSettings:
             widgets.HTML(value="For safety reason, your tokens <b>won't be saved</b>.")
         ])
 
+    def validation(self, value):
+        root_dir_list = os.listdir("/content")
+        for folder in root_dir_list:
+            file_in_folder = os.lisdir(f"/content/{folder}")
+            for file in file_in_folder:
+                if value in file:
+                    return True
+        return False
+                    
+        
     # Check if the path is link
     def check_if_link(self, value):
-        return value.startswith("https://") or value.startswith("http://") or value.startswith("/content/gdrive/MyDrive")
+        return value.startswith("https://") or value.startswith("http://") or value.startswith("/content/gdrive/MyDrive") or self.validation(value)
         
     # Collect all values from the widgets and turn them into a single list
     def collect_values(self):
