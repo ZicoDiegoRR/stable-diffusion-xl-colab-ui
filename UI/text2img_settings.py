@@ -15,7 +15,28 @@ class Text2ImgSettings:
             self.token_section,
             widgets.HTML(value="For safety reason, your tokens <b>won't be saved</b>.")
         ])
-                    
+        
+    # Return every widget
+    def return_widgets(self):
+        return [
+            self.prompt_widget,
+            self.negative_prompt_widget,
+            self.model_widget,
+            self.width_slider,
+            self.height_slider,
+            self.steps_slider,
+            self.scale_slider,
+            self.clip_skip_slider,
+            self.scheduler_dropdown,
+            self.karras_bool,
+            self.vpred_bool,
+            self.sgmuniform_bool,
+            self.res_betas_zero_snr,
+            self.vae_link_widget,
+            self.vae_config,
+            self.freeze_widget
+        ]
+        
     # Check if the path is link
     def check_if_link(self, value):
         return value.startswith("https://") or value.startswith("http://") or value.startswith("/content/gdrive/MyDrive") or os.path.exists(f"/content/VAE/{value}")
