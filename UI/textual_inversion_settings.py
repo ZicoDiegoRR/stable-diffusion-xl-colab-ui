@@ -9,6 +9,12 @@ class TextualInversionLoader:
 
     def wrap_settings(self):
         return self.ti_settings
+
+    def return_widgets(self):
+        return [
+            self.ti_urls_widget,
+            self.ti_tokens_widget
+        ]
     
     def check_if_link(self, value): # Function to check whether the given path is a link or a file
         return value.startswith("https://") or value.startswith("http://") or value.startswith("/content/gdrive/MyDrive") or os.path.exists(f"/content/Embeddings/{value}")
