@@ -28,7 +28,7 @@ class ESRGANWidget:
         self.warning_upscale = widgets.HTML(value="It's recommended to upscale any image with up to 1024x1024 resolution or lower to avoid high VRAM usage.")
         self.input_link = widgets.Text(placeholder="Image link or path")
         self.input_upload = widgets.FileUpload(accept="image/*", multiple=False)
-        self.ersgan_input = widgets.VBox([self.warning_upscale, widgets.VBox([self.input_link, self.input_upload])])
+        self.ersgan_input = widgets.VBox([self.warning_upscale, widgets.HBox([self.input_link, self.input_upload])])
         
         self.input_upload.observe(self.input_upload_handler, names="value")
         
