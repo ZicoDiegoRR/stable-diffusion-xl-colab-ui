@@ -28,7 +28,7 @@ class LoRALoader:
             elif i % 3 == 1:
                 if self.lora_nested_vbox.children[i - 1].value != "":
                     collected_lora_scales += (str(self.lora_nested_vbox.children[i].value) + ",")
-        return collected_lora_urls, collected_lora_scales
+        return collected_lora_urls.rstrip(","), collected_lora_scales.rstrip(",")
 
     def lora_remover(self, link, scale, remove_button): # Function to remove lora (only the widgets, not the actual file)
         lora_nested_list = list(self.lora_nested_vbox.children)
