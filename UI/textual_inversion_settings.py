@@ -18,12 +18,12 @@ class TextualInversionLoader:
             split_cfg = re.split(r"\s*,\s*", cfg)
             split_token = re.split(r"\s*,\s*", token)
             sanitized_cfg = ""
-            santized_token = ""
+            sanitized_token = ""
             for item, tag in zip(split_cfg, split_token):
                 if self.check_if_link(item):
                     sanitized_cfg += item + ","
-                    santized_token += tag + ","
-            return sanitized_cfg, santized_token
+                    sanitized_token += tag + ","
+            return sanitized_cfg, sanitized_token
         else:
             return "", ""
         
@@ -33,7 +33,7 @@ class TextualInversionLoader:
         self.ti_remove_button = widgets.Button(description="X", button_style='danger', layout=widgets.Layout(width='30px', height='30px'))
 
         self.ti_nested_vbox.children += (self.ti_url_input, self.ti_tokens_input, self.ti_remove_button,)
-        self.ti_remove_button.on_click(lambda b: ti_remover(
+        self.ti_remove_button.on_click(lambda b: self.ti_remover(
             list(self.ti_nested_vbox.children).index(self.ti_remove_button) - 2,
             list(self.ti_nested_vbox.children).index(self.ti_remove_button) - 1,
             list(self.ti_nested_vbox.children).index(self.ti_remove_button)
