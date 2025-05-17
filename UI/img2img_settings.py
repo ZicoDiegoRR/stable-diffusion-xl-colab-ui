@@ -41,7 +41,7 @@ class Img2ImgSettings:
             self.vae_link_widget.value if self.check_if_link(self.vae_link_widget.value) else "",
             self.vae_config.value if self.check_if_link(self.vae_config.value) else "",
             self.freeze_widget.value,
-            self.reference_image_link_widget.value if check_if_link(self.reference_image_link_widget.value) else "",
+            self.reference_image_link_widget.value if self.check_if_link(self.reference_image_link_widget.value) else "",
             self.denoising_strength_slider.value,
         ]
         
