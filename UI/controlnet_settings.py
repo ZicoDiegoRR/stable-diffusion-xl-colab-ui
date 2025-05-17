@@ -134,6 +134,25 @@ class ControlNetSettings:
     # ________________________________________________________________________________________________________________________________________________________
 
     # Open Pose
+    def openpose_popup(self, change):  # Function to display openpose settings if true
+        if change["new"]:
+            self.openpose_settings.children = [self.openpose_toggle, self.openpose_dropdown, self.openpose_strength_slider]
+          else:
+            self.openpose_settings.children = [self.openpose_toggle]
+
+def openpose_dropdown_handler(change): # Function to attach the canny dropdown to the controlnet dropdown handler
+  controlnet_dropdown_handler("openpose", change["new"])
+
+def openpose_upload_handler(change): # Function to load the path of the uploaded image to the image link
+  print(openpose_upload.value)
+  if not os.path.exists("/content/openpose/"):
+    os.mkdir("/content/openpose/")
+  for file_info in openpose_upload.value.items():
+    openpose_uploaded_image = file_info[1]["content"]
+    with open("/content/openpose/temp.png", "wb") as up:
+      up.write(openpose_uploaded_image)
+  openpose_link_widget.value = "/content/openpose/temp.png"
+    # ________________________________________________________________________________________________________________________________________________________
     # Initialize widgets creation
     def __init__(self, cfg, ideas_line):
         self.prompt_widget = widgets.Textarea(value=cfg[0] if cfg else "", placeholder="Enter your prompt here")
