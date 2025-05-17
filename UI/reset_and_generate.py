@@ -25,8 +25,8 @@ class ResetGenerateSettings:
             cfg_reset = param_default()
             every_widgets = all_widgets.import_widgets()
             for key, items in every_widgets.items():
-                for item, reset in zip(items, cfg_reset[key]):
-                    item.value = reset
+                for i in range(len(items)):
+                    items[i].value = cfg_reset[key][i]
         self.reset_display.children = [self.reset_button]
 
     def reset_button_click(self): # Function to show a warning when the reset parameter button is clicked
