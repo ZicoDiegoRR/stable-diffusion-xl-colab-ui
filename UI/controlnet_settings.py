@@ -18,9 +18,10 @@ class ControlNetSettings:
             widgets.HTML(value="For safety reason, your tokens <b>won't be saved</b>.")
         ])
 
-    # Cheeck if the path is link
+    # Check if the path is link
     def check_if_link(self, value):
-        return (value.startswith("https://") or value.startswith("http://")) or (value.startswith("/content/gdrive/MyDrive")) or value.count("/") == 0
+        pass_check = ["", "controlnet", "inpaint"]
+        return (value.startswith("https://") or value.startswith("http://")) or (value.startswith("/content/gdrive/MyDrive")) or value in pass_check
         
     # Collect all values from the widgets and turn them into a single list
     def collect_values(self):
