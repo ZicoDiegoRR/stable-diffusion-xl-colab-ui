@@ -2,6 +2,7 @@ This folder contains the functions of the main logic behind the generation proce
 
 - `downloader.py`: To download stuff obviously
 - `embeddings_loader.py`: To load embeddings or textual inversion
+- `generate_prompt.py`: To generate or continue the prompt.
 - `image_saver.py`: To save the generated image into your Google Drive if enabled
 - `lora_loader.py`: To add the weight of LoRAs into the model
 - `modified_inference_realesrgan.py`: To run the Real-ESRGAN image upscaling process.
