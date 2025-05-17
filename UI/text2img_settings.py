@@ -53,7 +53,7 @@ class Text2ImgSettings:
 
         self.prompt_widget.layout.width = "50%"
         self.negative_prompt_widget.layout.width = "50%"
-        self.prompt_randomize_button.on_click(lambda b: generate_prompt(self.prompt_widget.value))
+        self.prompt_randomize_button.on_click(lambda b: generate_prompt.generate(self.prompt_widget.value))
 
         self.prompts_section = widgets.HBox()
         self.prompts_section.children = [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget, widgets.HBox([self.prompt_randomize_button, self.prompt_randomize_button_label])]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])] if ideas_line else [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])]
