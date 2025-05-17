@@ -18,7 +18,7 @@ class Text2ImgSettings:
 
     # Check if the path is link
     def check_if_link(self, value):
-        return value.startswith("https://") or value.startswith("http://")
+        return value.startswith("https://") or value.startswith("http://") or value.startswith("/content/gdrive/MyDrive")
         
     # Collect all values from the widgets and turn them into a single list
     def collect_values(self):
