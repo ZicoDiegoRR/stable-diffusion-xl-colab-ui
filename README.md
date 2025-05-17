@@ -34,25 +34,26 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 ## Feature Table
 <details> <summary>Click here</summary>
   
-| Features                                                                              |
-|---------------------------------------------------------------------------------------|
-| Base pipelines (ControlNet, VAE, Inpainting, Text2Img)                                | 
-| Base adapters (LoRA, IP-Adapter)                                                      | 
-| IPyWidgets                                                                            | 
-| Saving and loading parameters                                                         | 
-| Interactive UI                                                                        | 
-| Linking widgets                                                                       | 
-| History system                                                                        | 
-| Upload images directly                                                                | 
-| Image-to-image                                                                        |
-| Textual inversion or embeddings                                                       |
-| Send images from history to Image-to-image, ControlNet, Inpainting, and/or IP-Adapter | 
-| Reset button (defaulting the parameters)                                              | 
-| Compatibility with saved parameters from previous versions                            | 
-| Preset system (saving and loading custom parameters)                                  | 
-| GPT-2 Prompt Generator                                                                | 
-| Hugging Face token integration                                                        |
-| Real-ESRGAN Image Upscaling                                                           | 
+|     | Features                                                                              |
+|-----|---------------------------------------------------------------------------------------|
+| 1.  | Base pipelines (ControlNet, VAE, Inpainting, Text2Img)                                |
+| 2.  | Base adapters (LoRA, IP-Adapter)                                                      |
+| 3.  | IPyWidgets                                                                            |
+| 4.  | Saving and loading parameters                                                         |
+| 5.  | Interactive UI                                                                        |
+| 6.  | Linking widgets                                                                       |
+| 7.  | History system                                                                        |
+| 8.  | Upload images directly                                                                |
+| 9.  | Image-to-image                                                                        |
+| 10. | Textual inversion or embeddings                                                       |
+| 11. | Send images from history to Image-to-image, ControlNet, Inpainting, and/or IP-Adapter |
+| 12. | Reset button (defaulting the parameters)                                              |
+| 13. | Compatibility with saved parameters from previous versions                            |
+| 14. | Preset system (saving and loading custom parameters)                                  |
+| 15. | GPT-2 Prompt Generator                                                                |
+| 16. | Hugging Face token integration                                                        |
+| 17. | Real-ESRGAN Image Upscaling                                                           |
+
 </details>
 
 ## Preview
