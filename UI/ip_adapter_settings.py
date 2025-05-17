@@ -13,6 +13,13 @@ class IPAdapterLoader:
             self.ip_adapter_dropdown.value
         ]
 
+    def return_widgets(self):
+        return [
+            self.ip_image_link_widget,
+            self.ip_adapter_strength_slider,
+            self.ip_adapter_dropdown
+        ]
+
     def wrap_settings(self): # Function to collect every widget into a vbox
         return self.ip_settings
 
