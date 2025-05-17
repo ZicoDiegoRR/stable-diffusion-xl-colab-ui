@@ -10,6 +10,7 @@ class ControlNetSettings:
             self.model_input_section,
             self.image_resolution_section,
             self.generation_parameter_section,
+            self.controlnet_selections,
             self.scheduler_settings,
             self.vae_section,
             self.freeze_widget,
@@ -39,7 +40,18 @@ class ControlNetSettings:
             self.res_betas_zero_snr.value,
             self.vae_link_widget.value if check_if_link(self.vae_link_widget.value) else "",
             self.vae_config.value if check_if_link(self.vae_config.value) else "",
-            self.freeze_widget.value
+            self.freeze_widget.value,
+            self.canny_link_widget.value,
+            self.canny_min_slider.value,
+            self.canny_max_slider.value,
+            self.canny_toggle.value,
+            self.canny_strength_slider.value,
+            self.depth_map_link_widget.value,
+            self.depth_map_toggle.value,
+            self.depth_strength_slider.value,
+            self.openpose_link_widget.value,
+            self.openpose_toggle.value,
+            self.openpose_strength_slider.value,
         ]
         
      # Function to show or hide scheduler booleans
@@ -271,3 +283,12 @@ class ControlNetSettings:
         self.depth_map_toggle.observe(self.depthmap_popup, names="value")
         self.openpose_toggle.observe(self.openpose_popup, names="value")
 
+        self.controlnet_selections = widgets.VBox([
+            widgets.HTML(value="<hr>"), 
+            self.canny_settings, 
+            widgets.HTML(value="<hr>"), 
+            self.depth_settings, 
+            widgets.HTML(value="<hr>"), 
+            self.openpose_settings, 
+            widgets.HTML(value="<hr>")
+        ])
