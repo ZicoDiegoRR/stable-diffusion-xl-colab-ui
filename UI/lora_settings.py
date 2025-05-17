@@ -8,6 +8,12 @@ class LoRALoader:
 
     def wrap_settings(self): # Function to collect every widget into a vbox for convenience
         return self.lora_settings
+
+    def return_widgets(self):
+        return [
+            self.lora_urls_widget,
+            self.weight_scale_widget
+        ]
         
     def lora_click(self, link, scale): # Function to add widgets after clicking the plus button
         self.lora_url_input = widgets.Text(value=link, placeholder="Input the link here", description="Direct URL")
