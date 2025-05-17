@@ -1,6 +1,13 @@
 import ipywidgets as widgets
 
 class LoRALoader:
+    def collect_values(self): # Function to return the value
+        collected_lora_urs_values, collected_lora_scale_values = self.read()
+        return [collected_lora_urs_values, collected_lora_scale_values]
+
+    def wrap_settings(self): # Function to collect every widget into a vbox for convenience
+        return self.lora_settings
+        
     def lora_click(self, link, scale): # Function to add widgets after clicking the plus button
         self.lora_url_input = widgets.Text(value=link, placeholder="Input the link here", description="Direct URL")
         self.lora_scale_input = widgets.FloatSlider(value=scale, min=-5, max=5, step=0.1, description="Weight Scale")
@@ -42,7 +49,7 @@ class LoRALoader:
 
         self.lora_add = widgets.Button(description="+", button_style='success', layout=widgets.Layout(width='30px', height='30px'))
         self.lora_nested_vbox = widgets.VBox()
-        self.lora_settings = widgets.VBox([lora_add])
+        self.lora_settings = widgets.VBox([self.lora_add])
 
         self.lora_add.on_click(lambda b: self.lora_click("", 1.0))
         self.construct(cfg)
