@@ -41,15 +41,15 @@ class ControlNetSettings:
             self.vae_link_widget.value if self.check_if_link(self.vae_link_widget.value) else "",
             self.vae_config.value if self.check_if_link(self.vae_config.value) else "",
             self.freeze_widget.value,
-            self.canny_link_widget.value if check_if_link(self.canny_link_widget.value) else "",
+            self.canny_link_widget.value if self.check_if_link(self.canny_link_widget.value) else "",
             self.canny_min_slider.value,
             self.canny_max_slider.value,
             self.canny_toggle.value,
             self.canny_strength_slider.value,
-            self.depth_map_link_widget.value if check_if_link(self.depth_map_link_widget.value) else "",
+            self.depth_map_link_widget.value if self.check_if_link(self.depth_map_link_widget.value) else "",
             self.depth_map_toggle.value,
             self.depth_strength_slider.value,
-            self.openpose_link_widget.value if check_if_link(self.openpose_link_widget.value) else "",
+            self.openpose_link_widget.value if self.check_if_link(self.openpose_link_widget.value) else "",
             self.openpose_toggle.value,
             self.openpose_strength_slider.value,
         ]
@@ -76,7 +76,7 @@ class ControlNetSettings:
         self.controlnet_upload_widgets_list = [self.canny_upload, self.depth_upload, self.openpose_upload]
 
         controlnet_type = 0 if type == "canny" else 1 if type == "depth" else 2
-        controlnet_children = list(canny_settings.children) if controlnet_type == 0 else list(depth_settings.children) if controlnet_type == 1 else list(openpose_settings.children)
+        controlnet_children = list(self.canny_settings.children) if controlnet_type == 0 else list(self.depth_settings.children) if controlnet_type == 1 else list(self.openpose_settings.children)
         if value == "Link":
             if controlnet_upload_widgets_list[controlnet_type] in controlnet_children:
                 controlnet_children.pop(2)
