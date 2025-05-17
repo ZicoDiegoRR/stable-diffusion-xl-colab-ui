@@ -1,1 +1,82 @@
+import ipywidgets as widgets
+import re
+import os
 
+class TextualInversionLoader:
+    def collect_values(self): # Function to collect values in this class
+        ti_collected_url, ti_collected_token = self.read()
+        return [ti_collected_url, ti_collected_token]
+
+    def wrap_settings(self):
+        return self.ti_settings
+    
+    def check_if_link(self, value): # Function to check whether the given path is a link or a file
+        return value.startswith("https://") or value.startswith("http://") or value.startswith("/content/gdrive/MyDrive") or os.path.exists(f"/content/Embeddings/{value}")
+        
+    def sanitize(self, cfg, token): # Function to filter out empty strings and invalid path
+        if cfg:
+            split_cfg = re.split(r"\s*,\s*", cfg)
+            split_token = re.split(r"\s*,\s*", token)
+            sanitized_cfg = ""
+            santized_token = ""
+            for item, tag in zip(split_cfg, split_token):
+                if self.check_if_link(item):
+                    sanitized_cfg += item + ","
+                    santized_token += tag + ","
+            return sanitized_cfg, santized_token
+        else:
+            return "", ""
+        
+    def ti_click(self, link, token):  # Function to add widgets after clicking the plus button
+        self.ti_url_input = widgets.Text(value=link, placeholder="Input the link here", description="Direct URL")
+        self.ti_tokens_input = widgets.Text(value=token, placeholder="Activation tag", description="Token")
+        self.ti_remove_button = widgets.Button(description="X", button_style='danger', layout=widgets.Layout(width='30px', height='30px'))
+
+        self.ti_nested_vbox.children += (self.ti_url_input, self.ti_tokens_input, self.ti_remove_button,)
+        self.ti_remove_button.on_click(lambda b: ti_remover(
+            list(self.ti_nested_vbox.children).index(self.ti_remove_button) - 2,
+            list(self.ti_nested_vbox.children).index(self.ti_remove_button) - 1,
+            list(self.ti_nested_vbox.children).index(self.ti_remove_button)
+        ))
+        self.ti_settings.children = [self.ti_tip, self.ti_add, self.ti_nested_vbox]
+
+    def read(self):  # Function to process every value into two strings to be fed into the main logic
+        collected_ti_urls = ""
+        collected_ti_tokens = ""
+        for i in range(len(self.ti_nested_vbox.children)):
+            if i % 3 == 0:
+              if self.ti_nested_vbox.children[i].value != "":
+                collected_ti_urls += (self.ti_nested_vbox.children[i].value + ",")
+            elif i % 3 == 1:
+              if self.ti_nested_vbox.children[i - 1].value != "":
+                collected_ti_tokens += (self.ti_nested_vbox.children[i].value + ",")
+        return collected_ti_urls, collected_ti_tokens
+
+    def ti_remover(self, link, token, remove_button):  # Function to remove textual inversion widgets
+        ti_nested_list = list(self.ti_nested_vbox.children)
+        ti_nested_list.pop(remove_button)
+        ti_nested_list.pop(token)
+        ti_nested_list.pop(link)
+        self.ti_nested_vbox.children = tuple(ti_nested_list)
+
+    def construct(self, cfg):  # Function to add widgets from saved parameters
+        ti_links = re.split(r"\s*,\s*", self.ti_urls_widget.value)
+        ti_tokens = re.split(r"\s*,\s*", self.ti_tokens_widget.value)
+        if len(ti_tokens) < len(ti_links):
+            for i in range(len(ti_links) - len(ti_tokens)):
+                ti_tokens.append("")
+        for embeddings in ti_links:
+            if embeddings:
+                self.ti_click(ti_links[i], ti_tokens[i])
+
+    def __init__(self, cfg):
+        sanitized_url, sanitized_token = self.sanitize(cfg[0], cfg[1])
+        self.ti_urls_widget = widgets.Text(value=sanitized_url)
+        self.ti_tokens_widget = widgets.Text(value=sanitized_token)
+
+        self.ti_add = widgets.Button(description="+", button_style='success', layout=widgets.Layout(width='30px', height='30px'))
+        self.ti_nested_vbox = widgets.VBox()
+        self.ti_tip = widgets.HTML(value="Due to the architecture, you must pass the activation tag in the Token widget. Leaving it blank will skip the embeddings from being loaded to avoid any issue.")
+        self.ti_settings = widgets.VBox([self.ti_tip, self.ti_add])
+
+        self.ti_add.on_click(lambda b: self.ti_click("", ""))
