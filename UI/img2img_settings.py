@@ -18,7 +18,7 @@ class Img2ImgSettings:
             widgets.HTML(value="For safety reason, your tokens <b>won't be saved</b>.")
         ])
 
-    # Cheeck if the path is link
+    # Check if the path is link
     def check_if_link(self, value):
         return value.startswith("https://") or value.startswith("http://")
         
