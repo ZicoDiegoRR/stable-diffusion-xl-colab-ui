@@ -1,12 +1,12 @@
-from StableDiffusionXLColabUI.UI import all_widgets, param_default
+from StableDiffusionXLColabUI.UI import all_widgets
 import ipywidgets as widgets
 
 class ResetGenerate:
     def reset_evaluate(self, result): # Function to set every parameter into the default value
         if result == "yes":
-            cfg_reset = param_default.import_values()
+            cfg_reset = param_default()
             every_widgets = all_widgets.import_widgets()
-        for :
+        for key in :
             every_widgets.children[i].value = cfg_reset[i]
         self.reset_display.children = [self.reset_button]
 
@@ -30,3 +30,21 @@ class ResetGenerate:
         self.reset_display = widgets.VBox([self.reset_button])
 
         self.reset_button.on_click(lambda b: self.reset_button_click())
+
+def param_default():
+    default_param = {
+        "text2img": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
+                     False, False, False, False, "", "", False,
+                    ],
+        "img2img": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
+                    False, False, False, False, "", "", False, "", 0.3,
+                   ],
+        "controlnet": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
+                      False, False, False, False, "", "", False, "", 100, 240, False, 
+                      0.7, "", False, 0.7, "", False, 0.7,
+                      ],
+        "inpaint": ["pre-generated text2image image", "", False, 0.9],
+        "ip": ["", 0.8, "None"],
+        "lora": ["", ""],
+        "embeddings": ["", ""],
+    }
