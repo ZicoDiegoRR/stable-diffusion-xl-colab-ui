@@ -112,27 +112,28 @@ class ControlNetSettings:
                 up.write(canny_uploaded_image)
             self.canny_link_widget.value = "/content/canny/temp.png"
     # ________________________________________________________________________________________________________________________________________________________
-    # Depth Map
     
-    def depthmap_popup(change): # Function to display depth map settings if true
-  if change["new"]:
-    depth_settings.children = [depth_map_toggle, depthmap_dropdown, depth_strength_slider]
-  else:
-    depth_settings.children = [depth_map_toggle]
+    # Depth Map
+    def depthmap_popup(self, change): # Function to display depth map settings if true
+        if change["new"]:
+            self.depth_settings.children = [self.depth_map_toggle, self.depthmap_dropdown, self.depth_strength_slider]
+        else:
+            self.depth_settings.children = [self.depth_map_toggle]
 
-def depthmap_dropdown_handler(change): # Function to attach the canny dropdown to the controlnet dropdown handler
-  controlnet_dropdown_handler("depth", change["new"])
+    def depthmap_dropdown_handler(self, change): # Function to attach the canny dropdown to the controlnet dropdown handler
+        self.controlnet_dropdown_handler("depth", change["new"])
 
-def depthmap_upload_handler(change): # Function to load the path of the uploaded image to the image link
-  if not os.path.exists("/content/depthmap/"):
-    os.mkdir("/content/depthmap/")
-  for file_info in depth_upload.value.items():
-    depth_uploaded_image = file_info[1]["content"]
-    with open("/content/depthmap/temp.png", "wb") as up:
-      up.write(depth_uploaded_image)
-  depth_map_link_widget.value = "/content/depthmap/temp.png"
+    def depthmap_upload_handler(change): # Function to load the path of the uploaded image to the image link
+        os.makedirs("/content/depthmap/", exist_ok=True)
+        for file_info in self.depth_upload.value.items():
+            depth_uploaded_image = file_info[1]["content"]
+            with open("/content/depthmap/temp.png", "wb") as up:
+                up.write(depth_uploaded_image)
+            self.depth_map_link_widget.value = "/content/depthmap/temp.png"
     
     # ________________________________________________________________________________________________________________________________________________________
+
+    # Open Pose
     # Initialize widgets creation
     def __init__(self, cfg, ideas_line):
         self.prompt_widget = widgets.Textarea(value=cfg[0] if cfg else "", placeholder="Enter your prompt here")
@@ -217,25 +218,6 @@ depth_settings = widgets.VBox([depth_map_toggle])
 
 depthmap_popup({"new": depth_map_toggle.value})
 depth_upload.observe(depthmap_upload_handler, names="value")
-
-def openpose_popup(change):  # Function to display openpose settings if true
-  if change["new"]:
-    openpose_settings.children = [openpose_toggle, openpose_dropdown, openpose_strength_slider]
-  else:
-    openpose_settings.children = [openpose_toggle]
-
-def openpose_dropdown_handler(change): # Function to attach the canny dropdown to the controlnet dropdown handler
-  controlnet_dropdown_handler("openpose", change["new"])
-
-def openpose_upload_handler(change): # Function to load the path of the uploaded image to the image link
-  print(openpose_upload.value)
-  if not os.path.exists("/content/openpose/"):
-    os.mkdir("/content/openpose/")
-  for file_info in openpose_upload.value.items():
-    openpose_uploaded_image = file_info[1]["content"]
-    with open("/content/openpose/temp.png", "wb") as up:
-      up.write(openpose_uploaded_image)
-  openpose_link_widget.value = "/content/openpose/temp.png"
 
 openpose_upload = widgets.FileUpload(accept="image/*", multiple=False)
 openpose_link_widget = widgets.Text(value=cfg[21] if cfg and (not cfg[21].startswith("/content/openpose/") or os.path.exists("/content/openpose/")) else "", description="OpenPose Link", placeholder="Image link")
