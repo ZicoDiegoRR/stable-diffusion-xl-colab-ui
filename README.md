@@ -62,6 +62,7 @@ Work in progress
 - Adding textual inversion ✅ 
 - Implementing Inpainting using IPyCanvas
 - Modularizing the code (in progress)
+- Overhauling the save system (in progress)
 - Adding Hugging Face's token integration ✅ 
 - Implementing Img2Img pipeline ✅ 
 ## License
