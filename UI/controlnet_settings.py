@@ -18,6 +18,37 @@ class ControlNetSettings:
             widgets.HTML(value="For safety reason, your tokens <b>won't be saved</b>.")
         ])
 
+    def return_widgets(self):
+        return [
+            self.prompt_widget,
+            self.negative_prompt_widget,
+            self.model_widget,
+            self.width_slider,
+            self.height_slider,
+            self.steps_slider,
+            self.scale_slider,
+            self.clip_skip_slider,
+            self.scheduler_dropdown,
+            self.karras_bool,
+            self.vpred_bool,
+            self.sgmuniform_bool,
+            self.res_betas_zero_snr,
+            self.vae_link_widget,
+            self.vae_config,
+            self.freeze_widget,
+            self.canny_link_widget,
+            self.canny_min_slider,
+            self.canny_max_slider,
+            self.canny_toggle,
+            self.canny_strength_slider,
+            self.depth_map_link_widget,
+            self.depth_map_toggle,
+            self.depth_strength_slider,
+            self.openpose_link_widget,
+            self.openpose_toggle,
+            self.openpose_strength_slider
+        ]
+
     def validation(self, value):
         root_dir_list = os.listdir("/content")
         for folder in root_dir_list:
