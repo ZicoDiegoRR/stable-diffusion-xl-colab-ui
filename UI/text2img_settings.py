@@ -90,7 +90,7 @@ class Text2ImgSettings:
 
         self.vae_link_widget = widgets.Text(value=cfg[13] if cfg else "", description="VAE", placeholder="VAE model link")
         self.vae_config = widgets.Text(value=cfg[14] if cfg else "", placeholder="VAE config link")
-        self.vae_section = widgets.HBox([vae_link_widget, vae_config])
+        self.vae_section = widgets.HBox([self.vae_link_widget, self.vae_config])
 
         self.civit_token_label = widgets.Label(value="CivitAI token:")
         self.token_widget = widgets.Text(placeholder="Avoid 401 error from CivitAI")
