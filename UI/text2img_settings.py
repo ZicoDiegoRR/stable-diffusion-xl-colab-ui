@@ -45,7 +45,6 @@ class Text2ImgSettings:
             
     # Initialize widgets creation
     def __init__(self, cfg, ideas_line):
-        self.cfg = config["text2img"]
         self.prompt_widget = widgets.Textarea(value=cfg[0] if cfg else "", placeholder="Enter your prompt here")
         self.negative_prompt_widget = widgets.Textarea(value=cfg[1] if cfg else "", placeholder="What you don't want to see?")
         self.prompt_randomize_button = widgets.Button(description="🔄", layout=widgets.Layout(width="40px"))
