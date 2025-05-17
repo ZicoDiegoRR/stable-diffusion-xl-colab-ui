@@ -1,7 +1,7 @@
 from transformers import pipeline as pipe, set_seed
 
 # Prompt wildcard function
-def generate_prompt(starting_text, gpt2_pipe, ideas_line):
+def generate(starting_text, gpt2_pipe, ideas_line):
     # Set seed
     random_seed_for_gpt2 = random.randint(100, 1000000)
     set_seed(random_seed_for_gpt2)
