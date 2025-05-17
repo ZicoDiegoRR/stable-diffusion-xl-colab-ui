@@ -1,4 +1,4 @@
-from StableDiffusionXLColabUI.UI import all_widgets
+from StableDiffusionXLColabUI.UI import all_widgets, param_default
 import ipywidgets as widgets
 
 class ResetGenerate:
