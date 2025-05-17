@@ -1,0 +1,103 @@
+import ipywidgets as widgets
+
+class Text2ImgSettings:
+    # Collect every widget into a single VBox
+    def wrap_settings(self):
+        return widgets.VBox([
+            self.prompts_section,
+            self.model_input_section,
+            self.image_resolution_section,
+            self.generation_parameter_section,
+            self.scheduler_settings,
+            self.vae_section,
+            self.freeze_widget,
+            self.token_section,
+            widgets.HTML(value="For safety reason, your tokens <b>won't be saved</b>.")
+        ])
+        
+    # Collect all values from the widgets and turn them into a single list
+    def collect_values(self):
+        return [
+            self.prompt_widget.value,
+            self.negative_prompt_widget.value,
+            self.model_widget.value,
+            self.width_slider.value,
+            self.height_slider.value,
+            self.steps_slider.value,
+            self.scale_slider.value,
+            self.clip_skip_slider.value,
+            self.scheduler_dropdown.value,
+            self.karras_bool.value,
+            self.vpred_bool.value,
+            self.sgmuniform_bool.value,
+            self.res_betas_zero_snr.value,
+            self.vae_link_widget.value if self.vae_link_widget.value.startswith("https://") or self.vae_link_widget.value.startswith("http://") else "",
+            self.vae_config.value if self.vae_config.value.startswith("https://") or self.vae_config.value.startswith("http://") else "",
+            self.freeze_widget.value
+        ]
+        
+     # Function to show or hide scheduler booleans
+    def scheduler_dropdown_handler(self, change):
+        if change["new"] != "Default (defaulting to the model)":
+            self.scheduler_settings.children = [self.scheduler_dropdown, self.karras_bool, self.vpred_bool, self.sgmuniform_bool, self.res_betas_zero_snr, widgets.HTML(value="Rescaling the betas to have zero terminal SNR helps to achieve vibrant color, but not necessary.")]
+        else:
+            self.scheduler_settings.children = [self.scheduler_dropdown]
+            
+    # Initialize widgets creation
+    def __init__(self, cfg, ideas_line):
+        self.cfg = config["text2img"]
+        self.prompt_widget = widgets.Textarea(value=cfg[0] if cfg else "", placeholder="Enter your prompt here")
+        self.negative_prompt_widget = widgets.Textarea(value=cfg[1] if cfg else "", placeholder="What you don't want to see?")
+        self.prompt_randomize_button = widgets.Button(description="🔄", layout=widgets.Layout(width="40px"))
+        self.prompt_randomize_button_label = widgets.Label(value="Randomize or continue your prompt with GPT-2")
+
+        self.prompt_widget.layout.width = "50%"
+        self.negative_prompt_widget.layout.width = "50%"
+        self.prompt_randomize_button.on_click(lambda b: generate_prompt(self.prompt_widget.value))
+
+        self.prompts_section = widgets.HBox()
+        self.prompts_section.children = [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget, widgets.HBox([self.prompt_randomize_button, self.prompt_randomize_button_label])]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])] if ideas_line else [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])]
+
+        self.model_widget = widgets.Text(value=cfg[2] if cfg else "", placeholder="HF's repository or direct URL")
+        self.model_input_section = widgets.HBox([widgets.Label(value="Model link"), self.model_widget])
+
+        self.width_slider = widgets.IntSlider(min=512, max=1536, step=64, value=cfg[3] if cfg else 1024, description="Width")
+        self.height_slider = widgets.IntSlider(min=512, max=1536, step=64, value=cfg[4] if cfg else 1024, description="Height")
+        self.image_resolution_section = widgets.HBox([self.width_slider, self.height_slider])
+
+        self.steps_slider = widgets.IntText(value=cfg[5] if cfg else 12, description="Steps")
+        self.scale_slider = widgets.FloatSlider(min=1, max=12, step=0.1, value=cfg[6] if cfg else 6, description="Scale")
+        self.clip_skip_slider = widgets.IntSlider(min=0, max=12, step=1, value=cfg[7] if cfg else 2, description="Clip Skip")
+        self.generation_parameter_section = widgets.VBox([self.steps_slider, widgets.HBox([self.scale_slider, self.clip_skip_slider])])
+
+        self.scheduler_dropdown = widgets.Dropdown(
+            options=[
+                "Default (defaulting to the model)", "DPM++ 2M", "DPM++ 2M SDE",
+                "DPM++ SDE", "DPM2", "DDPM",
+                "DPM2 a", "DDIM", "PNDM", "Euler", "Euler a", "Heun", "LMS",
+                "DEIS", "UniPC"
+            ],
+            value=cfg[8] if cfg else "Default (defaulting to the model)",
+            description="Scheduler",
+        )
+        self.karras_bool = widgets.Checkbox(value=cfg[9] if cfg else False, description="Enable Karras")
+        self.vpred_bool = widgets.Checkbox(value=cfg[10] if cfg else False, description="Enable V-prediction")
+        self.sgmuniform_bool = widgets.Checkbox(value=cfg[11] if cfg else False, description="Enable SGMUniform")
+        self.res_betas_zero_snr = widgets.Checkbox(value=cfg[12] if cfg else False, description="Rescale beta zero SNR")
+        self.scheduler_settings = widgets.VBox([self.scheduler_dropdown])
+
+        self.scheduler_dropdown.observe(self.scheduler_dropdown_handler, names="value")
+        self.scheduler_dropdown_handler({"new": self.scheduler_dropdown.value})
+
+        self.vae_link_widget = widgets.Text(value=cfg[13] if cfg else "", description="VAE", placeholder="VAE model link")
+        self.vae_config = widgets.Text(value=cfg[14] if cfg else "", placeholder="VAE config link")
+        self.vae_section = widgets.HBox([vae_link_widget, vae_config])
+
+        self.civit_token_label = widgets.Label(value="CivitAI token:")
+        self.token_widget = widgets.Text(placeholder="Avoid 401 error from CivitAI")
+        
+        self.hf_token_label = widgets.Label(value="Hugging Face token:")
+        self.hf_token_widget = widgets.Text(placeholder="Avoid 401 error from HF")
+        self.token_section = widgets.HBox([widgets.VBox([self.civit_token_label, self.token_widget]), widgets.VBox([self.hf_token_label, self.hf_token_widget])])
+
+        self.freeze_widget = widgets.Checkbox(description="Use the same seed", value=cfg[15] if cfg else False)
