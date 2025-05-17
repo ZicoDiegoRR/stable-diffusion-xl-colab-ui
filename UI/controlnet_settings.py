@@ -20,7 +20,7 @@ class ControlNetSettings:
 
     # Cheeck if the path is link
     def check_if_link(self, value):
-        return value.startswith("https://") or value.startswith("http://")
+        return (value.startswith("https://") or value.startswith("http://")) or (value.startswith("/content/gdrive/MyDrive")) or value.count("/") == 0
         
     # Collect all values from the widgets and turn them into a single list
     def collect_values(self):
@@ -38,18 +38,18 @@ class ControlNetSettings:
             self.vpred_bool.value,
             self.sgmuniform_bool.value,
             self.res_betas_zero_snr.value,
-            self.vae_link_widget.value if check_if_link(self.vae_link_widget.value) else "",
-            self.vae_config.value if check_if_link(self.vae_config.value) else "",
+            self.vae_link_widget.value if self.check_if_link(self.vae_link_widget.value) else "",
+            self.vae_config.value if self.check_if_link(self.vae_config.value) else "",
             self.freeze_widget.value,
-            self.canny_link_widget.value,
+            self.canny_link_widget.value if check_if_link(self.canny_link_widget.value) else "",
             self.canny_min_slider.value,
             self.canny_max_slider.value,
             self.canny_toggle.value,
             self.canny_strength_slider.value,
-            self.depth_map_link_widget.value,
+            self.depth_map_link_widget.value if check_if_link(self.depth_map_link_widget.value) else "",
             self.depth_map_toggle.value,
             self.depth_strength_slider.value,
-            self.openpose_link_widget.value,
+            self.openpose_link_widget.value if check_if_link(self.openpose_link_widget.value) else "",
             self.openpose_toggle.value,
             self.openpose_strength_slider.value,
         ]
@@ -72,8 +72,8 @@ class ControlNetSettings:
             return "inpaint"
 
     def controlnet_dropdown_handler(self, type, value): # Function to change the image reference based on the selected option in the dropdown
-        self.controlnet_url_widgets_list = [canny_link_widget, depth_map_link_widget, openpose_link_widget]
-        self.controlnet_upload_widgets_list = [canny_upload, depth_upload, openpose_upload]
+        self.controlnet_url_widgets_list = [self.canny_link_widget, self.depth_map_link_widget, self.openpose_link_widget]
+        self.controlnet_upload_widgets_list = [self.canny_upload, self.depth_upload, self.openpose_upload]
 
         controlnet_type = 0 if type == "canny" else 1 if type == "depth" else 2
         controlnet_children = list(canny_settings.children) if controlnet_type == 0 else list(depth_settings.children) if controlnet_type == 1 else list(openpose_settings.children)
@@ -162,7 +162,7 @@ class ControlNetSettings:
     def openpose_popup(self, change):  # Function to display openpose settings if true
         if change["new"]:
             self.openpose_settings.children = [self.openpose_toggle, self.openpose_dropdown, self.openpose_strength_slider]
-          else:
+        else:
             self.openpose_settings.children = [self.openpose_toggle]
 
     def openpose_dropdown_handler(self, change): # Function to attach the canny dropdown to the controlnet dropdown handler
