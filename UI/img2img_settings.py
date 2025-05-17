@@ -54,6 +54,7 @@ class Img2ImgSettings:
 
     # Function to handle image upload
     def reference_image_upload_handler(self, change):
+        os.makedirs("/content/img2img/", exist_ok=True)
         for file_info in self.reference_image_upload_widget.value.items():
             ref_uploaded_image = file_info[1]["content"]
             with open("/content/img2img/temp.png", "wb") as up:
