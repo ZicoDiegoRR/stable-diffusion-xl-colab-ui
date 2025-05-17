@@ -15,6 +15,10 @@ class Text2ImgSettings:
             self.token_section,
             widgets.HTML(value="For safety reason, your tokens <b>won't be saved</b>.")
         ])
+
+    # Cheeck if the path is link
+    def check_if_link(self, value):
+        return value.startswith("https://") or value.startswith("http://")
         
     # Collect all values from the widgets and turn them into a single list
     def collect_values(self):
@@ -32,8 +36,8 @@ class Text2ImgSettings:
             self.vpred_bool.value,
             self.sgmuniform_bool.value,
             self.res_betas_zero_snr.value,
-            self.vae_link_widget.value if self.vae_link_widget.value.startswith("https://") or self.vae_link_widget.value.startswith("http://") else "",
-            self.vae_config.value if self.vae_config.value.startswith("https://") or self.vae_config.value.startswith("http://") else "",
+            self.vae_link_widget.value if check_if_link(self.vae_link_widget.value) else "",
+            self.vae_config.value if check_if_link(self.vae_config.value) else "",
             self.freeze_widget.value
         ]
         
