@@ -23,7 +23,7 @@ class TextualInversionLoader:
                 if self.check_if_link(item):
                     sanitized_cfg += item + ","
                     sanitized_token += tag + ","
-            return sanitized_cfg, sanitized_token
+            return sanitized_cfg.rstrip(","), sanitized_token.rstrip(",")
         else:
             return "", ""
         
@@ -50,7 +50,7 @@ class TextualInversionLoader:
             elif i % 3 == 1:
               if self.ti_nested_vbox.children[i - 1].value != "":
                 collected_ti_tokens += (self.ti_nested_vbox.children[i].value + ",")
-        return collected_ti_urls, collected_ti_tokens
+        return collected_ti_urls.rstrip(","), collected_ti_tokens.rstrip(",")
 
     def ti_remover(self, link, token, remove_button):  # Function to remove textual inversion widgets
         ti_nested_list = list(self.ti_nested_vbox.children)
@@ -65,7 +65,7 @@ class TextualInversionLoader:
         if len(ti_tokens) < len(ti_links):
             for i in range(len(ti_links) - len(ti_tokens)):
                 ti_tokens.append("")
-        for embeddings in ti_links:
+        for i, embeddings in enumerate(ti_links):
             if embeddings:
                 self.ti_click(ti_links[i], ti_tokens[i])
 
