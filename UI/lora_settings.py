@@ -1,1 +1,48 @@
+import ipywidgets as widgets
 
+class LoRALoader:
+    def lora_click(self, link, scale): # Function to add widgets after clicking the plus button
+        self.lora_url_input = widgets.Text(value=link, placeholder="Input the link here", description="Direct URL")
+        self.lora_scale_input = widgets.FloatSlider(value=scale, min=-5, max=5, step=0.1, description="Weight Scale")
+        self.lora_remove_button = widgets.Button(description="X", button_style='danger', layout=widgets.Layout(width='30px', height='30px'))
+
+        self.lora_nested_vbox.children += (self.lora_url_input, self.lora_scale_input, self.lora_remove_button,)
+        self.lora_remove_button.on_click(lambda b: self.lora_remover(list(self.lora_nested_vbox.children).index(self.lora_remove_button) - 2, list(self.lora_nested_vbox.children).index(self.lora_remove_button) - 1, list(self.lora_nested_vbox.children).index(self.lora_remove_button)))
+        self.lora_settings.children = [self.lora_add, self.lora_nested_vbox]
+
+    def read(self): # Function to process every value from the widgets into two strings to be fed into the main logic 
+        collected_lora_urls = ""
+        collected_lora_scales = ""
+        for i in range(len(self.lora_nested_vbox.children)):
+            if i % 3 == 0:
+                if self.lora_nested_vbox.children[i].value != "":
+                    collected_lora_urls += (self.lora_nested_vbox.children[i].value + ",")
+            elif i % 3 == 1:
+                if self.lora_nested_vbox.children[i - 1].value != "":
+                    collected_lora_scales += (str(self.lora_nested_vbox.children[i].value) + ",")
+        return collected_lora_urls, collected_lora_scales
+
+    def lora_remover(self, link, scale, remove_button): # Function to remove lora (only the widgets, not the actual file)
+        lora_nested_list = list(self.lora_nested_vbox.children)
+        lora_nested_list.pop(remove_button)
+        lora_nested_list.pop(scale)
+        lora_nested_list.pop(link)
+        self.lora_nested_vbox.children = tuple(lora_nested_list)
+
+    def construct(self, cfg): # Function to add widgets based on pre-existing URLs from the saved parameter
+        lora_links = re.split(r"\s*,\s*", self.lora_urls_widget.value)
+        lora_scales = re.split(r"\s*,\s*", self.weight_scale_widget.value)
+        for lora, scale in zip(lora_links, lora_scales):
+            if lora:
+                self.lora_click(lora, scale)
+
+    def __init__(self, cfg):
+        self.lora_urls_widget = widgets.Text(value=cfg[1] if cfg else "")
+        self.weight_scale_widget = widgets.Text(value=cfg[2] if cfg else "")
+
+        self.lora_add = widgets.Button(description="+", button_style='success', layout=widgets.Layout(width='30px', height='30px'))
+        self.lora_nested_vbox = widgets.VBox()
+        self.lora_settings = widgets.VBox([lora_add])
+
+        self.lora_add.on_click(lambda b: self.lora_click("", 1.0))
+        self.construct(cfg)
