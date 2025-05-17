@@ -1,4 +1,5 @@
 import ipywidgets as widgets
+import re
 
 class LoRALoader:
     def collect_values(self): # Function to return the value
@@ -41,7 +42,7 @@ class LoRALoader:
         lora_scales = re.split(r"\s*,\s*", self.weight_scale_widget.value)
         for lora, scale in zip(lora_links, lora_scales):
             if lora:
-                self.lora_click(lora, scale)
+                self.lora_click(lora, float(scale))
 
     def __init__(self, cfg):
         self.lora_urls_widget = widgets.Text(value=cfg[1] if cfg else "")
