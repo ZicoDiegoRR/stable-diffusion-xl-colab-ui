@@ -19,4 +19,15 @@ def import_widgets(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         "embeddings": embeddings.return_widgets(),
     }
     return widgets_dictionary
+
+def import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
+    values_dictionary = {
+        "text2img": text2img.collect_values(),
+        "img2img": img2img.collect_values(),
+        "controlnet": controlnet.collect_values(),
+        "inpaint": inpaint.collect_values(),
+        "ip": ip.collect_values(),
+        "lora": lora.collect_values(),
+        "embeddings": embeddings.collect_values(),
+    }
   
