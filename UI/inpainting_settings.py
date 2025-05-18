@@ -35,7 +35,7 @@ class InpaintingSettings:
             value=cfg[0] if cfg else "pre-generated text2image image",
             description="Inpainting Image",
             ensure_option=False
-    )
-    self.mask_image_widget = widgets.Text(value=cfg[1] if cfg else "", description="Mask Image", placeholder="Image link")
-    self.inpainting_toggle = widgets.Checkbox(value=cfg[2] if cfg else False, description="Enable Inpainting")
-    self.inpainting_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.01, value=cfg[3] if cfg else 0.9, description="Inpainting Strength")
+        )
+        self.mask_image_widget = widgets.Text(value=cfg[1] if cfg else "", description="Mask Image", placeholder="Image link")
+        self.inpainting_toggle = widgets.Checkbox(value=cfg[2] if cfg else False, description="Enable Inpainting")
+        self.inpainting_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.01, value=cfg[3] if cfg else 0.9, description="Inpainting Strength")
