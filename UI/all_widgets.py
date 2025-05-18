@@ -30,4 +30,5 @@ def import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
         "lora": lora.collect_values(),
         "embeddings": embeddings.collect_values(),
     }
+    return values_dictionary
   
