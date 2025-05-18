@@ -1,53 +1,60 @@
+from StableDiffusionXLColabUI.UI import all_widgets
 import ipywidgets as widgets
+import json
+import time
+import os
 
 class PresetSystem:
+    def save_param(self, path, param):
+        with open(path, "w") as file:
+            json.dump(param, file)
+            
     def save_warning_evaluate(self, result, name):
         if result == "override":
-            self.lora_urls_widget.value, self.weight_scale_widget.value = lora_reader()
-            self.ti_urls_widget.value, self.ti_tokens_widget.value = ti_reader()
-            save_params = self.param_constructor()
-    save_param(f"{base_path}/Saved Parameters/{name}.json", save_params)
-    load_preset_selection_dropdown.options = list_all_saved_preset()
-    rename_preset_selection_dropdown.options = list_all_saved_preset()
-    delete_preset_selection_dropdown.options = list_all_saved_preset()
+            save_params = all_widgets.import_values()
+            self.save_param(f"{base_path}/Saved Parameters/{name}.json", save_params)
+            self.load_preset_selection_dropdown.options = self.list_all_saved_preset()
+            self.rename_preset_selection_dropdown.options = self.list_all_saved_preset()
+            self.delete_preset_selection_dropdown.options = self.list_all_saved_preset()
 
-  save_preset_display.children = [save_preset_name_widget, save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")] if result != "override" else [widgets.HTML(value=f"Succesfully saved the current parameters as {name}.json in '{base_path}/Saved Parameters' folder."), save_preset_name_widget, save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")]
-  save_preset_button._click_handlers.callbacks.clear()
-  save_preset_button.on_click(lambda b: save_preset_on_click(save_preset_name_widget.value))
+            self.save_preset_display.children = [
+                self.save_preset_name_widget, self.save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.") 
+            ] if result != "override" else [
+                widgets.HTML(value=f"Succesfully saved the current parameters as {name}.json in '{base_path}/Saved Parameters' folder."), self.save_preset_name_widget, self.save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")
+            ]
+            self.save_preset_button._click_handlers.callbacks.clear()
+            self.save_preset_button.on_click(lambda b: self.save_preset_on_click(self.save_preset_name_widget.value))
 
-def save_warning_if_preset_exists(name):
-  save_warning_back_button = widgets.Button(description="Back")
-  save_warning_back_button._click_handlers.callbacks.clear()
+    def save_warning_if_preset_exists(self, name):
+        self.save_warning_back_button._click_handlers.callbacks.clear()
 
-  save_preset_display.children = [widgets.HTML(value=f"<span style='color: orange;'>Warning:</span> {name}.json already exists. Saving the current parameters with the same name will overwrite the original saved parameters. Do you wish to continue?"), save_preset_name_widget, widgets.HBox([save_preset_button, save_warning_back_button])]
-  save_warning_back_button.on_click(lambda b: save_warning_evaluate("back", name))
+        self.save_preset_display.children = [widgets.HTML(value=f"<span style='color: orange;'>Warning:</span> {name}.json already exists. Saving the current parameters with the same name will overwrite the original saved parameters. Do you wish to continue?"), self.save_preset_name_widget, widgets.HBox([self.save_preset_button, self.save_warning_back_button])]
+        self.save_warning_back_button.on_click(lambda b: self.save_warning_evaluate("back", name))
 
-  save_preset_button._click_handlers.callbacks.clear()
-  save_preset_button.on_click(lambda b: save_warning_evaluate("override", name))
+        self.save_preset_button._click_handlers.callbacks.clear()
+        self.save_preset_button.on_click(lambda b: self.save_warning_evaluate("override", name))
 
-def save_preset_on_click(name):
-  if name and name not in list_all_saved_preset():
-    lora_urls_widget.value, weight_scale_widget.value = lora_reader()
-    ti_urls_widget.value, ti_tokens_widget.value = ti_reader()
-    save_params = param_constructor()
-    save_param(f"{base_path}/Saved Parameters/{name}.json", save_params)
-    save_preset_display.children = [widgets.HTML(value=f"Succesfully saved the current parameters as {name}.json in {base_path}/Saved Parameters folder."), save_preset_name_widget, save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")]
-    load_preset_selection_dropdown.options = list_all_saved_preset()
-    rename_preset_selection_dropdown.options = list_all_saved_preset()
-    delete_preset_selection_dropdown.options = list_all_saved_preset()
-  elif name in list_all_saved_preset():
-    save_warning_if_preset_exists(name)
-  else:
-    save_preset_display.children = [widgets.HTML(value="<span style='color: red;'>Error:</span> Name cannot be empty!"), save_preset_name_widget, save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")]
-    time.sleep(1.5)
-    save_preset_display.children = [save_preset_name_widget, save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")]
+    def save_preset_on_click(name):
+        if name and name not in self.list_all_saved_preset():
+            save_params = all_widgets.import_values()
+            self.save_param(f"{base_path}/Saved Parameters/{name}.json", save_params)
+            self.save_preset_display.children = [widgets.HTML(value=f"Succesfully saved the current parameters as {name}.json in {base_path}/Saved Parameters folder."), self.save_preset_name_widget, self.save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")]
+            self.load_preset_selection_dropdown.options = self.list_all_saved_preset()
+            self.rename_preset_selection_dropdown.options = self.list_all_saved_preset()
+            self.delete_preset_selection_dropdown.options = self.list_all_saved_preset()
+        elif name in self.list_all_saved_preset():
+            self.save_warning_if_preset_exists(name)
+        else:
+            self.save_preset_display.children = [widgets.HTML(value="<span style='color: red;'>Error:</span> Name cannot be empty!"), self.save_preset_name_widget, self.save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")]
+            time.sleep(1.5)
+            self.save_preset_display.children = [self.save_preset_name_widget, self.save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")]
 
-def list_all_saved_preset():
-  list_of_saved_parameters = [word.replace(".json" , "") for word in os.listdir(f"{base_path}/Saved Parameters/") if os.path.isfile(os.path.join(f"{base_path}/Saved Parameters/", word)) and word.endswith(".json")]
-  return list_of_saved_parameters
+    def list_all_saved_preset(self):
+        list_of_saved_parameters = [word.replace(".json" , "") for word in os.listdir(f"{base_path}/Saved Parameters/") if os.path.isfile(os.path.join(f"{base_path}/Saved Parameters/", word)) and word.endswith(".json")]
+        return list_of_saved_parameters
 
-def load_preset_on_click(name):
-  preset_cfg = load_param(os.path.join(f"{base_path}/Saved Parameters/", f"{name}.json"))
+    def load_preset_on_click(self, name):
+        preset_cfg = load_param(os.path.join(f"{base_path}/Saved Parameters/", f"{name}.json"))
   every_widgets = all_widgets()
   for i in range(len(every_widgets.children)):
     every_widgets.children[i].value = preset_cfg[i]
@@ -115,6 +122,7 @@ def delete_preset_on_click(name):
   delete_back_button.on_click(lambda b: delete_preset_evaluate("back", name))
   delete_preset_button.on_click(lambda b: delete_preset_evaluate("delete", name))
 
+save_warning_back_button = widgets.Button(description="Back")
 save_preset_button = widgets.Button(description="Save current parameters")
 save_preset_name_widget = widgets.Text(description="Name", placeholder="Preset name", value="")
 save_preset_display = widgets.VBox([save_preset_name_widget, save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")])
