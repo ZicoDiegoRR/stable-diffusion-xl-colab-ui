@@ -19,6 +19,10 @@ class PresetSystem:
         except FileNotFoundError:
             return []
 
+    # Wrapping every widget into a vbox
+    def wrap_settings(self):
+        return self.preset_tab_vbox
+
     # Resetting the dropdown options
     def reset_options(self):
         self.load_preset_selection_dropdown.options = self.list_all_saved_preset()
