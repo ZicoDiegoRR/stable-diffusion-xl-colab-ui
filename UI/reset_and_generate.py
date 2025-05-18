@@ -20,16 +20,16 @@ def param_default():
     }
 
 class ResetGenerateSettings:
-    def reset_evaluate(self, result): # Function to set every parameter into the default value
+    def reset_evaluate(self, result, text2img, img2img, controlnet, inpaint, ip, lora, embeddings): # Function to set every parameter into the default value
         if result == "yes":
             cfg_reset = param_default()
-            every_widgets = all_widgets.import_widgets()
+            every_widgets = all_widgets.import_widgets(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
             for key, items in every_widgets.items():
                 for i in range(len(items)):
                     items[i].value = cfg_reset[key][i]
         self.reset_display.children = [self.reset_button]
 
-    def reset_button_click(self): # Function to show a warning when the reset parameter button is clicked
+    def reset_button_click(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings): # Function to show a warning when the reset parameter button is clicked
         self.reset_display.children = [widgets.HTML(value="Are you sure you want to reset all parameters to default? You still can revert it back after rerunning this cell. LoRA and embeddings won't be reset."), widgets.HBox([self.reset_yes_button, self.reset_no_button])]
         self.reset_yes_button._click_handlers.callbacks.clear()
         self.reset_no_button._click_handlers.callbacks.clear()
@@ -37,7 +37,7 @@ class ResetGenerateSettings:
         self.reset_yes_button.on_click(lambda b: self.reset_evaluate("yes"))
         self.reset_no_button.on_click(lambda b: self.reset_evaluate("no"))
 
-    def __init__(self):
+    def __init__(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
         self.submit_button_widget = widgets.Button(disabled=False, button_style='', description="Generate")
         self.dont_spam = widgets.HTML(value="Please <b>don't spam</b> the generate button!")
         self.keep_generating = widgets.HTML(value="You still can generate even though the cell is complete executing.")
