@@ -55,11 +55,11 @@ class PresetSystem:
         self.save_preset_button.on_click(lambda b: self.save_warning_evaluate("override", name))
 
     # Saving and/or evaluating input
-    def save_preset_on_click(name):
+    def save_preset_on_click(self, name):
         if name and name not in self.list_all_saved_preset():
             save_params = all_widgets.import_values()
             self.save_param(f"{self.base_path}/Saved Parameters/{name}.json", save_params)
-            self.save_preset_display.children = [widgets.HTML(value=f"Succesfully saved the current parameters as {name}.json in {base_path}/Saved Parameters folder."), self.save_preset_name_widget, self.save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")]
+            self.save_preset_display.children = [widgets.HTML(value=f"Succesfully saved the current parameters as {name}.json in {self.base_path}/Saved Parameters folder."), self.save_preset_name_widget, self.save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")]
             self.reset_options()
         elif name in self.list_all_saved_preset():
             self.save_warning_if_preset_exists(name)
@@ -75,7 +75,7 @@ class PresetSystem:
 
     # Load a preset into your parameters
     def load_preset_on_click(self, name, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
-        preset_cfg = load_param(os.path.join(f"{self.base_path}/Saved Parameters/", f"{name}.json"))
+        preset_cfg = self.load_param(os.path.join(f"{self.base_path}/Saved Parameters/", f"{name}.json"))
         every_widgets = all_widgets.import_widgets(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         for key, items in every_widgets.items():
             for i in range(len(items)):
@@ -101,7 +101,7 @@ class PresetSystem:
             os.rename(os.path.join(f"{self.base_path}/Saved Parameters/", f"{old}.json"), os.path.join(f"{self.base_path}/Saved Parameters/", f"{new}.json"))
             self.reset_options()
             self.rename_preset_display.children = [widgets.HTML(value=f"Succesfully renamed {old}.json to {new}.json."), widgets.HBox([widgets.VBox([self.rename_preset_selection_dropdown_label, self.rename_preset_selection_dropdown]), widgets.VBox([self.rename_preset_widget_label, self.rename_preset_widget])]), self.rename_preset_button, widgets.HTML(value="Clicking the button will rename your selected saved preset.")]
-        elif new in list_all_saved_preset() and new and new != old:
+        elif new in self.list_all_saved_preset() and new and new != old:
             self.rename_back_button._click_handlers.callbacks.clear()
             self.rename_preset_display.children = [widgets.HTML(value=f"<span style='color: orange;'>Warning:</span> {new}.json already exists. Rename the current parameters with the same name will overwrite the original saved parameters. Do you wish to continue?"), widgets.HBox([widgets.VBox([self.rename_preset_selection_dropdown_label, self.rename_preset_selection_dropdown]), widgets.VBox([self.rename_preset_widget_label, self.rename_preset_widget])]), widgets.HBox([self.rename_preset_button, self.rename_back_button]), widgets.HTML(value="Clicking the button will rename your selected saved preset.")]
             self.rename_preset_button._click_handlers.callbacks.clear()
