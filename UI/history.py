@@ -8,10 +8,10 @@ class HistorySystem:
     def wrap_settings(self): # Function to collect every widget into a vbox
         return self.history_display_vbox
 
-    def list_images(path): # Function to list every image in a folder
+    def list_images(self, path): # Function to list every image in a folder
         if os.path.exists(path):
             return sorted([os.path.join(path, element) for element in os.listdir(path) if element.endswith(".png") and os.path.isfile(os.path.join(path, element))], key=os.path.getmtime, reverse=True)
-        else
+        else:
             return []
         
     def history_quick_reference_controlnet_selector(self, type, path, controlnet, tab): # Function to input the image as the reference for ControlNet
@@ -88,8 +88,11 @@ class HistorySystem:
         self.history_quick_reference_upscale.on_click(lambda b: self.history_quick_reference_second("upscale", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
 
     def history_button_handler(self, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): # Function to show and replace image from history upon clicking a button
-        self.history_image_widget.value = open(path, "rb").read()
-        self.history_image_modification_date.value = f"Last modification time: {time.strftime('%B, %d %Y %H:%M:%S', time.localtime(os.path.getmtime(path)))}"
+        try:
+            self.history_image_widget.value = open(path, "rb").read()
+            self.history_image_modification_date.value = f"Last modification time: {time.strftime('%B, %d %Y %H:%M:%S', time.localtime(os.path.getmtime(path)))}"
+        except Exception as e:
+            self.history_image_modification_date.value = f"An error occured when trying to read the image. Reason: {e}"
         self.history_image_display_first.children = [widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), self.history_image_widget, self.history_image_modification_date, self.history_quick_reference_button]
 
         self.history_quick_reference_button._click_handlers.callbacks.clear()
