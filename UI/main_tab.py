@@ -13,15 +13,28 @@ from StableDiffusionXLColabUI.UI import all_widgets
 import ipywidgets as widgets
 
 class UIWrapper:
+    def get_tab_index(self):
+        return self.ui_tab.selected_index
+    
     def merge_final_phase(self, init, destination, index, text2img, img2img, controlnet):
         all_widgets.merge(init, destination, text2img, img2img, controlnet)
         
     def merge_first_phase(self, index, text2img, img2img, controlnet):
         self.merge_options.children = [self.send_text2img, self.send_img2img, self.send_controlnet]
+
+    def checking_the_selected_tab_index(self, change):
+        self.tab_selected_index = change["new"]
+        if self.tab_selected_index > 3 and self.tab_selected_index!= 7:
+            self.submit_settings.layout.visibility = "hidden"
+        elif self.tab_selected_index == 7:
+            self.submit_settings.layout.visibility = "visible"
+        else:
+            self.submit_settings.layout.visibility = "visible"
+
     
     def __init__(self, cfg, ideas_line): # cfg as a dictionary
         # Creating the tab
-        self.ui = widgets.Tab()
+        self.ui_tab = widgets.Tab()
         
         # Instantiate other classes
         self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line)
@@ -59,13 +72,13 @@ class UIWrapper:
             self.lora,
             self.embeddings,
             self.upscaler,
-            self.ui,
+            self.ui_tab,
         )
         
         # Wrapping widgets for seed
         self.seed = widgets.Text(description="Seed")
         self.freeze = widgets.Checkbox(description="Use the same seed")
-        self.seed_info = widgets.Label(value="You can input -1 seed or check the 'Use the same seed' checkbox to use the same seed.")
+        self.seed_info = widgets.Label(value="You can input -1 seed or uncheck the 'Use the same seed' checkbox to use random seed.")
 
         self.seed_section = widgets.VBox([
             widgets.HBox([self.seed, self.freeze]),
@@ -94,18 +107,18 @@ class UIWrapper:
         self.merge_options = widgets.HBox([self.merge_button])
 
         # Wrapping widgets for reset and merge
-        reset_settings = reset.wrap_settings("reset")
-        reset_settings.layout = widgets.Layout(margin='0 0 0 auto')
-        self.reset_and_send_section = widgets.HBox([self.merge_options, reset_settings])
+        self.reset_settings = reset.wrap_settings("reset")
+        self.reset_settings.layout = widgets.Layout(margin='0 0 0 auto')
+        self.reset_and_send_section = widgets.HBox([self.merge_options, self.reset_settings])
 
         # Wrapping additional widgets
         self.additional_widgets = widgets.VBox([self.seed_and_token_section, self.reset_and_send_section])
 
-        # Creating the children
-        self.ui.children = [
+        # Creating the UI
+        self.ui_tab.children = [
             widgets.VBox([self.text2img.wrap_settings(), self.additional_widgets]),
             widgets.VBox([self.img2img.wrap_settings(), self.additional_widgets]),
-            widgets.VBox([self.controlnet.wrap_settings, self.additional_widgets]),
+            widgets.VBox([self.controlnet.wrap_settings(), self.additional_widgets]),
             self.inpaint.wrap_settings(),
             self.lora.wrap_settings(),
             self.embeddings.wrap_settings(),
@@ -113,3 +126,16 @@ class UIWrapper:
             self.upscale.ersgan_settings,
             self.history.wrap_settings()
         ]
+        ui_titles = ["Text-to-image ✍", "Image-to-image 🎨", "ControlNet 🖼️🔧", "Inpainting 🖼️🖌️", "LoRA Settings 📁🖌️", "Textual Inversion 📃🖌️", "IP-Adapter Settings 🖼️📝", "Image Upscaler 🖼️✨", "History 🔮📜"]
+        for i, title in enumerate(ui_titles):
+            self.ui_tab.set_title(i, title)
+
+        
+        self.submit_settings = reset.wrap_settings("submit")
+        self.preset_settings = self.preset_system.wrap_settings()
+        self.ui_bottom = widgets.HBox([self.submit_settings, self.preset_settings])
+
+        self.ui = widgets.VBox([self.ui_tab, self.ui_bottom])
+
+        self.ui_tab.observe(self.checking_the_selected_tab_index, names="selected_index")
+        self.checking_the_selected_tab_index({"name": "selected_index", "new": self.ui_tab.selected_index, "old": None, "type": "change", "owner": self.ui_tab})
