@@ -71,7 +71,7 @@ class HistorySystem:
             ui.selected_index = 7
 
     def history_quick_reference_first(self, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): # Function to use an image from history to be the reference image of Img2Img, ControlNet, or Inpainting
-        self.history_image_display_first.children = [widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), history_image_widget, history_image_modification_date, widgets.HBox([history_quick_reference_img2img, history_quick_reference_controlnet, history_quick_reference_inpainting, history_quick_reference_ip_adapter, history_quick_reference_upscale]), history_back_button_first]
+        self.history_image_display_first.children = [widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), self.history_image_widget, self.history_image_modification_date, widgets.HBox([self.history_quick_reference_img2img, self.history_quick_reference_controlnet, self.history_quick_reference_inpainting, self.history_quick_reference_ip_adapter, self.history_quick_reference_upscale]), self.history_back_button_first]
 
         self.history_back_button_first._click_handlers.callbacks.clear()
         self.history_quick_reference_img2img._click_handlers.callbacks.clear()
