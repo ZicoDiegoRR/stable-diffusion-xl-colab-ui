@@ -36,7 +36,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
   
 |     | Features                                                                              |
 |-----|---------------------------------------------------------------------------------------|
-| 1.  | Base pipelines (ControlNet, VAE, Inpainting, Text2Img)                                |
+| 1.  | Base pipelines and autoencoder (ControlNet, Inpainting, VAE, Text2Img)                                |
 | 2.  | Base adapters (LoRA, IP-Adapter)                                                      |
 | 3.  | IPyWidgets                                                                            |
 | 4.  | Saving and loading parameters                                                         |
