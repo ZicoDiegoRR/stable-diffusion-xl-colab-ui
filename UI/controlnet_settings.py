@@ -13,7 +13,6 @@ class ControlNetSettings:
             self.controlnet_selections,
             self.scheduler_settings,
             self.vae_section,
-            self.freeze_widget,
             self.token_section,
             widgets.HTML(value="For safety reason, your tokens <b>won't be saved</b>.")
         ])
@@ -35,7 +34,6 @@ class ControlNetSettings:
             self.res_betas_zero_snr,
             self.vae_link_widget,
             self.vae_config,
-            self.freeze_widget,
             self.canny_link_widget,
             self.canny_min_slider,
             self.canny_max_slider,
@@ -81,7 +79,6 @@ class ControlNetSettings:
             self.res_betas_zero_snr.value,
             self.vae_link_widget.value if self.check_if_link(self.vae_link_widget.value) else "",
             self.vae_config.value if self.check_if_link(self.vae_config.value) else "",
-            self.freeze_widget.value,
             self.canny_link_widget.value if self.check_if_link(self.canny_link_widget.value) else "",
             self.canny_min_slider.value,
             self.canny_max_slider.value,
@@ -222,35 +219,35 @@ class ControlNetSettings:
         self.controlnet_dropdown_choice = ["Link", "Upload", "Last Generated Text2Img", "Last Generated ControlNet", "Last Generated Inpainting"]        
 
         self.canny_upload = widgets.FileUpload(accept="image/*", multiple=False)
-        self.canny_link_widget = widgets.Text(value=cfg[16] if cfg else "", description="Canny Link", placeholder="Image link")
+        self.canny_link_widget = widgets.Text(value=cfg[15] if cfg else "", description="Canny Link", placeholder="Image link")
 
         self.canny_dropdown = widgets.Dropdown(options=self.controlnet_dropdown_choice, value=self.dropdown_selector_upon_starting(self.canny_link_widget.value), disabled=False, description="Reference Image")
-        self.canny_min_slider = widgets.IntSlider(min=10, max=500, step=5, value=cfg[17] if cfg else 100, description="Min Threshold")
-        self.canny_max_slider = widgets.IntSlider(min=100, max=750, step=5, value=cfg[18] if cfg else 240, description="Max Threshold")
-        self.canny_toggle = widgets.Checkbox(value=cfg[19] if cfg else False, description="Enable Canny")
-        self.canny_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[20] if cfg else 0.7, description="Canny Strength")
+        self.canny_min_slider = widgets.IntSlider(min=10, max=500, step=5, value=cfg[16] if cfg else 100, description="Min Threshold")
+        self.canny_max_slider = widgets.IntSlider(min=100, max=750, step=5, value=cfg[17] if cfg else 240, description="Max Threshold")
+        self.canny_toggle = widgets.Checkbox(value=cfg[18] if cfg else False, description="Enable Canny")
+        self.canny_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[19] if cfg else 0.7, description="Canny Strength")
         self.canny_settings = widgets.VBox([self.canny_toggle])
 
         self.canny_popup({"new": self.canny_toggle.value})
         self.canny_upload.observe(self.canny_upload_handler, names="value")
 
         self.depth_upload = widgets.FileUpload(accept="image/*", multiple=False)
-        self.depth_map_link_widget = widgets.Text(value=cfg[21] if cfg else "", description="DepthMap Link", placeholder="Image link")
+        self.depth_map_link_widget = widgets.Text(value=cfg[20] if cfg else "", description="DepthMap Link", placeholder="Image link")
 
         self.depthmap_dropdown = widgets.Dropdown(options=self.controlnet_dropdown_choice, value=self.dropdown_selector_upon_starting(self.depth_map_link_widget.value), disabled=False, description="Reference Image")
-        self.depth_map_toggle = widgets.Checkbox(value=cfg[22] if cfg else False, description="Enable Depth Map")
-        self.depth_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[23] if cfg else 0.7, description="Depth Strength")
+        self.depth_map_toggle = widgets.Checkbox(value=cfg[21] if cfg else False, description="Enable Depth Map")
+        self.depth_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[22] if cfg else 0.7, description="Depth Strength")
         self.depth_settings = widgets.VBox([self.depth_map_toggle])
 
         self.depthmap_popup({"new": self.depth_map_toggle.value})
         self.depth_upload.observe(self.depthmap_upload_handler, names="value")
 
         self.openpose_upload = widgets.FileUpload(accept="image/*", multiple=False)
-        self.openpose_link_widget = widgets.Text(value=cfg[24] if cfg else "", description="OpenPose Link", placeholder="Image link")
+        self.openpose_link_widget = widgets.Text(value=cfg[23] if cfg else "", description="OpenPose Link", placeholder="Image link")
 
         self.openpose_dropdown = widgets.Dropdown(options=self.controlnet_dropdown_choice, value=self.dropdown_selector_upon_starting(self.openpose_link_widget.value), disabled=False, description="Reference Image")
-        self.openpose_toggle = widgets.Checkbox(value=cfg[25] if cfg else False, description="Enable OpenPose")
-        self.openpose_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[26] if cfg else 0.7, description="OpenPose Strength")
+        self.openpose_toggle = widgets.Checkbox(value=cfg[24] if cfg else False, description="Enable OpenPose")
+        self.openpose_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[25] if cfg else 0.7, description="OpenPose Strength")
         self.openpose_settings = widgets.VBox([self.openpose_toggle])
 
         self.openpose_popup({"new": self.openpose_toggle.value})
@@ -332,7 +329,5 @@ class ControlNetSettings:
         self.hf_token_label = widgets.Label(value="Hugging Face token:")
         self.hf_token_widget = widgets.Text(placeholder="Avoid 401 error from HF")
         self.token_section = widgets.HBox([widgets.VBox([self.civit_token_label, self.token_widget]), widgets.VBox([self.hf_token_label, self.hf_token_widget])])
-
-        self.freeze_widget = widgets.Checkbox(description="Use the same seed", value=cfg[15] if cfg else False)
 
         self.controlnet_widgets_handler(cfg)
