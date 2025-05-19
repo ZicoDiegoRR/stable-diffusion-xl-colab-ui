@@ -11,7 +11,6 @@ class Text2ImgSettings:
             self.generation_parameter_section,
             self.scheduler_settings,
             self.vae_section,
-            self.token_section,
         ])
         
     # Return every widget
@@ -32,7 +31,6 @@ class Text2ImgSettings:
             self.res_betas_zero_snr,
             self.vae_link_widget,
             self.vae_config,
-            self.freeze_widget
         ]
         
     # Check if the path is link
@@ -57,7 +55,6 @@ class Text2ImgSettings:
             self.res_betas_zero_snr.value,
             self.vae_link_widget.value if self.check_if_link(self.vae_link_widget.value) else "",
             self.vae_config.value if self.check_if_link(self.vae_config.value) else "",
-            self.freeze_widget.value
         ]
         
      # Function to show or hide scheduler booleans
@@ -115,10 +112,3 @@ class Text2ImgSettings:
         self.vae_link_widget = widgets.Text(value=cfg[13] if cfg else "", description="VAE", placeholder="VAE model link")
         self.vae_config = widgets.Text(value=cfg[14] if cfg else "", placeholder="VAE config link")
         self.vae_section = widgets.HBox([self.vae_link_widget, self.vae_config])
-
-        self.civit_token_label = widgets.Label(value="CivitAI token:")
-        self.token_widget = widgets.Text(placeholder="Avoid 401 error from CivitAI")
-        
-        self.hf_token_label = widgets.Label(value="Hugging Face token:")
-        self.hf_token_widget = widgets.Text(placeholder="Avoid 401 error from HF")
-        self.token_section = widgets.HBox([widgets.VBox([self.civit_token_label, self.token_widget]), widgets.VBox([self.hf_token_label, self.hf_token_widget])])
