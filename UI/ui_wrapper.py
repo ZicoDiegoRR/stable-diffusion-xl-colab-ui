@@ -28,6 +28,10 @@ class UIWrapper:
     def merge_first_phase(self, index, text2img, img2img, controlnet): # Giving options
         self.merge_options.children = [self.send_text2img, self.send_img2img, self.send_controlnet]
         type_for_init = "text2img" if index == 0 else "img2img" if index == 1 else "controlnet" if index == 2
+
+        self.send_text2img._click_handlers.callbacks.clear()
+        self.send_img2img._click_handlers.callbacks.clear()
+        self.send_controlnet._click_handlers.callbacks.clear()
         
         self.send_text2img.on_click(lambda b: self.merge_first_phase(type_for_init, "text2img", self.text2img, self.img2img, self.controlnet))
         self.send_img2img.on_click(lambda b: self.merge_first_phase(type_for_init, "img2img", self.text2img, self.img2img, self.controlnet))
