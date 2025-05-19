@@ -13,7 +13,6 @@ class Img2ImgSettings:
             self.reference_image_section,
             self.scheduler_settings,
             self.vae_section,
-            self.token_section,
         ])
 
     def return_widgets(self):
@@ -88,7 +87,6 @@ class Img2ImgSettings:
             with open("/content/img2img/temp.png", "wb") as up:
                 up.write(ref_uploaded_image)
             self.reference_image_link_widget.value = "/content/img2img/temp.png"
-
             
     # Initialize widgets creation
     def __init__(self, cfg, ideas_line):
@@ -138,14 +136,6 @@ class Img2ImgSettings:
         self.vae_link_widget = widgets.Text(value=cfg[13] if cfg else "", description="VAE", placeholder="VAE model link")
         self.vae_config = widgets.Text(value=cfg[14] if cfg else "", placeholder="VAE config link")
         self.vae_section = widgets.HBox([self.vae_link_widget, self.vae_config])
-
-        self.civit_token_label = widgets.Label(value="CivitAI token:")
-        self.token_widget = widgets.Text(placeholder="Avoid 401 error from CivitAI")
-        
-        self.hf_token_label = widgets.Label(value="Hugging Face token:")
-        self.hf_token_widget = widgets.Text(placeholder="Avoid 401 error from HF")
-        self.token_section = widgets.HBox([widgets.VBox([self.civit_token_label, self.token_widget]), widgets.VBox([self.hf_token_label, self.hf_token_widget])])
-
 
         self.reference_image_link_widget = widgets.Text(placeholder="Img2Img reference link", description="Reference Image", value=cfg[15] if cfg else "")
         self.reference_image_upload_widget = widgets.FileUpload(accept="image/*", multiple=False)
