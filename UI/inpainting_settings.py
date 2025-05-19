@@ -10,13 +10,13 @@ class InpaintingSettings:
         ]
         
     def wrap_settings(self):
-        return [
+        return widgets.VBox([
             widgets.HTML(value="<b>To be updated in the future.</b>"),
             self.inpainting_image_dropdown,
             self.mask_image_widget,
             self.inpainting_toggle,
             self.inpainting_strength_slider,
-        ]
+        ])
 
     def collect_values(self):
         return [
