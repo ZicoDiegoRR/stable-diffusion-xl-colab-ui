@@ -32,7 +32,7 @@ class PresetSystem:
             elif type == "success":
                 display(HTML(f"<span style='color: lime;'>Success:</span> {msg}"))
         if type != "warn":
-            threading.Timer(sec, widget.clear_output()).start()
+            threading.Timer(sec, widget.clear_output).start()
             
     # Wrapping every widget into a vbox
     def wrap_settings(self):
