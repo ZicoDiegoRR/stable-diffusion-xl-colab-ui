@@ -7,7 +7,13 @@ import re
 class HistorySystem:
     def wrap_settings(self): # Function to collect every widget into a vbox
         return self.history_display_vbox
-    
+
+    def list_images(path): # Function to list every image in a folder
+        if os.path.exists(path):
+            return sorted([os.path.join(path, element) for element in os.listdir(path) if element.endswith(".png") and os.path.isfile(os.path.join(path, element))], key=os.path.getmtime, reverse=True)
+        else
+            return []
+        
     def history_quick_reference_controlnet_selector(self, type, path, controlnet, tab): # Function to input the image as the reference for ControlNet
         ui = tab.ui
         if type == "canny":
@@ -48,24 +54,23 @@ class HistorySystem:
             self.history_button_handler(path)
             ui.selected_index = 6
         elif type == "controlnet":
-            self.history_image_display_first.children = [widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), history_image_widget, history_image_modification_date, widgets.HBox([history_quick_reference_canny, history_quick_reference_depthmap, history_quick_reference_openpose]), history_back_button_second]
+            self.history_image_display_first.children = [widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), self.history_image_widget, self.history_image_modification_date, widgets.HBox([self.history_quick_reference_canny, self.history_quick_reference_depthmap, self.history_quick_reference_openpose]), self.history_back_button_second]
 
             self.history_back_button_second._click_handlers.callbacks.clear()
             self.history_quick_reference_canny._click_handlers.callbacks.clear()
             self.history_quick_reference_depthmap._click_handlers.callbacks.clear()
             self.history_quick_reference_openpose._click_handlers.callbacks.clear()
 
-            self.history_quick_reference_canny.on_click(lambda b: history_quick_reference_controlnet_selector("canny", path, controlnet, tab))
-            self.history_quick_reference_depthmap.on_click(lambda b: history_quick_reference_controlnet_selector("depthmap", path, controlnet, tab))
-            self.history_quick_reference_openpose.on_click(lambda b: history_quick_reference_controlnet_selector("openpose", path, controlnet, tab))
-            self.history_back_button_second.on_click(lambda b: history_quick_reference_first(path))
+            self.history_quick_reference_canny.on_click(lambda b: self.history_quick_reference_controlnet_selector("canny", path, controlnet, tab))
+            self.history_quick_reference_depthmap.on_click(lambda b: self.history_quick_reference_controlnet_selector("depthmap", path, controlnet, tab))
+            self.history_quick_reference_openpose.on_click(lambda b: self.history_quick_reference_controlnet_selector("openpose", path, controlnet, tab))
+            self.history_back_button_second.on_click(lambda b: self.history_quick_reference_first(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
         elif type == "upscale":
             upscaler.upscale_widget.input_link.value = path
             self.history_button_handler(path)
             ui.selected_index = 7
 
     def history_quick_reference_first(self, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): # Function to use an image from history to be the reference image of Img2Img, ControlNet, or Inpainting
-        history_back_button_first = widgets.Button(description="Back", button_style='danger')
         self.history_image_display_first.children = [widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), history_image_widget, history_image_modification_date, widgets.HBox([history_quick_reference_img2img, history_quick_reference_controlnet, history_quick_reference_inpainting, history_quick_reference_ip_adapter, history_quick_reference_upscale]), history_back_button_first]
 
         self.history_back_button_first._click_handlers.callbacks.clear()
@@ -75,12 +80,12 @@ class HistorySystem:
         self.history_quick_reference_ip_adapter._click_handlers.callbacks.clear()
         self.history_quick_reference_upscale._click_handlers.callbacks.clear()
 
-        self.history_back_button_first.on_click(lambda b: history_button_handler(path))
-        self.history_quick_reference_img2img.on_click(lambda b: history_quick_reference_second("img2img", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
-        self.history_quick_reference_controlnet.on_click(lambda b: history_quick_reference_second("controlnet", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
-        self.history_quick_reference_inpainting.on_click(lambda b: history_quick_reference_second("inpainting", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
-        self.history_quick_reference_ip_adapter.on_click(lambda b: history_quick_reference_second("ip", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
-        self.history_quick_reference_upscale.on_click(lambda b: history_quick_reference_second("upscale", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
+        self.history_back_button_first.on_click(lambda b: self.history_button_handler(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
+        self.history_quick_reference_img2img.on_click(lambda b: self.history_quick_reference_second("img2img", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
+        self.history_quick_reference_controlnet.on_click(lambda b: self.history_quick_reference_second("controlnet", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
+        self.history_quick_reference_inpainting.on_click(lambda b: self.history_quick_reference_second("inpainting", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
+        self.history_quick_reference_ip_adapter.on_click(lambda b: self.history_quick_reference_second("ip", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
+        self.history_quick_reference_upscale.on_click(lambda b: self.history_quick_reference_second("upscale", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
 
     def history_button_handler(self, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): # Function to show and replace image from history upon clicking a button
         self.history_image_widget.value = open(path, "rb").read()
@@ -103,17 +108,17 @@ class HistorySystem:
 
     def history_display(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): # Main logic for history
         base_path = "/content/gdrive/MyDrive" if os.path.exists("/content/gdrive/MyDrive") else "/content"
-        text2img_listdir = sorted([os.path.join(f"{base_path}/Text2Img", element) for element in os.listdir(f"{base_path}/Text2Img") if element.endswith(".png") and os.path.isfile(os.path.join(f"{base_path}/Text2Img", element))], key=os.path.getmtime, reverse=True) if os.path.exists(f"{base_path}/Text2Img") else []
-        controlnet_listdir = sorted([os.path.join(f"{base_path}/ControlNet", element) for element in os.listdir(f"{base_path}/ControlNet") if element.endswith(".png") and os.path.isfile(os.path.join(f"{base_path}/ControlNet", element))], key=os.path.getmtime, reverse=True) if os.path.exists(f"{base_path}/ControlNet") else []
-        inpainting_listdir = sorted([os.path.join(f"{base_path}/Inpainting", element) for element in os.listdir(f"{base_path}/Inpainting") if element.endswith(".png") and os.path.isfile(os.path.join(f"{base_path}/Inpainting", element))], key=os.path.getmtime, reverse=True) if os.path.exists(f"{base_path}/Inpainting") else []
-        img2img_listdir = sorted([os.path.join(f"{base_path}/Img2Img", element) for element in os.listdir(f"{base_path}/Img2Img") if element.endswith(".png") and os.path.isfile(os.path.join(f"{base_path}/Img2Img", element))], key=os.path.getmtime, reverse=True) if os.path.exists(f"{base_path}/Img2Img") else []
-        upscale_listdir = sorted([os.path.join(f"{base_path}/Upscaled", element) for element in os.listdir(f"{base_path}/Upscaled") if os.path.isfile(os.path.join(f"{base_path}/Upscaled", element))], key=os.path.getmtime, reverse=True) if os.path.exists(f"{base_path}/Upscaled") else []
+        text2img_listdir = self.list_images(f"{base_path}/Text2Img")
+        controlnet_listdir = self.list_images(f"{base_path}/ControlNet")
+        inpainting_listdir = self.list_images(f"{base_path}/Inpainting")
+        img2img_listdir = self.list_images(f"{base_path}/Img2Img")
+        upscale_listdir = self.list_images(f"{base_path}/Upscaled")
 
-        text2img_list = grid(text2img_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
-        controlnet_list = grid(controlnet_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
-        inpainting_list = grid(inpainting_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
-        img2img_list = grid(img2img_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
-        upscale_list = grid(upscale_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
+        text2img_list = self.grid(text2img_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
+        controlnet_list = self.grid(controlnet_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
+        inpainting_list = self.grid(inpainting_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
+        img2img_list = self.grid(img2img_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
+        upscale_list = self.grid(upscale_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
 
         self.history_accordion = widgets.Accordion(continuous_update = True)
         self.history_image_modification_date = widgets.HTML()
@@ -122,13 +127,14 @@ class HistorySystem:
         self.history_accordion.children = [text2img_list, img2img_list, controlnet_list, inpainting_list, upscale_list]
         return text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list
 
-    def __init__(text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab):
+    def __init__(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab):
         self.history_quick_reference_button = widgets.Button(description="Use as a reference")
         self.history_quick_reference_img2img = widgets.Button(description="Image-to-image")
         self.history_quick_reference_controlnet = widgets.Button(description="ControlNet")
         self.history_quick_reference_inpainting = widgets.Button(description="Inpainting")
         self.history_quick_reference_ip_adapter = widgets.Button(description="IP-Adapter")
         self.history_quick_reference_upscale = widgets.Button(description="Upscale")
+        self.history_back_button_first = widgets.Button(description="Back", button_style='danger')
         self.history_back_button_second = widgets.Button(description="Back", button_style='danger')
 
         self.history_quick_reference_canny = widgets.Button(description="Canny")
