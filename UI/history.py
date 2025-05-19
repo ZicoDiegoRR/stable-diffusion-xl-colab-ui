@@ -66,7 +66,7 @@ class HistorySystem:
             self.history_quick_reference_openpose.on_click(lambda b: self.history_quick_reference_controlnet_selector("openpose", path, controlnet, tab))
             self.history_back_button_second.on_click(lambda b: self.history_quick_reference_first(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
         elif type == "upscale":
-            upscaler.upscale_widget.input_link.value = path
+            upscaler.input_link.value = path
             self.history_button_handler(path)
             ui.selected_index = 7
 
