@@ -4,13 +4,13 @@ import ipywidgets as widgets
 def param_default():
     default_param = {
         "text2img": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
-                     False, False, False, False, "", "", False,
+                     False, False, False, False, "", "",
                     ],
         "img2img": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
-                    False, False, False, False, "", "", False, "", 0.3,
+                    False, False, False, False, "", "", "", 0.3,
                    ],
         "controlnet": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
-                      False, False, False, False, "", "", False, "", 100, 240, False, 
+                      False, False, False, False, "", "", "", 100, 240, False, 
                       0.7, "", False, 0.7, "", False, 0.7,
                       ],
         "inpaint": ["pre-generated text2image image", "", False, 0.9],
