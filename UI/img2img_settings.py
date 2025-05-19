@@ -13,9 +13,7 @@ class Img2ImgSettings:
             self.reference_image_section,
             self.scheduler_settings,
             self.vae_section,
-            self.freeze_widget,
             self.token_section,
-            widgets.HTML(value="For safety reason, your tokens <b>won't be saved</b>.")
         ])
 
     def return_widgets(self):
@@ -35,7 +33,6 @@ class Img2ImgSettings:
             self.res_betas_zero_snr,
             self.vae_link_widget,
             self.vae_config,
-            self.freeze_widget,
             self.reference_image_link_widget,
             self.denoising_strength_slider
         ]
@@ -72,7 +69,6 @@ class Img2ImgSettings:
             self.res_betas_zero_snr.value,
             self.vae_link_widget.value if self.check_if_link(self.vae_link_widget.value) else "",
             self.vae_config.value if self.check_if_link(self.vae_config.value) else "",
-            self.freeze_widget.value,
             self.reference_image_link_widget.value if self.check_if_link(self.reference_image_link_widget.value) else "",
             self.denoising_strength_slider.value,
         ]
@@ -150,10 +146,9 @@ class Img2ImgSettings:
         self.hf_token_widget = widgets.Text(placeholder="Avoid 401 error from HF")
         self.token_section = widgets.HBox([widgets.VBox([self.civit_token_label, self.token_widget]), widgets.VBox([self.hf_token_label, self.hf_token_widget])])
 
-        self.freeze_widget = widgets.Checkbox(description="Use the same seed", value=cfg[15] if cfg else False)
 
-        self.reference_image_link_widget = widgets.Text(placeholder="Img2Img reference link", description="Reference Image", value=cfg[16] if cfg else "")
+        self.reference_image_link_widget = widgets.Text(placeholder="Img2Img reference link", description="Reference Image", value=cfg[15] if cfg else "")
         self.reference_image_upload_widget = widgets.FileUpload(accept="image/*", multiple=False)
-        self.denoising_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.01, description="Denoising Strength", value=cfg[17] if cfg else 0.3)
+        self.denoising_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.01, description="Denoising Strength", value=cfg[16] if cfg else 0.3)
         self.reference_image_section = widgets.VBox([widgets.HBox([self.reference_image_link_widget, self.reference_image_upload_widget]), widgets.HBox([self.denoising_strength_slider, widgets.HTML(value="Low value means similar to the original image.")])])
         self.reference_image_upload_widget.observe(self.reference_image_upload_handler, names="value")
