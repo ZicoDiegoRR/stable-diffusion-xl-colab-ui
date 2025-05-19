@@ -20,6 +20,9 @@ def param_default():
     }
 
 class ResetGenerateSettings:
+    def wrap_settings(self): # Function to wrap every widget into a vbox
+        return self.submit_display, self.reset_display
+    
     def reset_evaluate(self, result, text2img, img2img, controlnet, inpaint, ip, lora, embeddings): # Function to set every parameter into the default value
         if result == "yes":
             cfg_reset = param_default()
