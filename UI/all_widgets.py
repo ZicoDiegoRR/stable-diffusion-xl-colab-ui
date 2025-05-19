@@ -31,4 +31,19 @@ def import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
         "embeddings": embeddings.collect_values(),
     }
     return values_dictionary
-  
+
+def merge(init, destination, text2img, img2img, controlnet):
+    widgets_dictionary_for_merging = {
+        "text2img": text2img.return_widgets(),
+        "img2img": img2img.return_widgets(),
+        "controlnet": controlnet.return_widgets(),
+    }
+    values_dictionary_for_merging = {
+        "text2img": text2img.collect_values(),
+        "img2img": img2img.collect_values(),
+        "controlnet": controlnet.collect_values(),
+    }
+    init_values = values_dictionary_for_merging[init]
+    destination_widgets = widgets_dictionary_for_merging[destination]
+    for i in range(15):
+        destination_widgets[i].value = init_values[i]
