@@ -19,3 +19,7 @@ This folder contains the core functional components that power the image generat
 - `run_generation.py` — Executes the core image generation process.
 
 - `vae_loader.py` — Loads a Variational Autoencoder (VAE) into the inference pipeline.
+
+---
+
+This README was made by ChatGPT.
