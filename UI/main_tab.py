@@ -19,7 +19,7 @@ class TabWrapper:
             self.seed_info
         ])
         
-        # Wrapping widgets for token
+        # Wrapping widgets for token and seed
         self.civit_label = widgets.Label(value="CivitAI:")
         self.hf_label = widgets.Label(value="Hugging Face:")
 
@@ -30,6 +30,7 @@ class TabWrapper:
             widgets.VBox([self.civit_label, self.civit_token]),
             widgets.VBox([self.hf_label, self.hf_token])
         ])
+        self.seed_and_token_section = widgets.VBox([self.seed_section, self.token_section])
 
        # Wrapping widgets for merge
         self.merge_button = widgets.Button(description="Send parameters")
@@ -40,10 +41,19 @@ class TabWrapper:
         self.merge_options = widgets.HBox([self.merge_button])
 
         # Wrapping widgets for reset and merge
-        _, 
+        reset_settings = reset.wrap_settings("reset")
+        reset_settings.layout = widgets.Layout(margin='0 0 0 auto')
+        self.reset_and_send_section = widgets.HBox([self.merge_options, reset_settings])
+
+        # Wrapping additional widgets
+        self.additional_widgets = widgets.VBox([self.seed_and_token_section, self.reset_and_send_section])
 
         # Creating the ui
         self.ui = widgets.Tab()
         self.ui.children = [
-            widgets.VBox([text2img, self.seed_section, ])
+            widgets.VBox([text2img.wrap_settings(), self.additional_widgets]),
+            widgets.VBox([img2img.wrap_settings(), self.additional_widgets]),
+            widgets.VBox([controlnet.wrap_settings, self.additional_widgets]),
+            inpaint.wrap_settings(),
+            
         ]
