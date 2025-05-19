@@ -1,14 +1,16 @@
 from StableDiffusionXLColabUI.UI import all_widgets
 import ipywidgets as widgets
 
-class TabWrapper:
+class UIWrapper:
     def merge_final_phase(self, init, destination, index, text2img, img2img, controlnet):
         all_widgets.merge(init, destination, text2img, img2img, controlnet)
         
     def merge_first_phase(self, index, text2img, img2img, controlnet):
         self.merge_options.children = [self.send_text2img, self.send_img2img, self.send_controlnet]
     
-    def __init__(self, text2img, img2img, controlnet, inpaint, lora, embeddings, ip, upscale, history, reset):
+    def __init__(self, cfg, ideas_line):
+        # Instantiate other classes
+        self.text2img = Text2ImgSettings()
         # Wrapping widgets for seed
         self.seed = widgets.Text(description="Seed")
         self.freeze = widgets.Checkbox(description="Use the same seed")
@@ -55,5 +57,9 @@ class TabWrapper:
             widgets.VBox([img2img.wrap_settings(), self.additional_widgets]),
             widgets.VBox([controlnet.wrap_settings, self.additional_widgets]),
             inpaint.wrap_settings(),
-            
+            lora.wrap_settings(),
+            embeddings.wrap_settings(),
+            ip.wrap_settings(),
+            upscale.ersgan_settings,
+            history.wrap_settings()
         ]
