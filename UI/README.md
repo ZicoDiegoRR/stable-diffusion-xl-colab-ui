@@ -1,6 +1,6 @@
-# UI Folder – Stable Diffusion XL Notebook Interface
+# UI Folder – Stable Diffusion XL Colab UI User Interface
 
-This folder contains all the UI components and logic used in the **Stable Diffusion XL Colab Notebook**. Each file is modular, handling a specific part of the interface or parameter system. Below is a breakdown of what each file does.
+This folder contains all the UI components and logic used in this **Stable Diffusion XL Colab UI** repository. Each file is modular, handling a specific part of the interface or parameter system. Below is a breakdown of what each file does.
 
 ---
 
@@ -29,3 +29,4 @@ This folder contains all the UI components and logic used in the **Stable Diffus
 - Presets and history features enhance usability across sessions.
 - All widgets are designed with Colab/IPyWidgets compatibility in mind.
 - `inpainting_settings.py` is currently marked as *broken* and will be updated in a future release.
+- This README was made by ChatGPT.
