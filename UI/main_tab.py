@@ -39,5 +39,11 @@ class TabWrapper:
 
         self.merge_options = widgets.HBox([self.merge_button])
 
+        # Wrapping widgets for reset and merge
+        _, 
+
         # Creating the ui
         self.ui = widgets.Tab()
+        self.ui.children = [
+            widgets.VBox([text2img, self.seed_section, ])
+        ]
