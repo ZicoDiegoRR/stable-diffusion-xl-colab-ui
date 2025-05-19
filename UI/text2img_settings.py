@@ -11,9 +11,7 @@ class Text2ImgSettings:
             self.generation_parameter_section,
             self.scheduler_settings,
             self.vae_section,
-            self.freeze_widget,
             self.token_section,
-            widgets.HTML(value="For safety reason, your tokens <b>won't be saved</b>.")
         ])
         
     # Return every widget
@@ -124,5 +122,3 @@ class Text2ImgSettings:
         self.hf_token_label = widgets.Label(value="Hugging Face token:")
         self.hf_token_widget = widgets.Text(placeholder="Avoid 401 error from HF")
         self.token_section = widgets.HBox([widgets.VBox([self.civit_token_label, self.token_widget]), widgets.VBox([self.hf_token_label, self.hf_token_widget])])
-
-        self.freeze_widget = widgets.Checkbox(description="Use the same seed", value=cfg[15] if cfg else False)
