@@ -86,3 +86,4 @@ class TextualInversionLoader:
         self.ti_settings = widgets.VBox([self.ti_tip, self.ti_add])
 
         self.ti_add.on_click(lambda b: self.ti_click("", ""))
+        self.construct(cfg)
