@@ -16,21 +16,27 @@ class UIWrapper:
     def get_tab_index(self):
         return self.ui_tab.selected_index
     
-    def merge_final_phase(self, init, destination, index, text2img, img2img, controlnet):
+    def merge_final_phase(self, init, destination, index, text2img, img2img, controlnet): # Doing merging
         all_widgets.merge(init, destination, text2img, img2img, controlnet)
         
-    def merge_first_phase(self, index, text2img, img2img, controlnet):
+    def merge_first_phase(self, index, text2img, img2img, controlnet): # Giving options
         self.merge_options.children = [self.send_text2img, self.send_img2img, self.send_controlnet]
+        type_for_init = "text2img" if index == 0 else "img2img" if index == 1 else "controlnet" if index == 2
+        self.send_text2img.on_click(lambda b: self.merge_first_phase(type_for_init, "text2img", self.text2img, self.img2img, self.controlnet))
+        self.send_img2img.on_click(lambda b: self.merge_first_phase(type_for_init, "img2img", self.text2img, self.img2img, self.controlnet))
+        self.send_controlnet.on_click(lambda b: self.merge_first_phase(type_for_init, "controlnet", self.text2img, self.img2img, self.controlnet))
 
-    def checking_the_selected_tab_index(self, change):
+    def checking_the_selected_tab_index(self, change): # Hiding the generate and send button or showing them
         self.tab_selected_index = change["new"]
         if self.tab_selected_index > 3 and self.tab_selected_index!= 7:
             self.submit_settings.layout.visibility = "hidden"
+            self.merge_options.layout.visibility = "hidden"
         elif self.tab_selected_index == 7:
             self.submit_settings.layout.visibility = "visible"
+            self.merge_options.layout.visibility = "visible"
         else:
             self.submit_settings.layout.visibility = "visible"
-
+            self.merge_options.layout.visibility = "visible"
     
     def __init__(self, cfg, ideas_line): # cfg as a dictionary
         # Creating the tab
@@ -107,7 +113,7 @@ class UIWrapper:
         self.merge_options = widgets.HBox([self.merge_button])
 
         # Wrapping widgets for reset and merge
-        self.reset_settings = reset.wrap_settings("reset")
+        self.reset_settings = self.reset_generate.wrap_settings("reset")
         self.reset_settings.layout = widgets.Layout(margin='0 0 0 auto')
         self.reset_and_send_section = widgets.HBox([self.merge_options, self.reset_settings])
 
@@ -123,7 +129,7 @@ class UIWrapper:
             self.lora.wrap_settings(),
             self.embeddings.wrap_settings(),
             self.ip.wrap_settings(),
-            self.upscale.ersgan_settings,
+            self.upscaler.ersgan_settings,
             self.history.wrap_settings()
         ]
         ui_titles = ["Text-to-image ✍", "Image-to-image 🎨", "ControlNet 🖼️🔧", "Inpainting 🖼️🖌️", "LoRA Settings 📁🖌️", "Textual Inversion 📃🖌️", "IP-Adapter Settings 🖼️📝", "Image Upscaler 🖼️✨", "History 🔮📜"]
@@ -139,3 +145,5 @@ class UIWrapper:
 
         self.ui_tab.observe(self.checking_the_selected_tab_index, names="selected_index")
         self.checking_the_selected_tab_index({"name": "selected_index", "new": self.ui_tab.selected_index, "old": None, "type": "change", "owner": self.ui_tab})
+
+        self.merge_button.on_click(lambda b: self.merge_first_phase(self.ui_tab.selected_index, self.text2img, self.img2img, self.controlnet))
