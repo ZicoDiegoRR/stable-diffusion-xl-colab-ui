@@ -2,7 +2,7 @@ import time
 import os
 import re
 
-def save_image(image, base_path, prompt_for_name, prefix):
+def save_image(image, prompt_for_name, prefix, base_path="/content/gdrive/MyDrive" if os.path.exists("/content/gdrive/MyDrive") else "/content"):
     current_time = time.localtime()
     formatted_time = time.strftime("[%H-%M-%S %B %d, %Y]", current_time)
     if prefix == "[Text-to-Image]":
