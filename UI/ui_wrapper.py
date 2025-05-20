@@ -25,10 +25,13 @@ class UIWrapper:
             key = "text2img" if index == 0 else "img2img" if index == 1 else "controlnet" if index == 2
             self.value_list = values_dictionry_for_generation[key]
             self.submit_settings.layout.visibility = "hidden"
-            self.main.run(self.value_list, self.hf_token, self.civit_token, self.ui)
+            main.run(self.value_list, self.hf_token, self.civit_token, self.ui)
+            display(self.ui)
+            self.reload_submit_button()
         elif index == 7:
             self.submit_settings.layout.visibility = "hidden"
             self.upscaler.execute_realesrgan()
+            self.reload_submit_button()
     
     def get_tab_index(self):
         return self.ui_tab.selected_index
