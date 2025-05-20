@@ -247,7 +247,7 @@ def run_upscaling(
             input_width, input_height = load_image(input).size
             output_width, output_height = load_image(save_path).size
             clear_output()
-            tab.layout.visibility = "visible"
+            display(tab)
             display(make_image_grid([load_image(input), load_image(save_path).resize((input_width, input_height))], rows=1, cols=2))
             print(f"Original resolution: {input_width}x{input_height} px")
             print(f"Upscaled resolution: {output_width}x{output_height} px")
