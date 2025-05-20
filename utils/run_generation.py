@@ -9,7 +9,7 @@ def generate(
     Scale,
     Clip_Skip,
     generator,
-    Inpainting_Strength,
+    Inpainting_Strength=None,
     IP_Adapter="None",
     image_embeds=None,
     inpaint_image=None,
