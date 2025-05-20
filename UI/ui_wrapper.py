@@ -26,7 +26,6 @@ class UIWrapper:
             self.value_list = values_dictionry_for_generation[key]
             self.submit_settings.layout.visibility = "hidden"
             main.run(self.value_list, self.hf_token, self.civit_token, self.ui)
-            display(self.ui)
             self.reload_submit_button()
         elif index == 7:
             self.submit_settings.layout.visibility = "hidden"
