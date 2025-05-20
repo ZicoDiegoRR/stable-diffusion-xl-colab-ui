@@ -19,9 +19,8 @@ def autoencoderkl_load(vae_path):
         return None
 
 
-def load_vae(model_path, config_path, hf_token, civit_token):
+def load_vae(current_vae, model_path, config_path, hf_token, civit_token):
     # Checking if the provided vae has been loaded
-    global current_vae
     if model_path != current_vae:
         # Determining the path, whether the VAE has been downloaded or not
         if vae_url_checker(model_path):
