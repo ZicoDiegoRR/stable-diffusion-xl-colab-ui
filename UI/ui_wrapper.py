@@ -8,11 +8,28 @@ from StableDiffusionXLColabUI.UI.textual_inversion_settings import TextualInvers
 from StableDiffusionXLColabUI.UI.reset_and_generate import ResetGenerateSettings
 from StableDiffusionXLColabUI.UI.preset_system import PresetSystem
 from StableDiffusionXLColabUI.UI.history import HistorySystem
-from StableDiffusionXLColabUI.utils import modified_inference_realesrgan
+from StableDiffusionXLColabUI.utils import modified_inference_realesrgan, main
 from StableDiffusionXLColabUI.UI import all_widgets
+from IPython.display import display, clear_output
 import ipywidgets as widgets
 
 class UIWrapper:
+    def reload_submit_button(self):
+        self.submit_settings.layout.visibility = "visible"
+        
+    def generate_value(self, index, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
+        values_dictionry_for_generation = all_widgets.import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
+        if index == 3:
+            print("Inpainting is currently unavailable in this version. Please refer to the 'Legacy' version of this notebook. Sorry for the inconvenience.")
+        elif index < 3:
+            key = "text2img" if index == 0 else "img2img" if index == 1 else "controlnet" if index == 2
+            self.value_list = values_dictionry_for_generation[key]
+            self.submit_settings.layout.visibility = "hidden"
+            self.main.run(self.value_list, self.hf_token, self.civit_token, self.ui)
+        elif index == 7:
+            self.submit_settings.layout.visibility = "hidden"
+            self.upscaler.execute_realesrgan()
+    
     def get_tab_index(self):
         return self.ui_tab.selected_index
     
@@ -52,6 +69,7 @@ class UIWrapper:
     def __init__(self, cfg, ideas_line): # cfg as a dictionary
         # Creating the tab
         self.ui_tab = widgets.Tab()
+        self.value_list = []
         
         # Instantiate other classes
         self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line)
@@ -148,9 +166,20 @@ class UIWrapper:
             self.ui_tab.set_title(i, title)
 
         
-        self.submit_settings = reset.wrap_settings("submit")
+        self.submit_settings = self.reset_generate.wrap_settings("submit")
         self.preset_settings = self.preset_system.wrap_settings()
         self.ui_bottom = widgets.HBox([self.submit_settings, self.preset_settings])
+
+        self.reset_generate.submit_button_widget.on_click(lambda b: self.generate_value(
+            self.ui_tab.selected_index, 
+            self.text2img,
+            self.img2img,
+            self.controlnet,
+            self.inpaint,
+            self.ip,
+            self.lora,
+            self.embeddings,
+        ))
 
         self.ui = widgets.VBox([self.ui_tab, self.ui_bottom])
 
