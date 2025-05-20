@@ -47,4 +47,6 @@ def load_vae(current_vae, model_path, config_path, hf_token, civit_token):
         print("You inputted a link to the VAE model, but not the config file. It's mandatory to pass both links.")
         print("Skipped VAE.")
         vae = None
+
+    return vae
         
