@@ -63,3 +63,5 @@ def load_pipeline(model_url, format=".safetensors", controlnets=None, active_inp
             if os.path.exists(Model_path):
                 os.remove(Model_path)
             raise TypeError(f"{Error}{Warning}")
+
+    return pipeline
