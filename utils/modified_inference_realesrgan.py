@@ -8,7 +8,7 @@ import ipywidgets as widgets
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from diffusers.utils import load_image, make_image_grid
 from basicsr.utils.download_util import load_file_from_url
-from IPython.display import display
+from IPython.display import display, clear_output
 
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
@@ -24,7 +24,8 @@ class ESRGANWidget:
             self.input_link.value = f"/content/upscale/{filename}"
                 
     #creating widgets
-    def __init__(self):
+    def __init__(self, tab):
+        self.tab_ui = tab
         self.warning_upscale = widgets.HTML(value="It's recommended to upscale any image with up to 1024x1024 resolution or lower to avoid high VRAM usage.")
         self.input_link = widgets.Text(placeholder="Image link or path")
         self.input_upload = widgets.FileUpload(accept="image/*", multiple=False)
@@ -53,6 +54,7 @@ class ESRGANWidget:
     def execute_realesrgan(self):
         # execute
         run_upscaling(
+            tab=self.tab_ui
             input=self.input_link.value,
             model_name=self.model_name.value,
             denoise_strength=self.denoising.value,
@@ -101,6 +103,7 @@ class VariableHandlerESRGAN:
         self.gpu_id = gpu_id
         
 def run_upscaling(
+    tab,
     input, 
     model_name, 
     tile,
@@ -242,4 +245,10 @@ def run_upscaling(
             save_path = os.path.join(args.output, img_filename)
             cv2.imwrite(save_path, output)
             input_width, input_height = load_image(input).size
+            output_width, output_height = load_image(save_path).size
+            clear_output()
+            tab.layout.visibility = "visible"
             display(make_image_grid([load_image(input), load_image(save_path).resize((input_width, input_height))], rows=1, cols=2))
+            print(f"Original resolution: {input_width}x{input_height} px")
+            print(f"Upscaled resolution: {output_width}x{output_height} px")
+            print(f"Image is saved at {save_path}.")
