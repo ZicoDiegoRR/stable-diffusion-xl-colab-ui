@@ -19,6 +19,7 @@ class UIWrapper:
         
     def generate_value(self, index, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
         values_dictionary_for_generation = all_widgets.import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
+        widgets_dictionary_for_generation = all_widgets.import_widgets(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         if index == 3:
             print("Inpainting is currently unavailable in this version. Please refer to the 'Legacy' version of this notebook. Sorry for the inconvenience.")
         elif index < 3:
@@ -28,10 +29,12 @@ class UIWrapper:
             main.run(self.value_list, 
                      values_dictionary_for_generation["lora"], 
                      values_dictionary_for_generation["embeddings"], 
+                     values_dictionary_for_generation["ip"],
                      self.hf_token, 
                      self.civit_token, 
-                     self.ui, 
+                     self.ui_tab, 
                      [self.seed, self.freeze.value],
+                     values_dictionary_for_generation,
             )
             self.reload_submit_button()
         elif index == 7:
@@ -43,25 +46,30 @@ class UIWrapper:
         return self.ui_tab.selected_index
     
     def merge_final_phase(self, init, destination, index, text2img, img2img, controlnet): # Doing merging
-        all_widgets.merge(init, destination, text2img, img2img, controlnet)
-        if destination == "text2img":
-            self.ui_tab.selected_index = 0
-        elif destination == "img2img":
-            self.ui_tab.selected_index = 1
-        elif destination == "controlnet":
-            self.ui_tab.selected_index = 2
+        if destination != "back":
+            all_widgets.merge(init, destination, text2img, img2img, controlnet)
+            if destination == "text2img":
+                self.ui_tab.selected_index = 0
+            elif destination == "img2img":
+                self.ui_tab.selected_index = 1
+            elif destination == "controlnet":
+                self.ui_tab.selected_index = 2
+        else:
+            self.merge_options.children = [self.merge_button]
         
     def merge_first_phase(self, index, text2img, img2img, controlnet): # Giving options
-        self.merge_options.children = [self.send_text2img, self.send_img2img, self.send_controlnet]
+        self.merge_options.children = [widgets.HBox([self.send_text2img, self.send_img2img, self.send_controlnet]), self.merge_back]
         type_for_init = "text2img" if index == 0 else "img2img" if index == 1 else "controlnet" if index == 2
 
         self.send_text2img._click_handlers.callbacks.clear()
         self.send_img2img._click_handlers.callbacks.clear()
         self.send_controlnet._click_handlers.callbacks.clear()
+        self.merge_back._click_handlers.callbacks.clear()
         
         self.send_text2img.on_click(lambda b: self.merge_first_phase(type_for_init, "text2img", self.text2img, self.img2img, self.controlnet))
         self.send_img2img.on_click(lambda b: self.merge_first_phase(type_for_init, "img2img", self.text2img, self.img2img, self.controlnet))
         self.send_controlnet.on_click(lambda b: self.merge_first_phase(type_for_init, "controlnet", self.text2img, self.img2img, self.controlnet))
+        self.merge_back.on_click(lambda b: self.merge_first_phase(type_for_init, "back", None, None, None))
 
     def checking_the_selected_tab_index(self, change): # Hiding the generate and send button or showing them
         self.tab_selected_index = change["new"]
@@ -147,8 +155,9 @@ class UIWrapper:
         self.send_text2img = widgets.Button(description="Text-to-Image")
         self.send_img2img = widgets.Button(description="Image-to-Image")
         self.send_controlnet = widgets.Button(description="ControlNet")
+        self.merge_back = widgets.Button(description="Back", button_style='danger', layout=widgets.Layout(width="100%"))
 
-        self.merge_options = widgets.HBox([self.merge_button])
+        self.merge_options = widgets.VBox([self.merge_button])
 
         # Wrapping widgets for reset and merge
         self.reset_settings = self.reset_generate.wrap_settings("reset")
