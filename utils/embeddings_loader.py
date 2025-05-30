@@ -34,7 +34,7 @@ def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token)
             ti_list.append(split_filename)
             tokens.append(token[i])
 
-            widget_value = widget.value.replace(link, split_filename)
+            widget_value = widget.value.replace(url, split_filename)
             widget.value = widget_value
 
     load_textual_inversion_from_link(pipe, ti_path, tokens, ti_list)
