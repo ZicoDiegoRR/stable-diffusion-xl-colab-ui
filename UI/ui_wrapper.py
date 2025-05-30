@@ -16,6 +16,26 @@ import ipywidgets as widgets
 class UIWrapper:
     def reload_submit_button(self):
         self.submit_settings.layout.visibility = "visible"
+
+    def select_class(self, index):
+        if index == 0:
+            return self.text2img
+        elif index == 1:
+            return self.img2img
+        elif index == 2:
+            return self.controlnet
+        elif index == 3:
+            return self.inpaint
+
+    def select_key(self, index):
+        if index == 0:
+            return "text2img" 
+        if index == 1:
+            return "img2img"
+        if index == 2:
+            return "controlnet"
+        if index == 3:
+            return "inpaint"
         
     def generate_value(self, index, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
         values_dictionary_for_generation = all_widgets.import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
@@ -23,7 +43,8 @@ class UIWrapper:
         if index == 3:
             print("Inpainting is currently unavailable in this version. Please refer to the 'Legacy' version of this notebook. Sorry for the inconvenience.")
         elif index < 3:
-            key = "text2img" if index == 0 else "img2img" if index == 1 else "controlnet" if index == 2
+            key = self.select_key(index)
+            selected_class = self.select_class(index)
             self.value_list = values_dictionary_for_generation[key]
             self.submit_settings.layout.visibility = "hidden"
             main.run(self.value_list, 
@@ -35,6 +56,15 @@ class UIWrapper:
                      self.ui_tab, 
                      [self.seed, self.freeze.value],
                      values_dictionary_for_generation,
+                     [
+                        selected_class.vae_link_widget,
+                        selected_class.vae_config,
+                        selected_class.model_widget,
+                        self.lora.lora_urls_widget,
+                        self.lora.weight_scale_widget,
+                        self.embeddings.ti_urls_widget,
+                        self.embeddings.ti_tokens_widget,
+                     ]
             )
             self.reload_submit_button()
         elif index == 7:
