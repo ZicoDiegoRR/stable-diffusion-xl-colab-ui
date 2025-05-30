@@ -31,7 +31,7 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
                 vae_filename = os.path.basename(path)
                 os.rename(path, f"/content/VAE/{vae_save_folder}/{vae_filename}")
 
-                widget_value = os.splitext(vae_filename)
+                widget_value, _ = os.splitext(vae_filename)
                 widget[i].value = widget_value
 
         # For Hugging Face pretrained VAE models
