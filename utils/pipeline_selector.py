@@ -26,6 +26,8 @@ def load_pipeline(model_url, widget, format=".safetensors", controlnets=None, ac
         # Download
         if model_url.startswith("https://") or model_url.startswith("http://"):
             Model_path = downloader.download_file(model_url, "Checkpoint", hf_token, civit_token)
+            widget_value = os.path.splitext(os.path.basename(Model_path))
+            widget.value = widget_value
         else:
             if not model_url.startswith("/content/Checkpoint"):
                 Model_path = f"/content/Checkpoint/{model_url}.{format}"
