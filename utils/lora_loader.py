@@ -35,7 +35,7 @@ def download_lora(pipe, link, scale, hf_token, civit_token):
 
     load_downloaded_lora(pipe, lora_paths, scales, lora_names)
 
-def process(pipe, link, scale, hf_token, civit_token):
+def process(pipe, link, scale, widget, hf_token, civit_token):
     os.makedirs("/content/LoRAs", exist_ok=True)
     lora_links = re.split(r"\s*,\s*", link)
     lora_scales = [float(num) for num in re.split(r"\s*,\s*", scale)]
