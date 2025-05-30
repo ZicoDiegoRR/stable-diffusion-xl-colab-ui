@@ -78,7 +78,7 @@ def get_depth_map_display(image, depth_estimator):
     image = np.concatenate([image, image, image], axis=2)
     return image
 
-def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary):
+def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary, widgets_change):
     # Initialization
     pipeline_type = ""
     if len(values_in_list) == 15:
@@ -130,24 +130,24 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     Textual_Inversion_URLs = embeddings[0]
     Textual_Inversion_Tokens = embeddings[1]
 
-    Canny_Link = values_in_list[15]
-    minimum_canny_threshold = values_in_list[16]
-    maximum_canny_threshold = values_in_list[17]
-    Canny = values_in_list[18]
-    Canny_Strength = values_in_list[19]
+    Canny_Link = values_in_list[15] if pipeline_type == "controlnet" else None
+    minimum_canny_threshold = values_in_list[16] if pipeline_type == "controlnet" else None
+    maximum_canny_threshold = values_in_list[17] if pipeline_type == "controlnet" else None
+    Canny = values_in_list[18] if pipeline_type == "controlnet" else None
+    Canny_Strength = values_in_list[19] if pipeline_type == "controlnet" else None
 
-    DepthMap_Link = values_in_list[20]
-    Depth_Map = values_in_list[21]
-    Depth_Strength = values_in_list[22]
+    DepthMap_Link = values_in_list[20] if pipeline_type == "controlnet" else None
+    Depth_Map = values_in_list[21] if pipeline_type == "controlnet" else None
+    Depth_Strength = values_in_list[22] if pipeline_type == "controlnet" else None
 
-    OpenPose_Link = values_in_list[23]
-    Open_Pose = values_in_list[24]
-    Open_Pose_Strength = values_in_list[25]
+    OpenPose_Link = values_in_list[23] if pipeline_type == "controlnet" else None
+    Open_Pose = values_in_list[24] if pipeline_type == "controlnet" else None
+    Open_Pose_Strength = values_in_list[25] if pipeline_type == "controlnet" else None
 
-    Inpainting_Image = values_in_list[15]
-    Mask_Image = values_in_list[16]
-    Inpainting = values_in_list[17]
-    Inpainting_Strength = values_in_list[18]
+    Inpainting_Image = values_in_list[15] if pipeline_type == "inpaint" else None
+    Mask_Image = values_in_list[16] if pipeline_type == "inpaint" else None
+    Inpainting = values_in_list[17] if pipeline_type == "inpaint" else None
+    Inpainting_Strength = values_in_list[18] if pipeline_type == "inpaint" else None
 
     IP_Image_Link = ip[0]
     IP_Adapter_Strength = ip[1]
