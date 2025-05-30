@@ -45,10 +45,10 @@ def download_file(url, type, hf_token, civit_token):
             download_filename = os.path.basename(url) + ".safetensors"
 
         # Save
-        with open(f"{download_path}/{download_filename}", "wb") as f:
+        with open(f"{download_folder}/{download_filename}", "wb") as f:
             for chunk in download_req.iter_content(chunk_size=8192):
                 if chunk:
                     f.write(download_req.chunk)
 
     # Return the path
-    return f"{download_path}/{download_filename}"
+    return f"{download_folder}/{download_filename}"
