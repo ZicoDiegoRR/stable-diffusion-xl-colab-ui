@@ -57,8 +57,7 @@ class UIWrapper:
                      [self.seed, self.freeze.value],
                      values_dictionary_for_generation,
                      [
-                        selected_class.vae_link_widget,
-                        selected_class.vae_config,
+                        [selected_class.vae_link_widget, selected_class.vae_config],
                         selected_class.model_widget,
                         self.lora.lora_urls_widget,
                         self.lora.weight_scale_widget,
