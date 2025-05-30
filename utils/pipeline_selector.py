@@ -9,7 +9,7 @@ from diffusers import (
 )
 from StableDiffusionXLColabUI.utils import downloader
 
-def load_pipeline(model_url, format=".safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token=""):
+def load_pipeline(model_url, widget, format=".safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token=""):
     # For Hugging Face repository with "author/repo_name" format
     if model_url.count("/") == 1 and (not model_url.startswith("https://") or not model_url.startswith("http://")):
         if all(cn is None for cn in controlnets) and pipeline_type != "img2img" and not active_inpaint:
