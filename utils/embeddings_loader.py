@@ -14,7 +14,7 @@ def load_textual_inversion_from_link(pipe, link, token, name):
         except Exception as e:
             print(f"Skipped {name}. Reason: {e}")
     
-def download_textual_inversion(pipe, link, token, hf_token, civit_token):
+def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token):
     # Download and handle duplication
     ti_list = []
     ti_path = []
@@ -34,14 +34,17 @@ def download_textual_inversion(pipe, link, token, hf_token, civit_token):
             ti_list.append(split_filename)
             tokens.append(token[i])
 
+            widget_value = widget.value.replace(link, split_filename)
+            widget.value = widget_value
+
     load_textual_inversion_from_link(pipe, ti_path, tokens, ti_list)
         
-def process(pipe, link, token, hf_token, civit_token):
+def process(pipe, link, token, widget, hf_token, civit_token):
     # Preprocessing the urls and weight before downloading
     ti_links = [word for word in re.split(r"\s*,\s*", link)]
     ti_tokens = [word for word in re.split(r"\s*,\s*", token)]
     
     os.makedirs("/content/Embeddings", exist_ok=True)
 
-    download_textual_inversion(pipe, ti_links, ti_tokens, hf_token, civit_token)
+    download_textual_inversion(pipe, ti_links, ti_tokens, widget, hf_token, civit_token)
 
