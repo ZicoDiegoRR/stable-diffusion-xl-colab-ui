@@ -14,7 +14,7 @@ def load_downloaded_lora(pipe, link, scales, names):
             print(f"Skipped {name}. Reason: {e}")
     pipe.set_adapters(name_list, adapter_weights=scale_list)
 
-def download_lora(pipe, link, scale, hf_token, civit_token):
+def download_lora(pipe, link, scale, widget, hf_token, civit_token):
     lora_names = []
     lora_paths = []
     scales = []
@@ -32,6 +32,9 @@ def download_lora(pipe, link, scale, hf_token, civit_token):
             split_lora_name, _ = os.splitext(os.path.basename(lora_file_path))
             lora_names.append(split_lora_name)
             scales.append(scale[i])
+
+            widget_value = widget.value.replace(url, split_lora_name)
+            widget.value = widget_value
 
     load_downloaded_lora(pipe, lora_paths, scales, lora_names)
 
