@@ -25,11 +25,14 @@ def load_vae(current_vae, model_path, config_path, hf_token, civit_token):
         # Determining the path, whether the VAE has been downloaded or not
         if vae_url_checker(model_path):
             vae_path = [downloader.download_file(model_path, "VAE", hf_token, civit_token), downloader.download_file(config_path, "VAE", hf_token, civit_token)]
-            vae_save_folder = os.path.splitext(os.path.basename(vae_path))
+            vae_save_folder = os.path.splitext(os.path.basename(vae_path[0]))
             os.makedirs(f"/content/VAE/{vae_save_folder}", exist_ok=True)
             for path in vae_path:
                 vae_filename = os.path.basename(path)
                 os.rename(path, f"/content/VAE/{vae_save_folder}/{vae_filename}")
+
+                vae_config_file = os.path.splitext(os.path.basename(vae_path[1]))
+                os.rename(path, f"/content/VAE/{vae_save_folder}/{vae_config_file}.json")
 
         # For Hugging Face pretrained VAE models
         elif model_path.count("/") == 1:
