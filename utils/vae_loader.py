@@ -31,9 +31,6 @@ def load_vae(current_vae, model_path, config_path, hf_token, civit_token):
                 vae_filename = os.path.basename(path)
                 os.rename(path, f"/content/VAE/{vae_save_folder}/{vae_filename}")
 
-                vae_config_file = os.path.splitext(os.path.basename(vae_path[1]))
-                os.rename(path, f"/content/VAE/{vae_save_folder}/{vae_config_file}.json")
-
         # For Hugging Face pretrained VAE models
         elif model_path.count("/") == 1:
             vae_path = [model_path, None]
