@@ -153,6 +153,9 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     IP_Adapter_Strength = ip[1]
     IP_Adapter = ip[2]
 
+    HF_Token = hf_token
+    Civit_Token = civit_token
+
     # Reusing the old logic
     if hf_token:
       login(hf_token)
@@ -233,6 +236,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         IP_Adapter = "None"
     if selected_tab_for_pipeline == 0 or (not Canny_link and not Depthmap_Link and not Openpose_Link and not active_inpaint and not ref_image):
         pipeline_type = "text2img"
+        if selected_tab_for_pipeline != 0:
+            print("No reference image. Defaulting to Text-to-Image...")
 
     save_param(f"{base_path}/Saved Parameters/main_parameters.json", dictionary)
     if os.path.exists(os.path.join(f"{base_path}", "parameters.json")):
@@ -240,12 +245,13 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Check if the current pipeline and model are the same as the previous ones
     global loaded_model, loaded_pipeline
-    if loaded_model and loaded_model != model_widget.value:
-        restart(model_widget.value, loaded_model)
+    if loaded_model and loaded_model != Model:
+        restart(Model, loaded_model)
     if loaded_pipeline and loaded_pipeline != pipeline_type:
         restart(pipeline_type, loaded_pipeline)
 
     # Logic to handle ControlNet and/or MultiControlNets
+    global controlnets, loaded_controlnet_model, images, controlnets_scale
     if Canny and Canny_link is not None:
         if "canny" not in loaded_controlnet_model:
           global canny_model
@@ -298,5 +304,30 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         display(make_image_grid([image_openpose, openpose_image.resize((1024, 1024))], rows=1, cols=2))
 
     global vae_current
-    if VAE_Link:
-        vae = vae_loader.load_vae(VAE_Link, )
+    if VAE_Link and VAE_Link != vae_current:
+        vae = vae_loader.load_vae(vae_current, VAE_Link, VAE_Config, widgets_change[0], HF_Token, Civit_Token)
+    elif not VAE_Link:
+        vae = None
+
+    global pipeline
+    pipeline = pipeline_selector.load_pipeline(
+        Model, 
+        widgets_change[1], 
+        controlnets=controlnets, 
+        active_inpaint=active_inpaint, 
+        vae=vae, 
+        hf_token=HF_Token, 
+        civit_token=Civit_Token
+    )
+    
+    if IP_Adapter != "None":
+        pipeline.image_encoder = CLIPVisionModelWithProjection.from_pretrained(
+            "h94/IP-Adapter",
+            subfolder="models/image_encoder",
+            torch_dtype=torch.float16,
+        ).to("cuda")
+
+    if not loaded_model:
+        loaded_model = Model
+    if not loaded_pipeline:
+        loaded_pipeline = pipeline_type
