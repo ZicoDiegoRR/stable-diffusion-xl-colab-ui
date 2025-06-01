@@ -5,13 +5,18 @@ This is a simple Google Colab notebook made by an 18-years-old junior programmer
 ## Features
 - **Image Generation:** Uses Transformers and Diffusers as the major components for image generation, along with ControlNet, Inpainting, and IP-Adapter.
 - **Download and Load:** Ability to download and load images, checkpoint, LoRA weights, and VAE using direct URLs.
+- **Textual Inversion:** Ability to load embeddings for more output control. (Beta V3 only)
+- **Image-to-Image:** Turn your images into something more creative and unique. (Beta V3 only)
+- **Prompt Generator:** Generate creative prompt powered by GPT-2. (Thank you [Gustavosta](https://huggingface.co/Gustavosta) for the amazing model) (Beta V3 only)
+- **Image Upscaling:** Using [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) made by [xinntao](https://github.com/xinntao) and Real-ESRGAN's contributors. (Beta V3 only)
 - **Google Drive Integration:** Can connect to your Google Drive or disable it.
 - **User-Friendly UI:** Simplified complexity with an easy-to-understand user interface.
-- **IPyWidgets:** Simplified UI so that you don't need to scroll up and down. (V2 and above only)
+- **IPyWidgets:** Simplified UI so that you don't need to scroll up and down. (Beta V2 and above only)
 - **Built-in History System:** Can show all of your previously generated images in Google Drive without opening it, just with a few simple clicks. (V2.5 and above only)
 - **CivitAI Token Support:** Pass your CivitAI token for additional functionality, but remember **never share it with anyone.**
+- **Hugging Face Token Support:** Pass your Hugging Face token for accessing private files, but remember **never share it with anyone.** (Beta V3 only)
 - **Simplicity:** Consists of two cells only.
-- **Written Guide:** Can keep you on track with the flow of this notebook.
+- **Written Guide:** Can keep you on track with the flow of this notebook. 
 
 ## Usage
 This notebook is designed for artistic purposes and to spark inspiration. **Please use it responsibly.** Creating deepfakes and uploading them online are strictly prohibited.
