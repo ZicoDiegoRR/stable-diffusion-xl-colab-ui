@@ -19,19 +19,21 @@ This notebook is designed for artistic purposes and to spark inspiration. **Plea
 ## Installation
 Simply open the notebook on Google Colab to start using it. No installation is needed. Debugging and editing the code might be difficult due to the complex structure and my lack of knowledge in modular programming.
 
-**Release Versions:**
+<details> <summary> Release Versions: </summary>
 
 - **V1:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/18cUHh7H1c4qUijSD50uQUNl0Fq8wq7nY)
 - **V2:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1CQeZADunh6tEZCBOleDkZY96osYkRk5I)
 - **V2.5:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/13sfGKPhbCvNon0rpVvImUwVpZ3lkcuit)
+</details>
 
-**Pre-release Versions:**
+<details> <summary> Pre-release Versions: </summary>
 
 - **Alpha V1:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/14Cwd4DUEj9y1uWrSnFIaX4qItdPmTiVq)
 - **Beta V2:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1d5X_kSjUIEA4vSy8a-QTFbVLk8Y7AhJQ)
 - **Beta V3:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1wPT8aMUyJsOGMPdMgUH7AsZyC-KD9RTN)
+</details>
 
-<details> <summary>Feature Table</summary>
+<details> <summary>Feature Table:</summary>
   
 | Features                                                                                   |  V1 |  V2  | V2.5 | Beta V3 |
 |--------------------------------------------------------------------------------------------|-----|------|------|---------|
