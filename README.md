@@ -1,6 +1,6 @@
 # Google Colab Non WebUI Stable Diffusion XL Image Generator (Legacy Version)
 
-This is a simple Google Colab notebook made by an 18-years-old junior programmer for generating images using Stable Diffusion XL.
+This is the legacy branch of this repository for containing the old versions of the notebook.
 
 ## Features
 - **Image Generation:** Uses Transformers and Diffusers as the major components for image generation, along with ControlNet, Inpainting, and IP-Adapter.
