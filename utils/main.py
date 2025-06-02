@@ -79,11 +79,12 @@ def load_last(filename, type):
         return None
 
 # Restarting the runtime if the selected model or pipeline is different compared to the loaded ones
-def restart(new, old):
-    print(f"New model is found. Your previous one ({old}) is different than your new one ({new}).")
-    print("Restarting the runtime is necessary to load the new one.")
-    time.sleep(2)
-    print("Restarting the runtime...")
+def restart(new, old, type):
+    if type == "model":
+        warning_restart = f"You inputted a new model ({new}), which is different than the old one ({old})."
+    elif type == "pipeline":
+        warning_restart = f"You changed the pipeline from {old} to {new}."
+    print(f"{warning_restart} Restarting is required to free some memory and avoid OutOfMemory error. Restarting...")
     time.sleep(0.5)
     os.kill(os.getpid(), 9)
 
@@ -124,8 +125,11 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     if not seed_list[1] and seed_list[0].value == -1:
         generator_seed = random.randint(1, 1000000000000)
-    else:
+    elif seed_list[1] or seed_list[0].value > -1:
         generator_seed = seed_list[0].value
+    elif seed_list[0].value < -1:
+        print("Seed cannot be less than -1. Randomizing the seed instead...")
+        generator_seed = random.randint(1, 1000000000000)
 
     base_path = "/content/gdrive/MyDrive" if os.path.exists("/content/gdrive/MyDrive") else "/content"
 
@@ -275,13 +279,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     if os.path.exists(os.path.join(f"{base_path}", "parameters.json")):
         os.remove(os.path.join(f"{base_path}", "parameters.json"))
 
-    # Check if the current pipeline and model are the same as the previous ones
-    global loaded_model, loaded_pipeline
-    if loaded_model and loaded_model != Model:
-        restart(Model, loaded_model)
-    if loaded_pipeline and loaded_pipeline != pipeline_type:
-        restart(pipeline_type, loaded_pipeline)
-
     # Logic to handle ControlNet and/or MultiControlNets
     global controlnets, loaded_controlnet_model, images, controlnets_scale
     if Canny and Canny_link is not None:
@@ -343,10 +340,12 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         vae = None
 
     # Handling pipeline and model loading
-    global pipeline
-    pipeline = pipeline_selector.load_pipeline(
+    global pipeline, loaded_model, loaded_pipeline
+    pipeline, model_name = pipeline_selector.load_pipeline(
         Model, 
         widgets_change[1], 
+        loaded_model, 
+        loaded_pipeline,
         controlnets=controlnets, 
         active_inpaint=active_inpaint, 
         vae=vae, 
@@ -364,7 +363,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Assigning new values if no model or pipeline is loaded
     if not loaded_model:
-        loaded_model = Model
+        loaded_model = model_name
     if not loaded_pipeline:
         loaded_pipeline = pipeline_type
 
