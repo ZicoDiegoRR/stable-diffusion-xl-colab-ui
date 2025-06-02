@@ -100,8 +100,8 @@ class Img2ImgSettings:
         self.prompt_randomize_button = widgets.Button(description="🔄", layout=widgets.Layout(width="40px"))
         self.prompt_randomize_button_label = widgets.Label(value="Randomize or continue your prompt with GPT-2")
 
-        self.prompt_widget.layout.width = "50%"
-        self.negative_prompt_widget.layout.width = "50%"
+        self.prompt_widget.layout.width = "100%"
+        self.negative_prompt_widget.layout.width = "100%"
         self.prompt_randomize_button.on_click(lambda b: self.generate_prompt_on_click(ideas_line, gpt2_pipe))
 
         self.prompts_section = widgets.HBox()
