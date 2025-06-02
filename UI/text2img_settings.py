@@ -14,8 +14,8 @@ class Text2ImgSettings:
         ])
 
     # Generate prompt
-    def generate_prompt_on_click(self):
-        generated_prompt = generate_prompt.generate(self.prompt_widget.value)
+    def generate_prompt_on_click(self, ideas_line, gpt2_pipe):
+        generated_prompt = generate_prompt.generate(self.prompt_widget.value, ideas_line, gpt2_pipe)
         self.prompt_widget.value = generated_prompt
         
     # Return every widget
@@ -70,7 +70,7 @@ class Text2ImgSettings:
             self.scheduler_settings.children = [self.scheduler_dropdown]
             
     # Initialize widgets creation
-    def __init__(self, cfg, ideas_line):
+    def __init__(self, cfg, ideas_line, gpt2_pipe):
         self.prompt_widget = widgets.Textarea(value=cfg[0] if cfg else "", placeholder="Enter your prompt here")
         self.negative_prompt_widget = widgets.Textarea(value=cfg[1] if cfg else "", placeholder="What you don't want to see?")
         self.prompt_randomize_button = widgets.Button(description="🔄", layout=widgets.Layout(width="40px"))
@@ -78,7 +78,7 @@ class Text2ImgSettings:
 
         self.prompt_widget.layout.width = "50%"
         self.negative_prompt_widget.layout.width = "50%"
-        self.prompt_randomize_button.on_click(lambda b: self.generate_prompt_on_click())
+        self.prompt_randomize_button.on_click(lambda b: self.generate_prompt_on_click(ideas_line, gpt2_pipe))
 
         self.prompts_section = widgets.HBox()
         self.prompts_section.children = [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget, widgets.HBox([self.prompt_randomize_button, self.prompt_randomize_button_label])]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])] if ideas_line else [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])]
