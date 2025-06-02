@@ -257,3 +257,6 @@ class UIWrapper:
         self.checking_the_selected_tab_index({"name": "selected_index", "new": self.ui_tab.selected_index, "old": None, "type": "change", "owner": self.ui_tab})
 
         self.merge_button.on_click(lambda b: self.merge_first_phase(self.ui_tab.selected_index, self.text2img, self.img2img, self.controlnet))
+
+        clear_output()
+        display(self.ui)
