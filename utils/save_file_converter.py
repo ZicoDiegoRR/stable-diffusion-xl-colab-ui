@@ -123,7 +123,7 @@ def old_to_new(cfg):
     # LoRA-exclusive parameters
     lora_list = [
         target_list[11],
-        target_list[13],
+        target_list[12],
     ]
     # Textual Inversion-exclusive parameters
     ti_list = [
