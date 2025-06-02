@@ -180,7 +180,7 @@ class UIWrapper:
         )
         
         # Wrapping widgets for seed
-        self.seed = widgets.Text(description="Seed")
+        self.seed = widgets.IntText(description="Seed")
         self.freeze = widgets.Checkbox(description="Use the same seed")
         self.seed_info = widgets.Label(value="You can input -1 seed or uncheck the 'Use the same seed' checkbox to use random seed.")
 
