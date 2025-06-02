@@ -119,21 +119,21 @@ class ControlNetSettings:
         controlnet_type = 0 if type == "canny" else 1 if type == "depth" else 2
         controlnet_children = list(self.canny_settings.children) if controlnet_type == 0 else list(self.depth_settings.children) if controlnet_type == 1 else list(self.openpose_settings.children)
         if value == "Link":
-            if controlnet_upload_widgets_list[controlnet_type] in controlnet_children:
+            if self.controlnet_upload_widgets_list[controlnet_type] in controlnet_children:
                 controlnet_children.pop(2)
-                controlnet_children.insert(2, controlnet_url_widgets_list[controlnet_type])
+                controlnet_children.insert(2, self.controlnet_url_widgets_list[controlnet_type])
         elif value == "Upload":
-            if controlnet_url_widgets_list[controlnet_type] in controlnet_children:
+            if self.controlnet_url_widgets_list[controlnet_type] in controlnet_children:
                 controlnet_children.pop(2)
-                controlnet_children.insert(2, controlnet_upload_widgets_list[controlnet_type])
+                controlnet_children.insert(2, self.controlnet_upload_widgets_list[controlnet_type])
         else:
-            if controlnet_url_widgets_list[controlnet_type] in controlnet_children:
+            if self.controlnet_url_widgets_list[controlnet_type] in controlnet_children:
                 controlnet_children.pop(2)
-            for i in range(len(controlnet_url_widgets_list)):
-                if controlnet_url_widgets_list[i] in controlnet_children:
-                    controlnet_children.remove(controlnet_url_widgets_list[i])
-                if controlnet_upload_widgets_list[i] in controlnet_children:
-                    controlnet_children.remove(controlnet_upload_widgets_list[i])
+            for i in range(len(self.controlnet_url_widgets_list)):
+                if self.controlnet_url_widgets_list[i] in controlnet_children:
+                    controlnet_children.remove(self.controlnet_url_widgets_list[i])
+                if self.controlnet_upload_widgets_list[i] in controlnet_children:
+                    controlnet_children.remove(self.controlnet_upload_widgets_list[i])
                     
                 if controlnet_type == 0:
                     self.canny_link_widget.value = self.controlnet_preset_ref(value)
