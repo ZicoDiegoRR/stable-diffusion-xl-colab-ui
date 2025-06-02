@@ -1,6 +1,7 @@
 import json
 import os
 
+# Loading the parameters
 def load_param(filename):
     try:
         with open(filename, 'r') as f:
@@ -9,6 +10,7 @@ def load_param(filename):
     except FileNotFoundError:
         return []
 
+# Removing None values
 def sanitize_none_values(list_value, default_value):
     sanitized_list = []
     for i, value in enumerate(list_value):
@@ -17,7 +19,8 @@ def sanitize_none_values(list_value, default_value):
         else:
             sanitized_list.append(value)
     return sanitized_list
-        
+
+# Converting the save file
 def old_to_new(path):
     default_param_for_dict = [
         "",
@@ -62,14 +65,17 @@ def old_to_new(path):
         "",
         "",
     ]
-    
+
+    # Loading and checking if the list contains less than 41 variables
     raw_list = load_param(path)
     if len(raw_list) < 41:
         for i in range(41 - len(raw_list)):
             raw_list.append(None)
 
+    # Sanitized list
     target_list = sanitize_none_values(raw_list, default_param_for_dict)
-            
+
+    # Text2Img or general parameters
     text2img_or_general_list = [
         target_list[0],
         target_list[3],
@@ -87,12 +93,14 @@ def old_to_new(path):
         target_list[9],
         target_list[36],
     ]
-    
+
+    # Img2Img-exclusive parameters
     img2img_list = [
         target_list[37],
         target_list[38],
     ]
-    
+
+    # ControlNet-exclusive parameters
     controlnet_list = [
         target_list[15],
         target_list[13],
@@ -106,25 +114,28 @@ def old_to_new(path):
         target_list[22],
         target_list[23],
     ]
-    
+
+    # Inpainting-exclusive parameters
     inpaint_list = [
         target_list[24],
         target_list[25],
         target_list[26],
         target_list[27],
     ]
-    
+
+    # IP-Adapter-exclusive parameters
     ip_list = [
         target_list[29],
         target_list[30],
         target_list[28],
     ]
-    
+
+    # LoRA-exclusive parameters
     lora_list = [
         target_list[11],
         target_list[13],
     ]
-    
+    # Textual Inversion-exclusive parameters
     ti_list = [
         target_list[39],
         target_list[40],
@@ -138,6 +149,7 @@ def old_to_new(path):
     ]
     '''
 
+    # Converting list to dictionary
     new_cfg = {
         "text2img": text2img_or_general_list,
         "img2img": text2img_or_general_list + img2img_list,
