@@ -15,6 +15,8 @@ This folder contains the core functional components that power the image generat
 - `modified_inference_realesrgan.py` — Performs image upscaling using Real-ESRGAN.
 
 - `pipeline_selector.py` — Selects the appropriate generation pipeline based on UI input.
+  
+- `preprocess.py` — Loads the save file and the prompt generator, then process them.
 
 - `run_generation.py` — Executes the core image generation process.
 
