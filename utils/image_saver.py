@@ -22,3 +22,5 @@ def save_image(image, prompt_for_name, prefix, base_path="/content/gdrive/MyDriv
     generated_image_filename = generated_image_raw_filename[:251] if len(generated_image_raw_filename) > 255 else generated_image_raw_filename
     generated_image_savefile = f"{image_save_path}/{generated_image_filename}.png"
     image.save(generated_image_savefile)
+
+    return generated_image_savefile
