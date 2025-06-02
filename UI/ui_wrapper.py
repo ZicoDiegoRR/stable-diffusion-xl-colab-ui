@@ -88,7 +88,7 @@ class UIWrapper:
             self.reload_submit_button()
         elif index == 7:
             self.submit_settings.layout.visibility = "hidden"
-            self.upscaler.execute_realesrgan()
+            self.upscaler.execute_realesrgan(self.ui)
             self.reload_submit_button()
 
     # Unused, but could be used for later
