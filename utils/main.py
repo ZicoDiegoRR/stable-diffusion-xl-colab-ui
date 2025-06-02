@@ -35,6 +35,7 @@ import json
 import time
 import os
 
+# Variables to avoid loading the same model or pipeline twice
 loaded_model = ""
 loaded_pipeline = ""
 vae_current = ""
@@ -43,10 +44,12 @@ controlnets = [None] * 3
 images = [None] * 3
 controlnets_scale = [None] * 3
 
+# Saving the set parameters
 def save_param(path, data):
     with open(path, 'w') as file:
         json.dump(data, file)
 
+# Saving the path of the latest generated images
 def save_last(filename, data, type):
     try:
         if os.path.exists(filename):
@@ -66,6 +69,7 @@ def save_last(filename, data, type):
     except Exception as e:
         print(f"Error occurred: {e}")
 
+# Loading the path of the latest generated images
 def load_last(filename, type):
     try:
         with open(filename, 'r') as file:
@@ -74,6 +78,7 @@ def load_last(filename, type):
     except (FileNotFoundError, json.JSONDecodeError):
         return None
 
+# Restarting the runtime if the selected model or pipeline is different compared to the loaded ones
 def restart(new, old):
     print(f"New model is found. Your previous one ({old}) is different than your new one ({new}).")
     print("Restarting the runtime is necessary to load the new one.")
@@ -82,6 +87,7 @@ def restart(new, old):
     time.sleep(0.5)
     os.kill(os.getpid(), 9)
 
+# Converting image into a depth map used for ControlNet
 def get_depth_map(image, depth_estimator):
     image = depth_estimator(image)["depth"]
     image = np.array(image)
@@ -91,7 +97,7 @@ def get_depth_map(image, depth_estimator):
     depth_map = detected_map.permute(2, 0, 1)
     return depth_map
 
-# Only for display in output, nothing crazy
+# Only for display in output for depth map, nothing crazy
 def get_depth_map_display(image, depth_estimator):
     image = depth_estimator(image)["depth"]
     image = np.array(image)
@@ -99,6 +105,7 @@ def get_depth_map_display(image, depth_estimator):
     image = np.concatenate([image, image, image], axis=2)
     return image
 
+# Initializing image generation
 def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary, widgets_change):
     # Initialization
     pipeline_type = ""
@@ -177,10 +184,11 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     HF_Token = hf_token
     Civit_Token = civit_token
 
-    # Reusing the old logic
+    # Logging in to HF hub if Hugging Face's token is not empty
     if hf_token:
       login(hf_token)
 
+    # Selecting image and pipeline
     last_generation_loading = os.path.join(base_path, "last_generation.json")
     if Canny and selected_tab_for_pipeline == 2:
         if Canny_Link == "inpaint":
@@ -260,10 +268,12 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         if selected_tab_for_pipeline != 0:
             print("No reference image. Defaulting to Text-to-Image...")
 
+    # Saving the set parameters (first phase)
     save_param(f"{base_path}/Saved Parameters/main_parameters.json", dictionary)
-    
+
+    # Deleting old save if exists
     if os.path.exists(os.path.join(f"{base_path}", "parameters.json")):
-      os.remove(os.path.join(f"{base_path}", "parameters.json"))
+        os.remove(os.path.join(f"{base_path}", "parameters.json"))
 
     # Check if the current pipeline and model are the same as the previous ones
     global loaded_model, loaded_pipeline
@@ -325,12 +335,14 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         controlnets_scale[2] = Open_Pose_Strength
         display(make_image_grid([image_openpose, openpose_image.resize((1024, 1024))], rows=1, cols=2))
 
+    # Handling VAE
     global vae_current
     if VAE_Link and VAE_Link != vae_current:
         vae = vae_loader.load_vae(vae_current, VAE_Link, VAE_Config, widgets_change[0], HF_Token, Civit_Token)
     elif not VAE_Link:
         vae = None
 
+    # Handling pipeline and model loading
     global pipeline
     pipeline = pipeline_selector.load_pipeline(
         Model, 
@@ -341,7 +353,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         hf_token=HF_Token, 
         civit_token=Civit_Token
     )
-    
+
+    # Using a custom image encoder if IP-Adapter is True
     if IP_Adapter != "None":
         pipeline.image_encoder = CLIPVisionModelWithProjection.from_pretrained(
             "h94/IP-Adapter",
@@ -349,15 +362,18 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             torch_dtype=torch.float16,
         ).to("cuda")
 
+    # Assigning new values if no model or pipeline is loaded
     if not loaded_model:
         loaded_model = Model
     if not loaded_pipeline:
         loaded_pipeline = pipeline_type
 
+    # Xformer, generator, and safety checker
     pipeline.enable_xformers_memory_efficient_attention()
     generator = torch.Generator("cpu").manual_seed(generator_seed)
     pipeline.safety_checker = None
 
+    # Handling schedulers
     Prediction_type = "v_prediction" if V_Prediction else "epsilon"
     scheduler_args = {"prediction_type": Prediction_type,
                            "use_karras_sigmas": Karras,
@@ -399,17 +415,21 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     elif Scheduler == "PNDM":
         pipeline.scheduler = PNDMScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
 
+    # Using prompt weighting with Compel
     compel = Compel(tokenizer=[pipeline.tokenizer, pipeline.tokenizer_2], text_encoder=[pipeline.text_encoder, pipeline.text_encoder_2], returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED, requires_pooled=[False, True], truncate_long_prompts=False)
     conditioning, pooled = compel([Prompt, Negative_Prompt])
 
+    # Loading LoRA if not empty
     if LoRA_URLs:
         lora_loader.process(pipeline, lora[0], lora[1], widgets_change[2], HF_Token, Civit_Token)
         torch.cuda.empty_cache()
 
+    # Loading embeddings if not empty
     if Textual_Inversion_URLs:
         embeddings_loader.process(pipeline, embeddings[0], embeddings[1], widgets_change[2], HF_Token, Civit_Token)
         torch.cuda.empty_cache()
 
+    # Handling IP-Adapter
     if IP_Adapter != "None" and IP_Image_Link:
         # Loading the images
         adapter_image = []
@@ -434,6 +454,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         pipeline.set_ip_adapter_scale(IP_Adapter_Strength)
     torch.cuda.empty_cache()
 
+    # Generating image
     prefix, image = run_generation.generate(
         pipeline,
         pipeline_type,
@@ -456,15 +477,19 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         Denoising_Strength
     )
 
+    # Saving the image and resetting the output
     generated_image_savefile= image_saver.save_image(image, Prompt, prefix)
     clear_output()
     display(ui)
 
+    # Saving the set parameters (second phase)
     save_param(f"{base_path}/Saved Parameters/main_parameters.json", dictionary)
 
+    # Saving the last generated image's path
     last_generation_json = os.path.join(base_path, "last_generation.json")
     save_last(last_generation_json, generated_image_savefile, prefix)
 
+    # Displaying the image
     display(image)
     print(f"Scheduler: {''.join(Scheduler_used)}")
     print(f"Seed: {saved_number}")
