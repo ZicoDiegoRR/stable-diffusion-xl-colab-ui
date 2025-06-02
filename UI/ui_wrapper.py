@@ -14,8 +14,27 @@ from IPython.display import display, clear_output
 import ipywidgets as widgets
 
 class UIWrapper:
+    # Displaying the submit button and resetting the history
     def reload_submit_button(self):
         self.submit_settings.layout.visibility = "visible"
+        text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list = self.history.history_display(
+            self.text2img,
+            self.img2img,
+            self.controlnet,
+            self.inpaint,
+            self.ip,
+            self.lora,
+            self.embeddings,
+            self.upscaler,
+            self.ui_tab,
+        )
+        self.history.history_accordion.children = [
+            text2img_list, 
+            img2img_list, 
+            controlnet_list, 
+            inpainting_list, 
+            upscale_list
+        ]
 
     def select_class(self, index):
         if index == 0:
@@ -36,7 +55,8 @@ class UIWrapper:
             return "controlnet"
         if index == 3:
             return "inpaint"
-        
+
+    # Running the image generation
     def generate_value(self, index, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
         values_dictionary_for_generation = all_widgets.import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         widgets_dictionary_for_generation = all_widgets.import_widgets(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
@@ -70,10 +90,12 @@ class UIWrapper:
             self.submit_settings.layout.visibility = "hidden"
             self.upscaler.execute_realesrgan()
             self.reload_submit_button()
-    
+
+    # Unused, but could be used for later
     def get_tab_index(self):
         return self.ui_tab.selected_index
-    
+
+    # Final phase of merging a pipeline's general parameters to the selected pipeline
     def merge_final_phase(self, init, destination, index, text2img, img2img, controlnet): # Doing merging
         if destination != "back":
             all_widgets.merge(init, destination, text2img, img2img, controlnet)
@@ -85,7 +107,8 @@ class UIWrapper:
                 self.ui_tab.selected_index = 2
         else:
             self.merge_options.children = [self.merge_button]
-        
+
+    # First phase of merging a pipeline's general parameters to the selected pipeline
     def merge_first_phase(self, index, text2img, img2img, controlnet): # Giving options
         self.merge_options.children = [widgets.HBox([self.send_text2img, self.send_img2img, self.send_controlnet]), self.merge_back]
         type_for_init = "text2img" if index == 0 else "img2img" if index == 1 else "controlnet" if index == 2
