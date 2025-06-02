@@ -210,11 +210,11 @@ class UIWrapper:
         self.merge_back = widgets.Button(description="Back", button_style='danger', layout=widgets.Layout(width="100%"))
 
         self.merge_options = widgets.VBox([self.merge_button])
+        self.merge_option.layout = widgets.Layout(margin='0 0 0 auto')
 
         # Wrapping widgets for reset and merge
         self.reset_settings = self.reset_generate.wrap_settings("reset")
-        self.reset_settings.layout = widgets.Layout(margin='0 0 0 auto')
-        self.reset_and_send_section = widgets.HBox([self.merge_options, self.reset_settings])
+        self.reset_and_send_section = widgets.HBox([self.reset_settings, self.merge_options])
 
         # Wrapping additional widgets
         self.additional_widgets = widgets.VBox([self.seed_and_token_section, self.reset_and_send_section])
