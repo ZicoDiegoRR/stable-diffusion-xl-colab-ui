@@ -111,16 +111,16 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     # Initialization
     pipeline_type = ""
     if len(values_in_list) == 15:
-        pipelie_type = "text2img"
+        pipeline_type = "text2img"
         selected_tab_for_pipeline = 0
     elif len(values_in_list) == 17:
-        pipelie_type = "img2img"
+        pipeline_type = "img2img"
         selected_tab_for_pipeline = 1
     elif len(values_in_list) == 26:
-        pipelie_type = "controlnet"
+        pipeline_type = "controlnet"
         selected_tab_for_pipeline = 2
     elif len(values_in_list) == 19:
-        pipelie_type = "inpaint"
+        pipeline_type = "inpaint"
         selected_tab_for_pipeline = 3
 
     if not seed_list[1] and seed_list[0].value == -1:
@@ -346,6 +346,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         widgets_change[1], 
         loaded_model, 
         loaded_pipeline,
+        pipeline_type,
         controlnets=controlnets, 
         active_inpaint=active_inpaint, 
         vae=vae, 
