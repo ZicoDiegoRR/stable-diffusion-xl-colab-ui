@@ -25,10 +25,12 @@ from controlnet_aux import OpenposeDetector
 from compel import Compel, ReturnedEmbeddingsType
 from transformers import CLIPVisionModelWithProjection
 from diffusers.utils import load_image, make_image_grid
+from IPython.display import display, clear_output
 from huggingface_hub import login
 import ipywidgets as widgets
 import numpy as np
 import random
+import torch
 import json
 import time
 import os
@@ -44,6 +46,25 @@ controlnets_scale = [None] * 3
 def save_param(path, data):
     with open(path, 'w') as file:
         json.dump(data, file)
+
+def save_last(filename, data, type):
+    try:
+        if os.path.exists(filename):
+            with open(filename, 'r') as file:
+                existing_data = json.load(file)
+        else:
+            existing_data = {}
+
+        if type == "[Text-to-Image]":
+            existing_data['text2img'] = data
+        elif type == "[ControlNet]":
+            existing_data['controlnet'] = data
+        elif type == "[Inpainting]":
+            existing_data['inpaint'] = data
+        with open(filename, 'w') as file:
+            json.dump(existing_data, file, indent=4)
+    except Exception as e:
+        print(f"Error occurred: {e}")
 
 def load_last(filename, type):
     try:
@@ -240,6 +261,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             print("No reference image. Defaulting to Text-to-Image...")
 
     save_param(f"{base_path}/Saved Parameters/main_parameters.json", dictionary)
+    
     if os.path.exists(os.path.join(f"{base_path}", "parameters.json")):
       os.remove(os.path.join(f"{base_path}", "parameters.json"))
 
@@ -331,3 +353,120 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         loaded_model = Model
     if not loaded_pipeline:
         loaded_pipeline = pipeline_type
+
+    pipeline.enable_xformers_memory_efficient_attention()
+    generator = torch.Generator("cpu").manual_seed(generator_seed)
+    pipeline.safety_checker = None
+
+    Prediction_type = "v_prediction" if V_Prediction else "epsilon"
+    scheduler_args = {"prediction_type": Prediction_type,
+                           "use_karras_sigmas": Karras,
+                           "rescale_betas_zero_snr": Rescale_betas_to_zero_SNR
+                           }
+    if SGMUniform:
+      scheduler_args["timestep_spacing"] = "trailing"
+    Scheduler_used = ["", f"{Scheduler} ", "", "", ""]
+    Scheduler_used[0] = "V-Prediction " if Prediction_type == "v_prediction" else ""
+    Scheduler_used[2] = "Karras " if Karras else ""
+    Scheduler_used[3] = "SGMUniform " if SGMUniform else ""
+    Scheduler_used[4] = "with zero SNR betas rescaling" if Rescale_betas_to_zero_SNR else ""
+    if Scheduler == "DPM++ 2M":
+        pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    elif Scheduler == "DPM++ 2M SDE":
+        pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config, algorithm_type="sde-dpmsolver++", **scheduler_args)
+    elif Scheduler == "DPM++ SDE":
+        pipeline.scheduler = DPMSolverSinglestepScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    elif Scheduler == "DPM2":
+        pipeline.scheduler = KDPM2DiscreteScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    elif Scheduler == "DPM2 a":
+        pipeline.scheduler = KDPM2AncestralDiscreteScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    elif Scheduler == "DDPM":
+        pipeline.scheduler = DDPMScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    elif Scheduler == "Euler":
+        pipeline.scheduler = EulerDiscreteScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    elif Scheduler == "Euler a":
+        pipeline.scheduler = EulerAncestralDiscreteScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    elif Scheduler == "Heun":
+        pipeline.scheduler = HeunDiscreteScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    elif Scheduler == "LMS":
+        pipeline.scheduler = LMSDiscreteScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    elif Scheduler == "DEIS":
+        pipeline.scheduler = DEISMultistepScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    elif Scheduler == "UniPC":
+        pipeline.scheduler = UniPCMultistepScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    elif Scheduler == "DDIM":
+        pipeline.scheduler = DDIMScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    elif Scheduler == "PNDM":
+        pipeline.scheduler = PNDMScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+
+    compel = Compel(tokenizer=[pipeline.tokenizer, pipeline.tokenizer_2], text_encoder=[pipeline.text_encoder, pipeline.text_encoder_2], returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED, requires_pooled=[False, True], truncate_long_prompts=False)
+    conditioning, pooled = compel([Prompt, Negative_Prompt])
+
+    if LoRA_URLs:
+        lora_loader.process(pipeline, lora[0], lora[1], widgets_change[2], HF_Token, Civit_Token)
+        torch.cuda.empty_cache()
+
+    if Textual_Inversion_URLs:
+        embeddings_loader.process(pipeline, embeddings[0], embeddings[1], widgets_change[2], HF_Token, Civit_Token)
+        torch.cuda.empty_cache()
+
+    if IP_Adapter != "None" and IP_Image_Link:
+        # Loading the images
+        adapter_image = []
+        simple_Url = [word for word in re.split(r"\s*,\s*", IP_Image_Link) if word]
+        for link in simple_Url:
+            adapter_image.append(load_image(link))
+
+        # Creating the display
+        adapter_display = [element for element in adapter_image]
+        if len(adapter_image) % 3 == 0:
+            row = int(len(adapter_image)/3)
+        else:
+            row = int(len(adapter_image)/3) + 1
+            for i in range(3*row - len(adapter_image)):
+                adapter_display.append(load_image("https://huggingface.co/IDK-ab0ut/BFIDIW9W29NFJSKAOAOXDOKERJ29W/resolve/main/placeholder.png"))
+        print("Image(s) for IP-Adapter:")
+        display(make_image_grid([element.resize((1024, 1024)) for element in adapter_display], rows=row, cols=3))
+
+        # Loading the images to the IP-Adapter
+        image_embeds = [adapter_image]
+        pipeline.load_ip_adapter("h94/IP-Adapter", subfolder="sdxl_models", weight_name=IP_Adapter, low_cpu_mem_usage=True)
+        pipeline.set_ip_adapter_scale(IP_Adapter_Strength)
+    torch.cuda.empty_cache()
+
+    prefix, image = run_generation.generate(
+        pipeline,
+        pipeline_type,
+        conditioning,
+        pooled,
+        Steps,
+        Width,
+        Height,
+        Scale,
+        Clip_Skip,
+        generator,
+        Inpainting_Strength,
+        IP_Adapter,
+        image_embeds,
+        inpaint_image,
+        mask_image,
+        controlnets_scale,
+        images,
+        ref_image,
+        Denoising_Strength
+    )
+
+    generated_image_savefile= image_saver.save_image(image, Prompt, prefix)
+    clear_output()
+    display(ui)
+
+    save_param(f"{base_path}/Saved Parameters/main_parameters.json", dictionary)
+
+    last_generation_json = os.path.join(base_path, "last_generation.json")
+    save_last(last_generation_json, generated_image_savefile, prefix)
+
+    display(image)
+    print(f"Scheduler: {''.join(Scheduler_used)}")
+    print(f"Seed: {saved_number}")
+    print(f"Image is saved at {generated_image_savefile}.")
+    torch.cuda.empty_cache()
