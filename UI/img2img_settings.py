@@ -102,7 +102,7 @@ class Img2ImgSettings:
 
         self.prompt_widget.layout.width = "50%"
         self.negative_prompt_widget.layout.width = "50%"
-        self.prompt_randomize_button.on_click(lambda b: self.generate_prompt_on_click.(ideas_line, gpt2_pipe))
+        self.prompt_randomize_button.on_click(lambda b: self.generate_prompt_on_click(ideas_line, gpt2_pipe))
 
         self.prompts_section = widgets.HBox()
         self.prompts_section.children = [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget, widgets.HBox([self.prompt_randomize_button, self.prompt_randomize_button_label])]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])] if ideas_line else [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])]
