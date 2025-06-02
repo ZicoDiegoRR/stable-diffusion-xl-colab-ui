@@ -55,4 +55,4 @@ class ResetGenerateSettings:
         self.reset_button = widgets.Button(description="Reset parameters to default")
         self.reset_display = widgets.VBox([self.reset_button])
 
-        self.reset_button.on_click(lambda b: self.reset_button_click())
+        self.reset_button.on_click(lambda b: self.reset_button_click(text2img, img2img, controlnet, inpaint, ip, lora, embeddings))
