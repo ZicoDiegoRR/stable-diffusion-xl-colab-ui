@@ -111,7 +111,7 @@ class UIWrapper:
     # First phase of merging a pipeline's general parameters to the selected pipeline
     def merge_first_phase(self, index, text2img, img2img, controlnet): # Giving options
         self.merge_options.children = [widgets.HBox([self.send_text2img, self.send_img2img, self.send_controlnet]), self.merge_back]
-        type_for_init = "text2img" if index == 0 else "img2img" if index == 1 else "controlnet" if index == 2
+        type_for_init = self.select_key(index)
 
         self.send_text2img._click_handlers.callbacks.clear()
         self.send_img2img._click_handlers.callbacks.clear()
