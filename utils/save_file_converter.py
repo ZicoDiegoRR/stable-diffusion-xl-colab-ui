@@ -1,15 +1,6 @@
 import json
 import os
 
-# Loading the parameters
-def load_param(filename):
-    try:
-        with open(filename, 'r') as f:
-            params = json.load(f)
-        return params
-    except FileNotFoundError:
-        return []
-
 # Removing None values
 def sanitize_none_values(list_value, default_value):
     sanitized_list = []
@@ -21,7 +12,7 @@ def sanitize_none_values(list_value, default_value):
     return sanitized_list
 
 # Converting the save file
-def old_to_new(path):
+def old_to_new(cfg):
     default_param_for_dict = [
         "",
         "",
@@ -67,13 +58,12 @@ def old_to_new(path):
     ]
 
     # Loading and checking if the list contains less than 41 variables
-    raw_list = load_param(path)
-    if len(raw_list) < 41:
-        for i in range(41 - len(raw_list)):
-            raw_list.append(None)
+    if len(cfg) < 41:
+        for i in range(41 - len(cfg)):
+            cfg.append(None)
 
     # Sanitized list
-    target_list = sanitize_none_values(raw_list, default_param_for_dict)
+    target_list = sanitize_none_values(cfg, default_param_for_dict)
 
     # Text2Img or general parameters
     text2img_or_general_list = [
