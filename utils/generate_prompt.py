@@ -1,4 +1,6 @@
 from transformers import pipeline as pipe, set_seed
+import random
+import re
 
 # Prompt wildcard function
 def generate(starting_text, ideas_line, gpt2_pipe):
