@@ -135,15 +135,15 @@ class UIWrapper:
             self.submit_settings.layout.visibility = "visible"
             self.merge_options.layout.visibility = "visible"
     
-    def __init__(self, cfg, ideas_line): # cfg as a dictionary
+    def __init__(self, cfg, ideas_line, gpt2_pipe): # cfg as a dictionary
         # Creating the tab
         self.ui_tab = widgets.Tab()
         self.value_list = []
         
         # Instantiate other classes
-        self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line)
-        self.img2img = Img2ImgSettings(cfg["img2img"], ideas_line)
-        self.controlnet = ControlNetSettings(cfg["controlnet"], ideas_line)
+        self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line, gpt2_pipe)
+        self.img2img = Img2ImgSettings(cfg["img2img"], ideas_line, gpt2_pipe)
+        self.controlnet = ControlNetSettings(cfg["controlnet"], ideas_line, gpt2_pipe)
         self.inpaint = InpaintingSettings(cfg["inpaint"])
         self.ip = IPAdapterLoader(cfg["ip"])
         self.lora = LoRALoader(cfg["lora"])
