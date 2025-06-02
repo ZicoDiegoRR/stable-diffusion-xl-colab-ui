@@ -149,7 +149,9 @@ class HistorySystem:
         self.history_image_widget = widgets.Image()
 
         self.history_image_display_first = widgets.VBox([widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), self.history_image_widget, self.history_image_modification_date], continuous_update = True)
-        text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list = self.history_display()
+        text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list = self.history_display(
+            text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab,
+        )
         self.history_accordion.children = [text2img_list, img2img_list, controlnet_list, inpainting_list, upscale_list]
 
         history_accordion_titles = ["Text-to-Image History 🔮✍", "Image-to-Image History 🔮🎨", "ControlNet History 🔮🔧", "Inpainting History 🔮🖌️", "Image Upscaler History 🔮✨"]
