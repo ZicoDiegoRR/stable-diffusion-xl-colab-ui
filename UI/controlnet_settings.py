@@ -15,6 +15,11 @@ class ControlNetSettings:
             self.vae_section,
         ])
 
+    # Generate prompt
+    def generate_prompt_on_click(self):
+        generated_prompt = generate_prompt.generate(self.prompt_widget.value)
+        self.prompt_widget.value = generated_prompt
+
     def return_widgets(self):
         return [
             self.prompt_widget,
@@ -281,7 +286,7 @@ class ControlNetSettings:
 
         self.prompt_widget.layout.width = "50%"
         self.negative_prompt_widget.layout.width = "50%"
-        self.prompt_randomize_button.on_click(lambda b: generate_prompt.generate(self.prompt_widget.value))
+        self.prompt_randomize_button.on_click(lambda b: self.generate_prompt_on_click())
 
         self.prompts_section = widgets.HBox()
         self.prompts_section.children = [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget, widgets.HBox([self.prompt_randomize_button, self.prompt_randomize_button_label])]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])] if ideas_line else [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])]
