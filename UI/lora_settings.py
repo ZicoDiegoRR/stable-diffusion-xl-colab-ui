@@ -51,8 +51,8 @@ class LoRALoader:
                 self.lora_click(lora, float(scale))
 
     def __init__(self, cfg):
-        self.lora_urls_widget = widgets.Text(value=cfg[1] if cfg else "")
-        self.weight_scale_widget = widgets.Text(value=cfg[2] if cfg else "")
+        self.lora_urls_widget = widgets.Text(value=cfg[0] if cfg else "")
+        self.weight_scale_widget = widgets.Text(value=cfg[1] if cfg else "")
 
         self.lora_add = widgets.Button(description="+", button_style='success', layout=widgets.Layout(width='30px', height='30px'))
         self.lora_nested_vbox = widgets.VBox()
