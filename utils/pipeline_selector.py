@@ -43,13 +43,15 @@ def load_pipeline(model_url, widget, loaded_model, loaded_pipeline, pipeline_typ
         # Download
         if model_url.startswith("https://") or model_url.startswith("http://"):
             Model_path = downloader.download_file(model_url, "Checkpoint", hf_token, civit_token)
-            widget_value, _ = os.path.splitext(os.path.basename(Model_path))
-            widget.value = widget_value
+            model_name, _ = os.path.splitext(os.path.basename(Model_path))
+            widget.value = model_name
         else:
             if not model_url.startswith("/content/Checkpoint"):
                 Model_path = f"/content/Checkpoint/{model_url}.{format}"
+                model_name = model_url
             else:
                 Model_path = model_url
+                model_name = model_url
                 
         # Load
         similarity_checker(model_url, loaded_model, loaded_pipeline, pipeline_type)
@@ -84,4 +86,4 @@ def load_pipeline(model_url, widget, loaded_model, loaded_pipeline, pipeline_typ
                 os.remove(Model_path)
             raise TypeError(f"{Error}{Warning}")
 
-    return pipeline
+    return pipeline, model_name
