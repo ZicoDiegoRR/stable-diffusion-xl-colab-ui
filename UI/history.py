@@ -98,7 +98,7 @@ class HistorySystem:
         self.history_quick_reference_button._click_handlers.callbacks.clear()
         self.history_quick_reference_button.on_click(lambda b: self.history_quick_reference_first(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
 
-    def grid(self, list, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): # Function to make a grid of buttons
+    def grid(self, list, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): # Function to make a grid of buttons
         list_grid = widgets.GridspecLayout(math.ceil(len(list)/10), 10) if list else widgets.HTML(value="Nothing in here currently.")
         if list:
             for i in range(math.ceil(len(list)/10)):
