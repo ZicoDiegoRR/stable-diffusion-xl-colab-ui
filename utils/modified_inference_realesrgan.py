@@ -54,7 +54,7 @@ class ESRGANWidget:
     def execute_realesrgan(self):
         # execute
         run_upscaling(
-            tab=self.tab_ui
+            tab=self.tab_ui,
             input=self.input_link.value,
             model_name=self.model_name.value,
             denoise_strength=self.denoising.value,
