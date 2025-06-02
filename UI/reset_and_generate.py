@@ -18,6 +18,7 @@ def param_default():
         "lora": ["", ""],
         "embeddings": ["", ""],
     }
+    return default_param
 
 class ResetGenerateSettings:
     def wrap_settings(self, type): # Function to wrap every widget into a vbox
