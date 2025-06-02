@@ -15,7 +15,7 @@ def sanitize_none_values(list_value, default_value):
         if value is None:
             sanitized_list.append(default_value[i])
         else:
-            sanitized_list.append(list_value[i])
+            sanitized_list.append(value)
     return sanitized_list
         
 def old_to_new(path):
@@ -129,11 +129,14 @@ def old_to_new(path):
         target_list[39],
         target_list[40],
     ]
-    
+
+    # Unused in the new version (for selecting the model format and saving the freeze widget's value)
+    ''' 
     misc_list = [
         target_list[31],
         target_list[2],
     ]
+    '''
 
     new_cfg = {
         "text2img": text2img_or_general_list,
