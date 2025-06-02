@@ -41,8 +41,8 @@ class ResetGenerateSettings:
         self.reset_yes_button._click_handlers.callbacks.clear()
         self.reset_no_button._click_handlers.callbacks.clear()
 
-        self.reset_yes_button.on_click(lambda b: self.reset_evaluate("yes"))
-        self.reset_no_button.on_click(lambda b: self.reset_evaluate("no"))
+        self.reset_yes_button.on_click(lambda b: self.reset_evaluate("yes", text2img, img2img, controlnet, inpaint, ip, lora, embeddings))
+        self.reset_no_button.on_click(lambda b: self.reset_evaluate("no", text2img, img2img, controlnet, inpaint, ip, lora, embeddings))
 
     def __init__(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
         self.submit_button_widget = widgets.Button(disabled=False, button_style='', description="Generate")
