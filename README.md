@@ -25,9 +25,7 @@ This notebook is designed for artistic purposes and to spark inspiration. **Plea
 ## Installation
 Simply open the notebook on Google Colab to start using it. No installation is needed. Debugging and editing the code might be difficult due to the complex structure and my lack of knowledge in modular programming.
 
-**Link ((Legacy) Beta V3):** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1wPT8aMUyJsOGMPdMgUH7AsZyC-KD9RTN)
-
-**Link (V3):** Coming soon...
+**Link:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/V3.ipynb)
 
 ## Disclaimer
 - This tool is intended for creating art and exploring creative image generation.
