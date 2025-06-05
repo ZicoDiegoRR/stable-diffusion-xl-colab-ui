@@ -118,10 +118,10 @@ class UIWrapper:
         self.send_controlnet._click_handlers.callbacks.clear()
         self.merge_back._click_handlers.callbacks.clear()
         
-        self.send_text2img.on_click(lambda b: self.merge_final_phase(type_for_init, "text2img", self.text2img, self.img2img, self.controlnet))
-        self.send_img2img.on_click(lambda b: self.merge_final_phase(type_for_init, "img2img", self.text2img, self.img2img, self.controlnet))
-        self.send_controlnet.on_click(lambda b: self.merge_final_phase(type_for_init, "controlnet", self.text2img, self.img2img, self.controlnet))
-        self.merge_back.on_click(lambda b: self.merge_final_phase(type_for_init, "back", None, None, None))
+        self.send_text2img.on_click(lambda b: self.merge_final_phase(type_for_init, "text2img", index, self.text2img, self.img2img, self.controlnet))
+        self.send_img2img.on_click(lambda b: self.merge_final_phase(type_for_init, "img2img", index, self.text2img, self.img2img, self.controlnet))
+        self.send_controlnet.on_click(lambda b: self.merge_final_phase(type_for_init, "controlnet", index, self.text2img, self.img2img, self.controlnet))
+        self.merge_back.on_click(lambda b: self.merge_final_phase(type_for_init, "back", index, None, None, None))
 
     def checking_the_selected_tab_index(self, change): # Hiding the generate and send button or showing them
         self.tab_selected_index = change["new"]
