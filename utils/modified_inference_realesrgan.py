@@ -10,8 +10,10 @@ from diffusers.utils import load_image, make_image_grid
 from basicsr.utils.download_util import load_file_from_url
 from IPython.display import display, clear_output
 
+os.chdir("/content/RealESRGAN")
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
+os.chdir("/content")
 
 class ESRGANWidget:
     # upload handler
