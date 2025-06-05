@@ -29,7 +29,7 @@ def download_lora(pipe, link, scale, widget, hf_token, civit_token):
             unique_lora_urls.append(url)
             lora_paths.append(lora_file_path)
 
-            split_lora_name, _ = os.splitext(os.path.basename(lora_file_path))
+            split_lora_name, _ = os.path.splitext(os.path.basename(lora_file_path))
             lora_names.append(split_lora_name)
             scales.append(scale[i])
 
