@@ -36,6 +36,7 @@ import time
 import os
 
 # Variables to avoid loading the same model or pipeline twice
+pipeline = None
 loaded_model = ""
 loaded_pipeline = ""
 vae_current = ""
@@ -342,6 +343,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     # Handling pipeline and model loading
     global pipeline, loaded_model, loaded_pipeline
     pipeline, model_name = pipeline_selector.load_pipeline(
+        pipeline,
         Model, 
         widgets_change[1], 
         loaded_model, 
