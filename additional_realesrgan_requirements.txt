@@ -1,0 +1,3 @@
+facexlib
+gfpgan
+basicsr-fixed
