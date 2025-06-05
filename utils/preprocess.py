@@ -1,5 +1,6 @@
 from StableDiffusionXLColabUI.utils import save_file_converter
 from transformers import pipeline as pipe, set_seed
+from transformers.utils import logging
 from google.colab import drive
 import requests
 import time
@@ -14,6 +15,18 @@ def load_param(filename):
         return params
     except FileNotFoundError:
         return []
+
+def import_mod_real_esrgan():
+    %cd /content/RealESRGAN
+    from modified_inference_realesrgan import ESRGANWidget, VariableHandlerESRGAN, run_upscaling
+    %cd /content
+
+# Adding the modified_inference_realesrgan.py to Real-ESRGAN
+def add_mod_real_esrgan():
+    mod = requests.get("https://raw.githubusercontent.com/ZicoDiegoRR/stable_diffusion_xl_colab_ui/refs/heads/main/utils/modified_inference_realesrgan.py")
+    with open("/content/RealESRGAN/modified_inference_realesrgan.py", "w") as f:
+        f.write(mod.text)
+    import_mod_real_esrgan()
 
 #Function to save parameters config (had to make separate JSON def to avoid confusion)
 def save_param(path, data):
@@ -51,6 +64,9 @@ def list_or_dict(cfg):
     return new_cfg
 
 def run():
+    # Adding the modified Real-ESRGAN's inference Python script
+    add_mod_real_esrgan()
+    
     # Loading the saved config for the IPyWidgets
     if not os.path.exists("/content/gdrive/MyDrive"):
         try:
