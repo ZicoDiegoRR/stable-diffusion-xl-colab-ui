@@ -16,7 +16,7 @@ This folder contains the core functional components that power the image generat
 
 - `pipeline_selector.py` — Selects the appropriate generation pipeline based on UI input.
   
-- `preprocess.py` — Loads the save file and the prompt generator, then process them.
+- `preprocess.py` — Loads the save file and the prompt generator and processes them.
 
 - `run_generation.py` — Executes the core image generation process.
 
