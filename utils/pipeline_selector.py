@@ -1,4 +1,5 @@
 import os
+import time
 from diffusers import (
     AutoencoderKL,
     ControlNetModel, 
@@ -23,7 +24,6 @@ def similarity_checker(model_url, loaded_model, loaded_pipeline, pipeline_type):
         restart(model_url, loaded_model, "model")
     if loaded_pipeline and loaded_pipeline != pipeline_type:
         restart(pipeline_type, loaded_pipeline, "pipeline")
-    
 
 def load_pipeline(model_url, widget, loaded_model, loaded_pipeline, pipeline_type, format=".safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token=""):
     # For Hugging Face repository with "author/repo_name" format
