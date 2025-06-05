@@ -17,9 +17,9 @@ def load_param(filename):
         return []
 
 def import_mod_real_esrgan():
-    %cd /content/RealESRGAN
+    os.chdir("/content/RealESRGAN")
     from modified_inference_realesrgan import ESRGANWidget, VariableHandlerESRGAN, run_upscaling
-    %cd /content
+    os.chdir("/content")
 
 # Adding the modified_inference_realesrgan.py to Real-ESRGAN
 def add_mod_real_esrgan():
