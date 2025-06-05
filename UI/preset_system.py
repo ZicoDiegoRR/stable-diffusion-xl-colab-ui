@@ -1,3 +1,4 @@
+from StableDiffusionXLColabUI.utils import save_file_converter
 from StableDiffusionXLColabUI.UI import all_widgets
 from IPython.display import display, HTML
 import ipywidgets as widgets
@@ -33,6 +34,15 @@ class PresetSystem:
                 display(HTML(f"<span style='color: lime;'>Success:</span> {msg}"))
         if type != "warn":
             threading.Timer(sec, widget.clear_output).start()
+
+    # Validating and converting old preset to the new one
+    def list_or_dict(self, cfg, path):
+        if isinstance(cfg, list):
+            new_cfg = save_file_converter.old_to_new(cfg)
+            self.save_param(path, new_cfg)
+            return new_cfg
+        elif isinstance(cfg, dict):
+            return cfg
             
     # Wrapping every widget into a vbox
     def wrap_settings(self):
@@ -84,11 +94,16 @@ class PresetSystem:
 
     # Load a preset into your parameters
     def load_preset_on_click(self, name, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
-        preset_cfg = self.load_param(os.path.join(f"{self.base_path}/Saved Parameters/", f"{name}.json"))
+        param_path = os.path.join(f"{self.base_path}/Saved Parameters/", f"{name}.json")
+        
+        preset_raw_cfg = self.load_param(param_path)
+        preset_cfg = self.list_or_dict(preset_raw_cfg, param_path)
+        
         every_widgets = all_widgets.import_widgets(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         for key, items in every_widgets.items():
             for i in range(len(items)):
                 items[i].value = preset_cfg[key][i]
+                
         lora.construct(preset_cfg["lora"])
         embeddings.construct(preset_cfg["embeddings"])
         self.show_message(self.load_output, f"Loaded {name}.json.", "success")
