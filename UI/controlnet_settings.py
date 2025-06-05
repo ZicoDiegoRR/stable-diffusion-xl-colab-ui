@@ -290,7 +290,8 @@ class ControlNetSettings:
 
         self.prompts_section = widgets.HBox()
         self.prompts_section.children = [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget, widgets.HBox([self.prompt_randomize_button, self.prompt_randomize_button_label])]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])] if ideas_line else [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])]
-
+        self.prompts_section.layout.width = "100%"
+        
         self.model_widget = widgets.Text(value=cfg[2] if cfg else "", placeholder="HF's repository or direct URL")
         self.model_input_section = widgets.HBox([widgets.Label(value="Model link"), self.model_widget])
 
