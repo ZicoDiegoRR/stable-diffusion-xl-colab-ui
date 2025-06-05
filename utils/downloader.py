@@ -3,6 +3,29 @@ import requests
 import os
 import re
 
+def is_exist(folder, name, type):
+    if name.endswith(".safetensors") and not name.startswith(("https://", "http://", "/content")):
+        subfolder, _ = os.path.splitext(name)
+        weight_file = name
+    elif name.startswith(("https://", "http://")):
+        return False
+    else:
+        parts = name.strip("/").split("/")
+        if len(parts) >= 2:
+            subfolder = parts[-2]
+            weight_file = parts[-1]
+        else:
+            subfolder = "unknown"
+            weight_file = name
+
+    full_path = f"{folder}/{type}/{subfolder}" if type == "VAE" else f"{folder}/{type}/{weight_file}"
+    
+    if not os.path.exists(full_path):
+        return False
+    if type == "VAE":
+        return bool(os.listdir(full_path))
+    return True
+
 def download_file(url, type, hf_token, civit_token):
     # Folder creation if not exist
     download_folder = f"/content/{type}"
@@ -29,7 +52,7 @@ def download_file(url, type, hf_token, civit_token):
         download_url = url
 
     # Download
-    if download_url:
+    if download_url and not is_exist(download_folder, url, type):
         if download_header:
             download_req = requests.get(download_url, headers=download_header, stream=True)
         else:
@@ -59,6 +82,8 @@ def download_file(url, type, hf_token, civit_token):
             for chunk in download_req.iter_content(chunk_size=1024):
                 f.write(chunk)
                 bar.update(len(chunk))
+    else:
+        full_path = url
 
     # Return the path
     return full_path
