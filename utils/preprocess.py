@@ -23,9 +23,10 @@ def import_mod_real_esrgan():
 
 # Adding the modified_inference_realesrgan.py to Real-ESRGAN
 def add_mod_real_esrgan():
-    mod = requests.get("https://raw.githubusercontent.com/ZicoDiegoRR/stable_diffusion_xl_colab_ui/refs/heads/main/utils/modified_inference_realesrgan.py")
-    with open("/content/RealESRGAN/modified_inference_realesrgan.py", "w") as f:
-        f.write(mod.text)
+    os.rename(
+        "/content/StableDiffusionXLColabUI/utils/modified_inference_realesrgan.py", 
+        "/content/RealESRGAN/modified_inference_realesrgan.py"
+    )
     import_mod_real_esrgan()
 
 #Function to save parameters config (had to make separate JSON def to avoid confusion)
