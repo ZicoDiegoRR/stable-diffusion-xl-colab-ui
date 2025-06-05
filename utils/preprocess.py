@@ -3,6 +3,7 @@ from transformers import pipeline as pipe, set_seed
 from transformers.utils import logging
 from google.colab import drive
 import requests
+import shutil
 import time
 import json
 import os
@@ -23,7 +24,7 @@ def import_mod_real_esrgan():
 
 # Adding the modified_inference_realesrgan.py to Real-ESRGAN
 def add_mod_real_esrgan():
-    os.rename(
+    shutil.copy(
         "/content/StableDiffusionXLColabUI/utils/modified_inference_realesrgan.py", 
         "/content/RealESRGAN/modified_inference_realesrgan.py"
     )
