@@ -18,7 +18,7 @@ This is a simple Google Colab notebook made by an 18-years-old junior programmer
 - **Simplicity:** Consists of two cells only.
 - **Written Guide:** Can keep you on track with the flow of this notebook.
 
-> [!NOTE]/
+> [!NOTE]\
 > With the current update, the Inpainting feature is under development and it may fail. Please use the older version in the "Legacy" branch if you wish to use Inpainting.
 
 ## Usage
