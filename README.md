@@ -17,7 +17,9 @@ This is a simple Google Colab notebook made by an 18-years-old junior programmer
 - **Hugging Face Token Support:** Pass your Hugging Face token for accessing private files, but remember **never share it with anyone.**
 - **Simplicity:** Consists of two cells only.
 - **Written Guide:** Can keep you on track with the flow of this notebook.
-### With the current update, the Inpainting feature is under development and it may fail. Please use the older version in the "Legacy" branch if you wish to use Inpainting.
+
+> [!NOTE]/
+> With the current update, the Inpainting feature is under development and it may fail. Please use the older version in the "Legacy" branch if you wish to use Inpainting.
 
 ## Usage
 This notebook is designed for artistic purposes and to spark inspiration. **Please use it responsibly.** Creating deepfakes and uploading them online are strictly prohibited.
