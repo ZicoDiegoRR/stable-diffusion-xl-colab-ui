@@ -56,7 +56,7 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
                 model_name = model_url
                 
         # Load
-        similarity_checker(model_url, loaded_model, loaded_pipeline, pipeline_type)
+        similarity_checker(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type)
         try:
             if all(cn is None for cn in controlnets) and pipeline_type != "img2img" and not active_inpaint:
                 pipeline = StableDiffusionXLPipeline.from_single_file(Model_path, vae=vae, torch_dtype=torch.float16, variant="fp16").to("cuda")
