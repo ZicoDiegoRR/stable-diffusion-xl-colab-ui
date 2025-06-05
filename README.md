@@ -18,7 +18,7 @@ This is a simple Google Colab notebook made by an 18-years-old junior programmer
 - **Simplicity:** Consists of two cells only.
 - **Written Guide:** Can keep you on track with the flow of this notebook.
 
-> [!NOTE]\
+> [!IMPORTANT]\
 > With the current update, the Inpainting feature is under development and it may fail. Please use the older version in the "Legacy" branch if you wish to use Inpainting.
 
 ## Usage
@@ -28,6 +28,9 @@ This notebook is designed for artistic purposes and to spark inspiration. **Plea
 Simply open the notebook on Google Colab to start using it. No installation is needed. 
 
 **Link:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/V3.ipynb)
+
+> [!NOTE]\
+> Check out the [Legacy branch](https://github.com/ZicoDiegoRR/stable_diffusion_xl_colab_ui/tree/legacy) to use the old versions of this notebook.
 
 ## Disclaimer
 - This tool is intended for creating art and exploring creative image generation.
