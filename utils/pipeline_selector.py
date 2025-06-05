@@ -21,7 +21,7 @@ def flush(pipe, new, old, type):
     torch.cuda.empty_cache()
     gc.collect()
 
-def similarity_checker(model_url, loaded_model, loaded_pipeline, pipeline_type):
+def similarity_checker(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type):
     if loaded_model and loaded_model != model_url:
         flush(pipe, model_url, loaded_model, "model")
     if loaded_pipeline and loaded_pipeline != pipeline_type:
