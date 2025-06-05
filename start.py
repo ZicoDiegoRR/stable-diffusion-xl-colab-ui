@@ -20,3 +20,6 @@ def start():
     
     cfg, ideas_line, gpt2_pipe = preprocess.run() # Preprocess the save file, ideas.txt, and GPT-2
     colab_ui = UIWrapper(cfg, ideas_line, gpt2_pipe) # Initialize the UI
+
+if __name__ == '__main__':
+    start()
