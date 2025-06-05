@@ -55,14 +55,16 @@ def default_params():
   }
 
 # Checking and validating the save file
-def list_or_dict(cfg):
+def list_or_dict(cfg, path):
   if isinstance(cfg, list):
     new_cfg = save_file_converter.old_to_new(cfg)
+    save_param(path, new_cfg)
     return new_cfg
   elif isinstance(cfg, dict):
     return cfg
   else:
     new_cfg = default_params()
+    save_param(path, new_cfg)
     return new_cfg
 
 def run():
@@ -86,16 +88,18 @@ def run():
     cfg = None
     if os.path.exists(f"{base_path}/parameters.json"):
         cfg = load_param(os.path.join(f"{base_path}", "parameters.json"))
-        print(f"Found a config at {base_path}/parameters.json.")
         os.makedirs(f"{base_path}/Saved Parameters", exist_ok=True)
         save_param(os.path.join(f"{base_path}/Saved Parameters/", "main_parameters.json"), cfg)
+        main_parameter_path = os.path.join(f"{base_path}/Saved Parameters/", "main_parameters.json")
+        print(f"Found a config at {base_path}/parameters.json.")
     elif not os.path.exists(f"{base_path}/parameters.json") or os.path.exists(f"{base_path}/Saved Parameters/main_parameters.json"):
         cfg = load_param(os.path.join(f"{base_path}/Saved Parameters/", "main_parameters.json"))
+        main_parameter_path = os.path.join(f"{base_path}/Saved Parameters/", "main_parameters.json")
         print(f"Found a config at {base_path}/Saved Parameters/main_parameters.json.")
 
     # Validating the save file's content
     if cfg:
-        cfg = list_or_dict(cfg)
+        cfg = list_or_dict(cfg, main_parameter_path)
     else:
         print("No saved config found. Defaulting...")
         cfg = default_params()
