@@ -1,5 +1,6 @@
 import os
-import time
+import gc
+import torch
 from diffusers import (
     AutoencoderKL,
     ControlNetModel, 
@@ -10,24 +11,25 @@ from diffusers import (
 )
 from StableDiffusionXLColabUI.utils import downloader
 
-def restart(new, old, type):
+def flush(pipe, new, old, type):
     if type == "model":
         warning_restart = f"You inputted a new model ({new}), which is different than the old one ({old})."
     elif type == "pipeline":
         warning_restart = f"You changed the pipeline from {old} to {new}."
-    print(f"{warning_restart} Restarting is required to free some memory and avoid OutOfMemory error. Restarting...")
-    time.sleep(0.5)
-    os.kill(os.getpid(), 9)
+    print(f"{warning_restart} Flushing the model...")
+    del pipe
+    torch.cuda.empty_cache()
+    gc.collect()
 
 def similarity_checker(model_url, loaded_model, loaded_pipeline, pipeline_type):
     if loaded_model and loaded_model != model_url:
-        restart(model_url, loaded_model, "model")
+        flush(pipe, model_url, loaded_model, "model")
     if loaded_pipeline and loaded_pipeline != pipeline_type:
-        restart(pipeline_type, loaded_pipeline, "pipeline")
+        flush(pipe, pipeline_type, loaded_pipeline, "pipeline")
 
-def load_pipeline(model_url, widget, loaded_model, loaded_pipeline, pipeline_type, format=".safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token=""):
+def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeline_type, format=".safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token=""):
     # For Hugging Face repository with "author/repo_name" format
-    similarity_checker(model_url, loaded_model, loaded_pipeline, pipeline_type)
+    similarity_checker(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type)
     if model_url.count("/") == 1 and (not model_url.startswith("https://") or not model_url.startswith("http://")):
         if all(cn is None for cn in controlnets) and pipeline_type != "img2img" and not active_inpaint:
             pipeline = StableDiffusionXLPipeline.from_pretrained(model_url, vae=vae, torch_dtype=torch.float16).to("cuda")
