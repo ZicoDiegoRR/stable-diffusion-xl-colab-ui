@@ -45,35 +45,35 @@ class PresetSystem:
         self.delete_preset_selection_dropdown.options = self.list_all_saved_preset()
 
     # Final phase of saving preset
-    def save_warning_evaluate(self, result, name):
+    def save_warning_evaluate(self, result, name, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
         if result == "override":
-            save_params = all_widgets.import_values()
+            save_params = all_widgets.import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
             self.save_param(f"{self.base_path}/Saved Parameters/{name}.json", save_params)
             self.reset_options()
             self.show_message(self.save_output, f"Saved {name}.json in {self.base_path} folder.", "success")
             
         self.save_preset_button._click_handlers.callbacks.clear()
-        self.save_preset_button.on_click(lambda b: self.save_preset_on_click(self.save_preset_name_widget.value))
+        self.save_preset_button.on_click(lambda b: self.save_preset_on_click(self.save_preset_name_widget.value, text2img, img2img, controlnet, inpaint, ip, lora, embeddings))
 
     # First phase of saving preset if another file with the same name exists
-    def save_warning_if_preset_exists(self, name):
+    def save_warning_if_preset_exists(self, name, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
         self.save_warning_back_button._click_handlers.callbacks.clear()
 
         self.show_message(self.save_output, f"{name}.json already exists. Saving the current parameters with the same name will overwrite the original saved parameters. Do you wish to continue?", "warn")
-        self.save_warning_back_button.on_click(lambda b: self.save_warning_evaluate("back", name))
+        self.save_warning_back_button.on_click(lambda b: self.save_warning_evaluate("back", name, text2img, img2img, controlnet, inpaint, ip, lora, embeddings))
 
         self.save_preset_button._click_handlers.callbacks.clear()
-        self.save_preset_button.on_click(lambda b: self.save_warning_evaluate("override", name))
+        self.save_preset_button.on_click(lambda b: self.save_warning_evaluate("override", name, text2img, img2img, controlnet, inpaint, ip, lora, embeddings))
 
     # Saving and/or evaluating input
-    def save_preset_on_click(self, name):
+    def save_preset_on_click(self, name, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
         if name and name not in self.list_all_saved_preset():
-            save_params = all_widgets.import_values()
+            save_params = all_widgets.import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
             self.save_param(f"{self.base_path}/Saved Parameters/{name}.json", save_params)
             self.show_message(self.save_output, f"Saved {name}.json in {self.base_path} folder.", "success")
             self.reset_options()
         elif name in self.list_all_saved_preset():
-            self.save_warning_if_preset_exists(name)
+            self.save_warning_if_preset_exists(name, text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         else:
             self.show_message(self.save_output, "Name cannot be empty!", "error")
 
@@ -184,7 +184,7 @@ class PresetSystem:
         self.preset_tab.set_title(2, "Rename Preset")
         self.preset_tab.set_title(3, "Delete Preset")
 
-        self.save_preset_button.on_click(lambda b: self.save_preset_on_click(self.save_preset_name_widget.value))
+        self.save_preset_button.on_click(lambda b: self.save_preset_on_click(self.save_preset_name_widget.value, text2img, img2img, controlnet, inpaint, ip, lora, embeddings))
         self.load_preset_button.on_click(lambda b: self.load_preset_on_click(self.load_preset_selection_dropdown.value, text2img, img2img, controlnet, inpaint, ip, lora, embeddings))
         self.rename_preset_button.on_click(lambda b: self.rename_preset_on_click(self.rename_preset_selection_dropdown.value, self.rename_preset_widget.value))
         self.delete_preset_button.on_click(lambda b: self.delete_preset_on_click(self.delete_preset_selection_dropdown.value))
