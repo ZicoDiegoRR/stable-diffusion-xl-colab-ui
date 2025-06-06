@@ -39,6 +39,7 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
             pipeline = StableDiffusionXLControlNetPipeline.from_pretrained(model_url, controlnet=[element for element in controlnets if element], vae=vae, torch_dtype=torch.float16).to("cuda")
         elif pipeline_type == "img2img":
             pipeline = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_url, vae=vae, torch_dtype=torch.float16).to("cuda")
+        model_name = model_url
 
     # For non-Hugging Face repository or Hugging Face direct link
     else:
