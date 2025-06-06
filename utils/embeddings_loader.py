@@ -22,20 +22,33 @@ def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token)
     unique_ti_urls = []
     
     for i, url in enumerate(link):
+        textual_inversion_path = ""
         if url not in unique_ti_urls:
             if url.startswith("https://") or url.startswith("http://"):
                 textual_inversion_path = downloader.download_file(url, "Embeddings", hf_token, civit_token)
             else:
-                textual_inversion_path = f"/content/Embeddings/{url}"
-            unique_ti_urls.append(url)
-            ti_path.append(textual_inversion_path)
+                if url.startswith("/content/LoRAs/"):
+                    ti_check = os.path.basename(url)
+                else:
+                    ti_check = url
+                for lora in os.listdir("/content/LoRAs/"):
+                    if ti_check in lora:
+                        textual_inversion_path = f"/content/LoRAs/{lora}"
+                        break
 
-            split_filename, _ = os.path.splitext(os.path.basename(textual_inversion_path))
-            ti_list.append(split_filename)
-            tokens.append(token[i])
+            if textual_inversion_path:
+                unique_ti_urls.append(url)
+                ti_path.append(textual_inversion_path)
 
-            widget_value = widget.value.replace(url, split_filename)
-            widget.value = widget_value
+                split_filename, _ = os.path.splitext(os.path.basename(textual_inversion_path))
+                ti_list.append(split_filename)
+                tokens.append(token[i])
+
+                widget_value = widget.value.replace(url, split_filename)
+                widget.value = widget_value
+            else:
+                print(f"It seems like {url} is an invalid path or doesn't exist. Make sure to put a correct path to ensure the weight being loaded correctly.")
+                print(f"Skipped {url}.")
 
     load_textual_inversion_from_link(pipe, ti_path, tokens, ti_list)
         
