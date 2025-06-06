@@ -26,7 +26,7 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
         # Determining the path, whether the VAE has been downloaded or not
         if vae_url_checker(model_path):
             vae_download_path = [downloader.download_file(model_path, "VAE", hf_token, civit_token), downloader.download_file(config_path, "VAE", hf_token, civit_token)]
-            vae_save_folder, _ = os.path.splitext(os.path.basename(vae_path[0]))
+            vae_save_folder, _ = os.path.splitext(os.path.basename(vae_download_path[0]))
             os.makedirs(f"/content/VAE/{vae_save_folder}", exist_ok=True)
             vae_path = []
             for i, path in enumerate(vae_download_path):
