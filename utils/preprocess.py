@@ -80,6 +80,8 @@ def run():
             print("Excluding Google Drive storage...")
             google_drive_use = False
             time.sleep(1.5)
+    else:
+        google_drive_use = True
 
     if google_drive_use:
         base_path = "/content/gdrive/MyDrive"
