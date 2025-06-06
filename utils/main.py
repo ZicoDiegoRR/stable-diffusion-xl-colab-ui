@@ -263,7 +263,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
       if ref_image or os.path.exists(ref_image):
         pipeline_type = "img2img"
     else:
-      ref_image = ""
+      ref_image = None
 
     if not IP_Image_Link and IP_Adapter != "None":
         print(f"You selected {IP_Adapter}, but left the IP_Image_Link empty. Skipping IP-Adapter...")
@@ -470,8 +470,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         Inpainting_Strength,
         IP_Adapter,
         image_embeds,
-        inpaint_image,
-        mask_image,
+        Inpainting_Image,
+        Mask_Image,
         controlnets_scale,
         images,
         ref_image,
