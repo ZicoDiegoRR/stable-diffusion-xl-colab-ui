@@ -68,6 +68,9 @@ def list_or_dict(cfg, path):
     return new_cfg
 
 def run():
+    # Minimizing the Transformers' output
+    logging.set_verbosity_error()
+    
     # Adding the modified Real-ESRGAN's inference Python script
     add_mod_real_esrgan()
     
