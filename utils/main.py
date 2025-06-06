@@ -364,11 +364,9 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             torch_dtype=torch.float16,
         ).to("cuda")
 
-    # Assigning new values if no model or pipeline is loaded
-    if not loaded_model:
-        loaded_model = model_name
-    if not loaded_pipeline:
-        loaded_pipeline = pipeline_type
+    # Assigning new values 
+    loaded_model = model_name
+    loaded_pipeline = pipeline_type
 
     # Xformer, generator, and safety checker
     pipeline.enable_xformers_memory_efficient_attention()
