@@ -112,6 +112,7 @@ class ControlNetSettings:
         else:
             return "inpaint"
 
+    '''
     def controlnet_dropdown_handler(self, type, value): # Function to change the image reference based on the selected option in the dropdown
         self.controlnet_url_widgets_list = [self.canny_link_widget, self.depth_map_link_widget, self.openpose_link_widget]
         self.controlnet_upload_widgets_list = [self.canny_upload, self.depth_upload, self.openpose_upload]
@@ -148,7 +149,8 @@ class ControlNetSettings:
             self.depth_settings.children = tuple(controlnet_children)
         else:
             self.openpose_settings.children = tuple(controlnet_children)
-
+    '''
+    
     def dropdown_selector_upon_starting(self, value):
         if value == "":
             return self.controlnet_dropdown_choice[2]
@@ -168,7 +170,22 @@ class ControlNetSettings:
             self.canny_settings.children = [self.canny_toggle]
 
     def canny_dropdown_handler(self, change): # Function to attach the canny dropdown to the controlnet dropdown handler
-        self.controlnet_dropdown_handler("canny", change["new"])
+        if change["new"] == "Link":
+            self.canny_settings.children = [
+                self.canny_toggle, self.canny_dropdown, self.canny_link_widget, 
+                self.canny_min_slider, self.canny_max_slider, self.canny_strength_slider
+            ]
+        elif change["new"] == "Upload":
+            self.canny_settings.children = [
+                self.canny_toggle, self.canny_dropdown, self.canny_upload, 
+                self.canny_min_slider, self.canny_max_slider, self.canny_strength_slider
+            ]
+        else:
+            self.canny_settings.children = [
+                self.canny_toggle, self.canny_dropdown, self.canny_min_slider, 
+                self.canny_max_slider, self.canny_strength_slider
+            ]
+            self.canny_link_widget.value = self.controlnet_preset_ref(change["new"])
 
     def canny_upload_handler(self, change): # Function to load the path of the uploaded image to the image link
         os.makedirs("/content/canny", exist_ok=True)
@@ -187,7 +204,22 @@ class ControlNetSettings:
             self.depth_settings.children = [self.depth_map_toggle]
 
     def depthmap_dropdown_handler(self, change): # Function to attach the canny dropdown to the controlnet dropdown handler
-        self.controlnet_dropdown_handler("depth", change["new"])
+        if change["new"] == "Link":
+            self.depth_settings.children = [
+                self.depth_map_toggle, self.depthmap_dropdown, 
+                self.depth_map_link_widget, self.depth_strength_slider
+            ]
+        elif change["new"] == "Upload":
+            self.depth_settings.children = [
+                self.depth_map_toggle, self.depthmap_dropdown, 
+                self.depth_upload, self.depth_strength_slider
+            ]
+        else:
+            self.depth_settings.children = [
+                self.depth_map_toggle, self.depthmap_dropdown, 
+                self.depth_strength_slider
+            ]
+            self.depth_map_link_widget.value = self.controlnet_preset_ref(change["new"])
 
     def depthmap_upload_handler(self, change): # Function to load the path of the uploaded image to the image link
         os.makedirs("/content/depthmap/", exist_ok=True)
@@ -207,7 +239,22 @@ class ControlNetSettings:
             self.openpose_settings.children = [self.openpose_toggle]
 
     def openpose_dropdown_handler(self, change): # Function to attach the canny dropdown to the controlnet dropdown handler
-        self.controlnet_dropdown_handler("openpose", change["new"])
+        if change["new"] == "Link":
+            self.openpose_settings.children = [
+                self.openpose_toggle, self.openpose_dropdown, 
+                self.openpose_link_widget, self.openpose_strength_slider
+            ]
+        elif change["new"] == "Upload":
+            self.openpose_settings.children = [
+                self.openpose_toggle, self.openpose_dropdown, 
+                self.openpose_upload, self.openpose_strength_slider
+            ]
+        else:
+            self.openpose_settings.children = [
+                self.openpose_toggle, self.openpose_dropdown, 
+                self.openpose_strength_slider
+            ]
+            self.depth_map_link_widget.value = self.controlnet_preset_ref(change["new"])
 
     def openpose_upload_handler(self, change): # Function to load the path of the uploaded image to the image link
         os.makedirs("/content/openpose", exist_ok=True)
