@@ -14,6 +14,12 @@ def start():
     # Import the preprocess module and UI
     from StableDiffusionXLColabUI.utils import preprocess
     from StableDiffusionXLColabUI.UI.ui_wrapper import UIWrapper
-    
-    cfg, ideas_line, gpt2_pipe, base_path = preprocess.run() # Preprocess the save file, ideas.txt, and GPT-2
-    colab_ui = UIWrapper(cfg, ideas_line, gpt2_pipe, base_path) # Initialize the UI
+
+    # Setting the environment
+    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
+    # Preprocess the save file, ideas.txt, and GPT-2
+    cfg, ideas_line, gpt2_pipe, base_path = preprocess.run()
+
+    # Initialize the UI
+    colab_ui = UIWrapper(cfg, ideas_line, gpt2_pipe, base_path)
