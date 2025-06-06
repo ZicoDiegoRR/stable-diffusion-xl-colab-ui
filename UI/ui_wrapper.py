@@ -27,6 +27,7 @@ class UIWrapper:
             self.embeddings,
             self.upscaler,
             self.ui_tab,
+            self.base_path
         )
         self.history.history_accordion.children = [
             text2img_list, 
@@ -135,10 +136,11 @@ class UIWrapper:
             self.submit_settings.layout.visibility = "visible"
             self.merge_options.layout.visibility = "visible"
     
-    def __init__(self, cfg, ideas_line, gpt2_pipe): # cfg as a dictionary
+    def __init__(self, cfg, ideas_line, gpt2_pipe, base_path): # cfg as a dictionary
         # Creating the tab
         self.ui_tab = widgets.Tab()
         self.value_list = []
+        self.base_path = base_path
         
         # Instantiate other classes
         self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line, gpt2_pipe)
@@ -177,6 +179,7 @@ class UIWrapper:
             self.embeddings,
             self.upscaler,
             self.ui_tab,
+            base_path,
         )
         
         # Wrapping widgets for seed
