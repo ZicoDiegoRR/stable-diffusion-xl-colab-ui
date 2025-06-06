@@ -493,6 +493,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     # Displaying the image
     display(image)
     print(f"Scheduler: {''.join(Scheduler_used)}")
-    print(f"Seed: {saved_number}")
+    print(f"Seed: {generator_seed}")
     print(f"Image is saved at {generated_image_savefile}.")
     torch.cuda.empty_cache()
