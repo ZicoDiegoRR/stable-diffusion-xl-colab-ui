@@ -109,8 +109,7 @@ class HistorySystem:
                     list_grid[i, j].on_click(lambda b, path=path: self.history_button_handler(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)) if k <= len(list) else None
         return list_grid
 
-    def history_display(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): # Main logic for history
-        base_path = "/content/gdrive/MyDrive" if os.path.exists("/content/gdrive/MyDrive") else "/content"
+    def history_display(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path): # Main logic for history
         text2img_listdir = self.list_images(f"{base_path}/Text2Img")
         controlnet_listdir = self.list_images(f"{base_path}/ControlNet")
         inpainting_listdir = self.list_images(f"{base_path}/Inpainting")
@@ -130,7 +129,7 @@ class HistorySystem:
         self.history_accordion.children = [text2img_list, img2img_list, controlnet_list, inpainting_list, upscale_list]
         return text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list
 
-    def __init__(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab):
+    def __init__(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path):
         self.history_quick_reference_button = widgets.Button(description="Use as a reference")
         self.history_quick_reference_img2img = widgets.Button(description="Image-to-image")
         self.history_quick_reference_controlnet = widgets.Button(description="ControlNet")
