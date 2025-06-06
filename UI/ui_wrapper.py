@@ -73,7 +73,7 @@ class UIWrapper:
                      values_dictionary_for_generation["ip"],
                      self.hf_token.value, 
                      self.civit_token.value, 
-                     self.ui_tab, 
+                     self.ui, 
                      [self.seed, self.freeze.value],
                      values_dictionary_for_generation,
                      [
