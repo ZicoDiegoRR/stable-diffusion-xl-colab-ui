@@ -479,7 +479,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     )
 
     # Saving the image and resetting the output
-    generated_image_savefile= image_saver.save_image(image, Prompt, prefix)
+    generated_image_savefile= image_saver.save_image(image, Prompt, prefix, base_path)
     clear_output()
     display(ui)
 
