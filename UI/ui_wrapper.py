@@ -168,6 +168,7 @@ class UIWrapper:
             self.ip,
             self.lora,
             self.embeddings,
+            base_path
         )
         self.history = HistorySystem(
             self.text2img,
