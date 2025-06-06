@@ -184,6 +184,8 @@ class ControlNetSettings:
             self.canny_settings.children = [
                 self.canny_toggle, self.canny_dropdown, self.canny_min_slider, 
                 self.canny_max_slider, self.canny_strength_slider
+            ] if self.canny_toggle.value else [
+                self.canny_toggle
             ]
             self.canny_link_widget.value = self.controlnet_preset_ref(change["new"])
 
@@ -218,6 +220,8 @@ class ControlNetSettings:
             self.depth_settings.children = [
                 self.depth_map_toggle, self.depthmap_dropdown, 
                 self.depth_strength_slider
+            ] if self.depth_map_toggle.value else [
+                self.depth_map_toggle
             ]
             self.depth_map_link_widget.value = self.controlnet_preset_ref(change["new"])
 
@@ -253,6 +257,8 @@ class ControlNetSettings:
             self.openpose_settings.children = [
                 self.openpose_toggle, self.openpose_dropdown, 
                 self.openpose_strength_slider
+            ] if self.openpose_toggle.value else [
+                self.openpose_toggle
             ]
             self.depth_map_link_widget.value = self.controlnet_preset_ref(change["new"])
 
