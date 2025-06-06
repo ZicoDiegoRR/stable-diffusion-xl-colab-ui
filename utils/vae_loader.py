@@ -15,8 +15,8 @@ def autoencoderkl_load(vae_path):
         else:
             return AutoencoderKL.from_pretrained(vae_path[0], torch_dtype=torch.float16)
     except Exception as e:
-        print(f"Error when loading the VAE. Reason: {e}")
-        print("Skipped VAE.")
+        print(f"Error when loading the VAE model from {vae_path[0]}. Skipped VAE.")
+        print(f"Reason: {e}")
         return None
 
 
