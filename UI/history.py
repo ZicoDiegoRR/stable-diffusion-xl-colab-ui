@@ -43,9 +43,9 @@ class HistorySystem:
             inpaint.inpainting_toggle.value = True
             tab.selected_index = 3
         elif type == "ip":
-            if ip_adapter_dropdown.value == "None":
+            if ip.ip_adapter_dropdown.value == "None":
               ip.ip_adapter_dropdown.value = "ip-adapter_sdxl_vit-h.bin"
-            if ip_image_link_widget.value == "":
+            if ip.ip_image_link_widget.value == "":
               ip.ip_image_link_widget.value = path
             else:
               ip.ip_image_link_widget.value += "," + path
