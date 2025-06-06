@@ -1,5 +1,6 @@
 from StableDiffusionXLColabUI.utils import downloader
 from diffusers import AutoencoderKL
+import torch
 import os
 
 def vae_url_checker(model_path):
