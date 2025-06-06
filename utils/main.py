@@ -430,6 +430,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         torch.cuda.empty_cache()
 
     # Handling IP-Adapter
+    image_embeds = None
     if IP_Adapter != "None" and IP_Image_Link:
         # Loading the images
         adapter_image = []
