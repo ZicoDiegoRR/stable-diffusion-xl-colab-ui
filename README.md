@@ -59,6 +59,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 15. | GPT-2 Prompt Generator                                                                |
 | 16. | Hugging Face token integration                                                        |
 | 17. | Real-ESRGAN Image Upscaling                                                           |
+| 18. | New saving system and a conversion to convert old saves to the new ones             |
 
 </details>
 
@@ -69,7 +70,7 @@ Work in progress
 - Adding textual inversion ✅ 
 - Implementing Inpainting using IPyCanvas
 - Modularizing the code (in progress)
-- Overhauling the save system (in progress)
+- Overhauling the save system ✅
 - Adding Hugging Face's token integration ✅ 
 - Implementing Img2Img pipeline ✅ 
 ## License
