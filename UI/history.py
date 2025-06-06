@@ -15,35 +15,33 @@ class HistorySystem:
             return []
         
     def history_quick_reference_controlnet_selector(self, type, path, controlnet, tab): # Function to input the image as the reference for ControlNet
-        ui = tab.ui
         if type == "canny":
             controlnet.canny_link_widget.value = path
             controlnet.canny_dropdown.value = "Link"
             controlnet.canny_toggle.value = True
-            ui.selected_index = 2
+            tab.selected_index = 2
         elif type == "depthmap":
             controlnet.depth_map_link_widget.value = path
             controlnet.depthmap_dropdown.value = "Link"
             controlnet.depth_map_toggle.value = True
-            ui.selected_index = 2
+            tab.selected_index = 2
         elif type == "openpose":
             controlnet.openpose_link_widget.value = path
             controlnet.openpose_dropdown.value = "Link"
             controlnet.openpose_toggle.value = True
-            ui.selected_index = 2
+            tab.selected_index = 2
         self.history_button_handler(path)
 
     def history_quick_reference_second(self, type, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): # Function to input the image as the reference image
-        ui = tab.ui
         if type == "img2img":
             img2img.reference_image_link_widget.value = path
             self.history_button_handler(path)
-            ui.selected_index = 1
+            tab.selected_index = 1
         elif type == "inpainting":
             inpaint.inpainting_image_dropdown.value = path
             self.history_button_handler(path)
             inpaint.inpainting_toggle.value = True
-            ui.selected_index = 3
+            tab.selected_index = 3
         elif type == "ip":
             if ip_adapter_dropdown.value == "None":
               ip.ip_adapter_dropdown.value = "ip-adapter_sdxl_vit-h.bin"
@@ -52,7 +50,7 @@ class HistorySystem:
             else:
               ip.ip_image_link_widget.value += "," + path
             self.history_button_handler(path)
-            ui.selected_index = 6
+            tab.selected_index = 6
         elif type == "controlnet":
             self.history_image_display_first.children = [widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), self.history_image_widget, self.history_image_modification_date, widgets.HBox([self.history_quick_reference_canny, self.history_quick_reference_depthmap, self.history_quick_reference_openpose]), self.history_back_button_second]
 
@@ -68,7 +66,7 @@ class HistorySystem:
         elif type == "upscale":
             upscaler.input_link.value = path
             self.history_button_handler(path)
-            ui.selected_index = 7
+            tab.selected_index = 7
 
     def history_quick_reference_first(self, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): # Function to use an image from history to be the reference image of Img2Img, ControlNet, or Inpainting
         self.history_image_display_first.children = [widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), self.history_image_widget, self.history_image_modification_date, widgets.HBox([self.history_quick_reference_img2img, self.history_quick_reference_controlnet, self.history_quick_reference_inpainting, self.history_quick_reference_ip_adapter, self.history_quick_reference_upscale]), self.history_back_button_first]
