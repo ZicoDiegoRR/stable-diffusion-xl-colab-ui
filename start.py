@@ -15,5 +15,5 @@ def start():
     from StableDiffusionXLColabUI.utils import preprocess
     from StableDiffusionXLColabUI.UI.ui_wrapper import UIWrapper
     
-    cfg, ideas_line, gpt2_pipe = preprocess.run() # Preprocess the save file, ideas.txt, and GPT-2
-    colab_ui = UIWrapper(cfg, ideas_line, gpt2_pipe) # Initialize the UI
+    cfg, ideas_line, gpt2_pipe, base_path = preprocess.run() # Preprocess the save file, ideas.txt, and GPT-2
+    colab_ui = UIWrapper(cfg, ideas_line, gpt2_pipe, base_path) # Initialize the UI
