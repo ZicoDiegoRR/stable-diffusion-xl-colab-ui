@@ -75,11 +75,13 @@ def run():
     if not os.path.exists("/content/gdrive/MyDrive"):
         try:
             drive.mount('/content/gdrive', force_remount=True)
+            google_drive_use = True
         except Exception as e:
             print("Excluding Google Drive storage...")
+            google_drive_use = False
             time.sleep(1.5)
 
-    if os.path.exists("/content/gdrive/MyDrive"):
+    if google_drive_use:
         base_path = "/content/gdrive/MyDrive"
     else:
         base_path = "/content"
@@ -92,16 +94,17 @@ def run():
         save_param(os.path.join(f"{base_path}/Saved Parameters/", "main_parameters.json"), cfg)
         main_parameter_path = os.path.join(f"{base_path}/Saved Parameters/", "main_parameters.json")
         print(f"Found a config at {base_path}/parameters.json.")
-    elif not os.path.exists(f"{base_path}/parameters.json") or os.path.exists(f"{base_path}/Saved Parameters/main_parameters.json"):
+    elif os.path.exists(f"{base_path}/Saved Parameters/main_parameters.json"):
         cfg = load_param(os.path.join(f"{base_path}/Saved Parameters/", "main_parameters.json"))
         main_parameter_path = os.path.join(f"{base_path}/Saved Parameters/", "main_parameters.json")
         print(f"Found a config at {base_path}/Saved Parameters/main_parameters.json.")
+    else:
+        print("No saved config found. Defaulting...")
 
     # Validating the save file's content
     if cfg:
         cfg = list_or_dict(cfg, main_parameter_path)
     else:
-        print("No saved config found. Defaulting...")
         cfg = default_params()
         time.sleep(1)
 
@@ -123,4 +126,4 @@ def run():
             ideas_line = ideas_file.readlines()
         gpt2_pipe = pipe('text-generation', model='Gustavosta/MagicPrompt-Stable-Diffusion', tokenizer='gpt2')
 
-    return cfg, ideas_line, gpt2_pipe
+    return cfg, ideas_line, gpt2_pipe, base_path
