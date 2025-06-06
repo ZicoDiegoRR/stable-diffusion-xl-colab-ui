@@ -159,8 +159,8 @@ class PresetSystem:
         self.delete_preset_button.on_click(lambda b: self.delete_preset_evaluate("delete", name))
 
     # Initiating widgets creation
-    def __init__(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
-        self.base_path = "/content/gdrive/MyDrive" if os.path.exists("/content/gdrive/MyDrive") else "/content"
+    def __init__(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, base_path):
+        self.base_path = base_path
         self.rename_output = widgets.Output()
         self.save_output = widgets.Output()
         self.load_output = widgets.Output()
