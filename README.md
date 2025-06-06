@@ -59,7 +59,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 15. | GPT-2 Prompt Generator                                                                |
 | 16. | Hugging Face token integration                                                        |
 | 17. | Real-ESRGAN Image Upscaling                                                           |
-| 18. | New saving system and a conversion to convert old saves to the new ones             |
+| 18. | New saving system and a conversion method to convert old saves to the new ones      |
 
 </details>
 
