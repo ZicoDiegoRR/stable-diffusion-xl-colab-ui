@@ -52,9 +52,9 @@ def similarity_checker(pipe, model_url, loaded_model, loaded_pipeline, pipeline_
 
 def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeline_type, format="safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token=""):
     # For Hugging Face repository with "author/repo_name" format
-    if similarity_checker(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type) or pipe is None:
-        try:
-            if model_url.count("/") == 1 and (not model_url.startswith("https://") or not model_url.startswith("http://")):
+    if model_url.count("/") == 1 and (not model_url.startswith("https://") or not model_url.startswith("http://")):
+        if similarity_checker(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type) or pipe is None:
+            try:
                 if all(cn is None for cn in controlnets) and pipeline_type != "img2img" and not active_inpaint:
                     pipeline = StableDiffusionXLPipeline.from_pretrained(model_url, vae=vae, torch_dtype=torch.float16).to("cuda")
                 elif active_inpaint and pipeline_type != "img2img" and all(cn is None for cn in controlnets):
@@ -64,8 +64,10 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
                 elif pipeline_type == "img2img":
                     pipeline = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_url, vae=vae, torch_dtype=torch.float16).to("cuda")
                 model_name = model_url
-        except (ValueError, OSError):
-            raise_error(model_url)
+            except (ValueError, OSError):
+                raise_error(model_url)
+        else:
+            return pipe, model_url
 
     # For non-Hugging Face repository or Hugging Face direct link
     else:
@@ -99,5 +101,7 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
         # Raise an  error if there's something wrong when loading the model
             except (ValueError, OSError):
                 raise_error(Model_path)
+        else:
+            return pipe, model_url
 
     return pipeline, model_name
