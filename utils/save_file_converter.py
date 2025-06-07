@@ -140,7 +140,8 @@ def old_to_new(cfg):
     '''
 
     # Converting list to dictionary
-    new_cfg = {
+    new_cfg = { # Since the old save uses list and each pipeline shares similar parameters, 
+                # there's nothing I can do but to share the general parameters across each pipeline
         "text2img": text2img_or_general_list,
         "img2img": text2img_or_general_list + img2img_list,
         "controlnet": text2img_or_general_list + controlnet_list,
