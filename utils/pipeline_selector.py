@@ -45,16 +45,19 @@ def verify(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type):
     if loaded_model:
         if loaded_model != model_url:
             flush(pipe, model_url, loaded_model, "model")
-            return True
+            model_check = True
         else:
-            return False
+            model_check = False
     if loaded_pipeline: 
         if loaded_pipeline != pipeline_type:
             flush(pipe, pipeline_type, loaded_pipeline, "pipeline")
-            return True
+            pipe_check = True
         else:
-            return False
-    return True
+            pipe_check = False
+    if model_check or pipe_check:
+        return True
+    elif not model_check and not pipe_check:
+        return False
 
 def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeline_type, format="safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token=""):
     # For Hugging Face repository with "author/repo_name" format
