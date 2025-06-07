@@ -120,6 +120,7 @@ class HistorySystem:
         img2img_list = self.grid(img2img_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
         upscale_list = self.grid(upscale_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
 
+        self.history_accordion = widgets.Accordion()
         self.history_image_modification_date = widgets.HTML()
         self.history_image_widget = widgets.Image()
         
@@ -144,15 +145,15 @@ class HistorySystem:
         self.history_image_widget = widgets.Image()
 
         self.history_image_display_first = widgets.VBox([widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), self.history_image_widget, self.history_image_modification_date], continuous_update = True)
-        self.text2img_list, self.controlnet_list, self.inpainting_list, self.img2img_list, self.upscale_list = self.history_display(
+        text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list = self.history_display(
             text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path,
         )
         self.history_accordion.children = [
-            self.text2img_list, 
-            self.img2img_list, 
-            self.controlnet_list, 
-            self.inpainting_list, 
-            self.upscale_list
+            text2img_list, 
+            img2img_list, 
+            controlnet_list, 
+            inpainting_list, 
+            upscale_list
         ]
 
         history_accordion_titles = ["Text-to-Image History 🔮✍", "Image-to-Image History 🔮🎨", "ControlNet History 🔮🔧", "Inpainting History 🔮🖌️", "Image Upscaler History 🔮✨"]
