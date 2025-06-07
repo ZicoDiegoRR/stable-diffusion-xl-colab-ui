@@ -1,5 +1,6 @@
 from StableDiffusionXLColabUI.utils import generate_prompt
 import ipywidgets as widgets
+import os
 
 class Text2ImgSettings:
     # Collect every widget into a single VBox
