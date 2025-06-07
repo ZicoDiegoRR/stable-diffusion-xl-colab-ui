@@ -427,7 +427,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Loading embeddings if not empty
     if Textual_Inversion_URLs:
-        embeddings_loader.process(pipeline, embeddings[0], embeddings[1], widgets_change[2], HF_Token, Civit_Token)
+        embeddings_loader.process(pipeline, embeddings[0], embeddings[1], widgets_change[3], HF_Token, Civit_Token)
         torch.cuda.empty_cache()
 
     # Handling IP-Adapter
