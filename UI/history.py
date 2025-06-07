@@ -135,7 +135,7 @@ class HistorySystem:
         self.history_quick_reference_depthmap = widgets.Button(description="DepthMap")
         self.history_quick_reference_openpose = widgets.Button(description="OpenPose")
 
-        self.history_accordion = widgets.Accordion()
+        self.history_accordion = widgets.Accordion(continuous_update = True)
         self.history_image_modification_date = widgets.HTML()
         self.history_image_widget = widgets.Image()
 
