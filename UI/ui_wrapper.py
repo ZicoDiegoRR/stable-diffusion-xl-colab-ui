@@ -81,9 +81,7 @@ class UIWrapper:
                         [selected_class.vae_link_widget, selected_class.vae_config],
                         selected_class.model_widget,
                         self.lora.lora_urls_widget,
-                        self.lora.weight_scale_widget,
                         self.embeddings.ti_urls_widget,
-                        self.embeddings.ti_tokens_widget,
                      ]
             )
             self.reload_submit_button()
