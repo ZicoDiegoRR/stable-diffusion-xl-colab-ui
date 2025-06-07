@@ -351,7 +351,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     # Handling VAE
     global vae_current
     if VAE_Link and (VAE_Link != vae_current or not vae_current):
-        pipeline.vae, loaded_vae = vae_loader.load_vae(
+        vae, loaded_vae = vae_loader.load_vae(
             vae_current, 
             VAE_Link, 
             VAE_Config, 
@@ -360,6 +360,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             Civit_Token
         )
         vae_current = loaded_vae
+        if vae is not None:
+            pipeline.vae = vae
 
     # Using a custom image encoder if IP-Adapter is True
     if IP_Adapter != "None":
