@@ -92,6 +92,13 @@ class HistorySystem:
         except Exception as e:
             self.history_image_modification_date.value = f"An error occured when trying to read the image. Reason: {e}"
 
+        if not self.display_click:
+            self.history_image_display_first.children = [
+                widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), 
+                self.history_image_widget, self.history_image_modification_date, self.history_quick_reference_button
+            ]
+            self.display_click = True
+
         self.history_quick_reference_button._click_handlers.callbacks.clear()
         self.history_quick_reference_button.on_click(lambda b: self.history_quick_reference_first(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
 
@@ -140,9 +147,12 @@ class HistorySystem:
         self.history_image_widget = widgets.Image()
 
         self.history_image_display_first = widgets.VBox([widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), self.history_image_widget, self.history_image_modification_date], continuous_update = True)
+        self.display_click = False
+        
         text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list = self.history_display(
             text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path,
         )
+        
         self.history_accordion.children = [
             text2img_list, 
             img2img_list, 
