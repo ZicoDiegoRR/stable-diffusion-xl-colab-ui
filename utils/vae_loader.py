@@ -44,7 +44,7 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
 
         # For VAE from local files
         else:
-            if not model_path.startswith("/content/VAE")
+            if not model_path.startswith("/content/VAE"):
                 vae_path = [os.path.join(f"/content/VAE/", path) for path in os.listdir(f"/content/VAE/{model_path}")]
             else: 
                 vae_subfolder, _ = os.path.splitext(os.path.basename(model_path)) 
