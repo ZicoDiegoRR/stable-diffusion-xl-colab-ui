@@ -336,26 +336,34 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     # Handling VAE
     global vae_current
     if VAE_Link and VAE_Link != vae_current:
-        vae, loaded_vae = vae_loader.load_vae(vae_current, VAE_Link, VAE_Config, widgets_change[0], HF_Token, Civit_Token)
+        vae, loaded_vae = vae_loader.load_vae(
+            vae_current, 
+            VAE_Link, 
+            VAE_Config, 
+            widgets_change[0], 
+            HF_Token, 
+            Civit_Token
+        )
         vae_current = loaded_vae
     elif not VAE_Link:
         vae = None
 
     # Handling pipeline and model loading
     global pipeline, loaded_model, loaded_pipeline
-    pipeline, model_name = pipeline_selector.load_pipeline(
-        pipeline,
-        Model, 
-        widgets_change[1], 
-        loaded_model, 
-        loaded_pipeline,
-        pipeline_type,
-        controlnets=controlnets, 
-        active_inpaint=active_inpaint, 
-        vae=vae, 
-        hf_token=HF_Token, 
-        civit_token=Civit_Token
-    )
+    if pipeline is None or loaded_model != Model or loaded_pipeline != pipeline_type:
+        pipeline, model_name = pipeline_selector.load_pipeline(
+            pipeline,
+            Model, 
+            widgets_change[1], 
+            loaded_model, 
+            loaded_pipeline,
+            pipeline_type,
+            controlnets=controlnets, 
+            active_inpaint=active_inpaint, 
+            vae=vae, 
+            hf_token=HF_Token, 
+            civit_token=Civit_Token
+        )
 
     # Using a custom image encoder if IP-Adapter is True
     if IP_Adapter != "None":
