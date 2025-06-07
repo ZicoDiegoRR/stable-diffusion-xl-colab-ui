@@ -31,9 +31,9 @@ def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token)
                     ti_check = os.path.basename(url)
                 else:
                     ti_check = url
-                for lora in os.listdir("/content/LoRAs/"):
-                    if ti_check in lora:
-                        textual_inversion_path = f"/content/LoRAs/{lora}"
+                for embed in os.listdir("/content/Embeddings/"):
+                    if ti_check in embed:
+                        textual_inversion_path = f"/content/Embeddings/{embed}"
                         break
 
             if textual_inversion_path:
