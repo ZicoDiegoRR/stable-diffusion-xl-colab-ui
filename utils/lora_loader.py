@@ -30,10 +30,10 @@ def download_lora(pipe, link, scale, widget, hf_token, civit_token):
                     lora_check = os.path.basename(url)
                 else:
                     lora_check = url
-                    for lora in os.listdir("/content/LoRAs/"):
-                        if lora_check in lora:
-                            lora_file_path = f"/content/LoRAs/{lora}"
-                            break
+                for lora in os.listdir("/content/LoRAs/"):
+                    if lora_check in lora:
+                        lora_file_path = f"/content/LoRAs/{lora}"
+                        break
                         
             if lora_file_path:
                 unique_lora_urls.append(url)
