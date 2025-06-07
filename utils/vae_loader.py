@@ -47,10 +47,17 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
         # For VAE from local files
         else:
             if not model_path.startswith("/content/VAE"):
-                vae_path = [os.path.join(f"/content/VAE/", path) for path in os.listdir(f"/content/VAE/{model_path}")]
+                vae_path_collected = [os.path.join(f"/content/VAE/", path) for path in os.listdir(f"/content/VAE/{model_path}") if os.path.isfile([os.path.join(f"/content/VAE/", path))]
             else: 
                 vae_subfolder, _ = os.path.splitext(os.path.basename(model_path)) 
-                vae_path = [os.path.join(f"/content/VAE/", path) for path in os.listdir(f"/content/VAE/{vae_subfolder}")]
+                vae_path_collected = [os.path.join(f"/content/VAE/", path) for path in os.listdir(f"/content/VAE/{vae_subfolder}") if os.path.isfile([os.path.join(f"/content/VAE/", path))]
+
+            vae_path = ["", ""]
+            for element in vae_path_collected:
+                if element.endswith(".json"):
+                    vae_path[1] = element
+                else:
+                    vae_path[0] = element
             for_vae_current = os.path.splitext(os.path.basename(vae_path[0])) 
 
         # Load
