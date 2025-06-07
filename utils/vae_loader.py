@@ -11,9 +11,9 @@ def autoencoderkl_load(vae_path):
     # Loading the VAE based on whether it's a pretrained model from Hugging Face or not
     try:
         if vae_path[1]:
-            return AutoencoderKL.from_single_file(vae_path[0], config=vae_path[1], torch_dtype=torch.float16, local_files_only=True)
+            return AutoencoderKL.from_single_file(vae_path[0], config=vae_path[1], torch_dtype=torch.float16, local_files_only=True).to("cuda")
         else:
-            return AutoencoderKL.from_pretrained(vae_path[0], torch_dtype=torch.float16)
+            return AutoencoderKL.from_pretrained(vae_path[0], torch_dtype=torch.float16).to("cuda")
     except Exception as e:
         print(f"Error when loading the VAE model from {vae_path[0]}. Skipped VAE.")
         print(f"Reason: {e}")
