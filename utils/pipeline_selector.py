@@ -27,7 +27,7 @@ def similarity_checker(pipe, model_url, loaded_model, loaded_pipeline, pipeline_
     if loaded_pipeline and loaded_pipeline != pipeline_type:
         flush(pipe, pipeline_type, loaded_pipeline, "pipeline")
 
-def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeline_type, format=".safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token=""):
+def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeline_type, format="safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token=""):
     # For Hugging Face repository with "author/repo_name" format
     similarity_checker(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type)
     if model_url.count("/") == 1 and (not model_url.startswith("https://") or not model_url.startswith("http://")):
@@ -50,8 +50,10 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
             widget.value = model_name
         else:
             if not model_url.startswith("/content/Checkpoint"):
-                Model_path = f"/content/Checkpoint/{model_url}.{format}"
-                model_name = model_url
+                for model in os.listdir("/content/Checkpoint"):
+                    if model_url in model:
+                        Model_path = f"/content/Checkpoint/{model}"
+                        model_name = model_url
             else:
                 Model_path = model_url
                 model_name = model_url
