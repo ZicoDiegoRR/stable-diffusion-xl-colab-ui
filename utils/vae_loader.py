@@ -37,10 +37,12 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
 
                 widget_value, _ = os.path.splitext(vae_filename)
                 widget[i].value = widget_value
+                for_vae_current = os.path.splitext(os.path.basename(vae_path[0])) 
 
         # For Hugging Face pretrained VAE models
         elif model_path.count("/") == 1:
             vae_path = [model_path, None]
+            for_vae_current = model_path
 
         # For VAE from local files
         else:
@@ -49,15 +51,20 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
             else: 
                 vae_subfolder, _ = os.path.splitext(os.path.basename(model_path)) 
                 vae_path = [os.path.join(f"/content/VAE/", path) for path in os.listdir(f"/content/VAE/{vae_subfolder}")]
+            for_vae_current = os.path.splitext(os.path.basename(vae_path[0])) 
 
         # Load
         vae = autoencoderkl_load(vae_path)
-        
+
+        # Add new value to the vae_current
+        loaded_vae, _ = os.path.splitext(os.path.basename(vae_path[0])) 
+    
     # Skipping the VAE if the model is still in an URL form, but the config is empty
     elif vae_url_checker(model_path) and not config_path:
         print("You inputted a link to the VAE model, but not the config file. It's mandatory to pass both links.")
         print("Skipped VAE.")
         vae = None
+        loaded_vae = current_vae
 
-    return vae, vae_path[0]
+    return vae, loaded_vae
         
