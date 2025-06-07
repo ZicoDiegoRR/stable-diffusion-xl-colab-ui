@@ -17,7 +17,7 @@ class UIWrapper:
     # Displaying the submit button and resetting the history
     def reload_submit_button(self):
         self.submit_settings.layout.visibility = "visible"
-        self.history.text2img_list, self.history.controlnet_list, self.history.inpainting_list, self.history.img2img_list, self.history.upscale_list = self.history.history_display(
+        text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list = self.history.history_display(
             self.text2img,
             self.img2img,
             self.controlnet,
@@ -30,11 +30,11 @@ class UIWrapper:
             self.base_path
         )
         self.history.history_accordion.children = [
-            self.history.text2img_list, 
-            self.history.img2img_list, 
-            self.history.controlnet_list, 
-            self.history.inpainting_list, 
-            self.history.upscale_list
+            text2img_list, 
+            img2img_list, 
+            controlnet_list, 
+            inpainting_list, 
+            upscale_list
         ]
 
     def select_class(self, index):
