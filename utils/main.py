@@ -336,7 +336,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     # Handling VAE
     global vae_current
     if VAE_Link and VAE_Link != vae_current:
-        vae = vae_loader.load_vae(vae_current, VAE_Link, VAE_Config, widgets_change[0], HF_Token, Civit_Token)
+        vae, loaded_vae = vae_loader.load_vae(vae_current, VAE_Link, VAE_Config, widgets_change[0], HF_Token, Civit_Token)
+        vae_current = loaded_vae
     elif not VAE_Link:
         vae = None
 
