@@ -48,12 +48,18 @@ def verify(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type):
             model_check = True
         else:
             model_check = False
+    else:
+        model_check = True
+        
     if loaded_pipeline: 
         if loaded_pipeline != pipeline_type:
             flush(pipe, pipeline_type, loaded_pipeline, "pipeline")
             pipe_check = True
         else:
             pipe_check = False
+    else:
+        pipe_check = True
+        
     if model_check or pipe_check:
         return True
     elif not model_check and not pipe_check:
