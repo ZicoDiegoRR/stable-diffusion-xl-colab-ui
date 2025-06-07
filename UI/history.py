@@ -91,7 +91,6 @@ class HistorySystem:
             self.history_image_modification_date.value = f"Last modification time: {time.strftime('%B, %d %Y %H:%M:%S', time.localtime(os.path.getmtime(path)))}"
         except Exception as e:
             self.history_image_modification_date.value = f"An error occured when trying to read the image. Reason: {e}"
-        self.history_image_display_first.children = [widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), self.history_image_widget, self.history_image_modification_date, self.history_quick_reference_button]
 
         self.history_quick_reference_button._click_handlers.callbacks.clear()
         self.history_quick_reference_button.on_click(lambda b: self.history_quick_reference_first(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab))
@@ -119,10 +118,6 @@ class HistorySystem:
         inpainting_list = self.grid(inpainting_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
         img2img_list = self.grid(img2img_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
         upscale_list = self.grid(upscale_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
-
-        self.history_accordion = widgets.Accordion()
-        self.history_image_modification_date = widgets.HTML()
-        self.history_image_widget = widgets.Image()
         
         return text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list
 
