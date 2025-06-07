@@ -41,19 +41,25 @@ def flush(pipe, new, old, type):
     torch.cuda.empty_cache()
     gc.collect()
 
-def similarity_checker(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type):
-    if loaded_model and loaded_model != model_url:
-        flush(pipe, model_url, loaded_model, "model")
-        return False
-    if loaded_pipeline and loaded_pipeline != pipeline_type:
-        flush(pipe, pipeline_type, loaded_pipeline, "pipeline")
-        return False
+def verify(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type):
+    if loaded_model:
+        if loaded_model != model_url:
+            flush(pipe, model_url, loaded_model, "model")
+            return True
+        else:
+            return False
+    if loaded_pipeline: 
+        if loaded_pipeline != pipeline_type:
+            flush(pipe, pipeline_type, loaded_pipeline, "pipeline")
+            return True
+        else:
+            return False
     return True
 
 def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeline_type, format="safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token=""):
     # For Hugging Face repository with "author/repo_name" format
     if model_url.count("/") == 1 and (not model_url.startswith("https://") or not model_url.startswith("http://")):
-        if similarity_checker(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type) or pipe is None:
+        if verify(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type) or pipe is None:
             try:
                 if all(cn is None for cn in controlnets) and pipeline_type != "img2img" and not active_inpaint:
                     pipeline = StableDiffusionXLPipeline.from_pretrained(model_url, vae=vae, torch_dtype=torch.float16).to("cuda")
@@ -87,7 +93,7 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
                 model_name = model_url
                 
         # Load
-        if similarity_checker(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type) or pipe is None:
+        if verify(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type) or pipe is None:
             try:
                 if all(cn is None for cn in controlnets) and pipeline_type != "img2img" and not active_inpaint:
                     pipeline = StableDiffusionXLPipeline.from_single_file(Model_path, vae=vae, torch_dtype=torch.float16, variant="fp16").to("cuda")
