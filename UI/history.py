@@ -120,6 +120,9 @@ class HistorySystem:
         img2img_list = self.grid(img2img_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
         upscale_list = self.grid(upscale_listdir, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
 
+        self.history_image_modification_date = widgets.HTML()
+        self.history_image_widget = widgets.Image()
+        
         return text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list
 
     def __init__(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path):
