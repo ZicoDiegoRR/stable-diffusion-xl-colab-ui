@@ -44,7 +44,11 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
 
         # For VAE from local files
         else:
-            vae_path = os.listdir(f"/content/VAE/{model_path}") if not model_path.startswith("/content/VAE") else os.listdir(model_path)
+            if not model_path.startswith("/content/VAE")
+                vae_path = [os.path.join(f"/content/VAE/", path}) for path in os.listdir(f"/content/VAE/{model_path}")]
+            else: 
+                vae_subfolder, _ = os.path.splitext(os.path.basename(model_path)) 
+                vae_path = [os.path.join(f"/content/VAE/", path}) for path in os.listdir(f"/content/VAE/{vae_subfolder}")]
 
         # Load
         vae = autoencoderkl_load(vae_path)
@@ -55,5 +59,5 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
         print("Skipped VAE.")
         vae = None
 
-    return vae
+    return vae, vae_path[0]
         
