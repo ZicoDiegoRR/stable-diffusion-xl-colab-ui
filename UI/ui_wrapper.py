@@ -111,7 +111,7 @@ class UIWrapper:
         merge_buttons = [self.send_text2img, self.send_img2img, self.send_controlnet]
         merge_buttons.pop(index)
         
-        self.merge_options.children = [widgets.HBox([merge_buttons]), self.merge_back]
+        self.merge_options.children = [widgets.HBox([tuple(merge_buttons)]), self.merge_back]
         type_for_init = self.select_key(index)
 
         self.send_text2img._click_handlers.callbacks.clear()
