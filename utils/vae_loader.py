@@ -37,7 +37,7 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
 
                 widget_value, _ = os.path.splitext(vae_filename)
                 widget[i].value = widget_value
-                for_vae_current = os.path.splitext(os.path.basename(vae_path[0])) 
+            for_vae_current = os.path.splitext(os.path.basename(vae_path[0])) 
 
         # For Hugging Face pretrained VAE models
         elif model_path.count("/") == 1:
@@ -47,10 +47,10 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
         # For VAE from local files
         else:
             if not model_path.startswith("/content/VAE"):
-                vae_path_collected = [os.path.join(f"/content/VAE/", path) for path in os.listdir(f"/content/VAE/{model_path}") if os.path.isfile([os.path.join(f"/content/VAE/", path))]
+                vae_path_collected = [os.path.join(f"/content/VAE", path) for path in os.listdir(f"/content/VAE{model_path}") if os.path.isfile(os.path.join(f"/content/VAE", path))]
             else: 
                 vae_subfolder, _ = os.path.splitext(os.path.basename(model_path)) 
-                vae_path_collected = [os.path.join(f"/content/VAE/", path) for path in os.listdir(f"/content/VAE/{vae_subfolder}") if os.path.isfile([os.path.join(f"/content/VAE/", path))]
+                vae_path_collected = [os.path.join(f"/content/VAE", path) for path in os.listdir(f"/content/VAE{vae_subfolder}") if os.path.isfile(os.path.join(f"/content/VAE", path))]
 
             vae_path = ["", ""]
             for element in vae_path_collected:
