@@ -33,11 +33,15 @@ class TextualInversionLoader:
         else:
             return "", ""
         
-    def ti_click(self, link, token):  # Function to add widgets after clicking the plus button
+    def ti_click(self, link, token, construct=False):  # Function to add widgets after clicking the plus button
         self.ti_url_input = widgets.Text(value=link, placeholder="Input the link here", description="Direct URL")
         self.ti_tokens_input = widgets.Text(value=token, placeholder="Activation tag", description="Token")
         self.ti_remove_button = widgets.Button(description="X", button_style='danger', layout=widgets.Layout(width='30px', height='30px'))
 
+        if construct and not self.ti_construct_bool:
+            self.ti_construct_bool = True
+            self.ti_nested_vbox.children = []
+        
         self.ti_nested_vbox.children += (self.ti_url_input, self.ti_tokens_input, self.ti_remove_button,)
         self.ti_remove_button.on_click(lambda b: self.ti_remover(
             list(self.ti_nested_vbox.children).index(self.ti_remove_button) - 2,
@@ -73,7 +77,8 @@ class TextualInversionLoader:
                 ti_tokens.append("")
         for i, embeddings in enumerate(ti_links):
             if embeddings:
-                self.ti_click(ti_links[i], ti_tokens[i])
+                self.ti_click(ti_links[i], ti_tokens[i], construct=True)
+        self.ti_construct_bool = False
 
     def __init__(self, cfg):
         sanitized_url, sanitized_token = self.sanitize(cfg[0], cfg[1])
@@ -84,6 +89,8 @@ class TextualInversionLoader:
         self.ti_nested_vbox = widgets.VBox()
         self.ti_tip = widgets.HTML(value="Due to the architecture, you must pass the activation tag in the Token widget. Leaving it blank will skip the embeddings from being loaded to avoid any issue.")
         self.ti_settings = widgets.VBox([self.ti_tip, self.ti_add])
+
+        self.ti_construct_bool = False
 
         self.ti_add.on_click(lambda b: self.ti_click("", ""))
         self.construct(cfg)
