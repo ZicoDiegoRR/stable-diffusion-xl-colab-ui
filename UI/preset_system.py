@@ -11,7 +11,7 @@ class PresetSystem:
     # Saving a preset
     def save_param(self, path, param):
         with open(path, "w") as file:
-            json.dump(param, file)
+            json.dump(param, file, indent=4)
 
     # Loading a preset from a JSON file
     def load_param(self, path):
