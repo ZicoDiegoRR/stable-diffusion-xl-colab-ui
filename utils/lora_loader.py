@@ -24,13 +24,13 @@ def download_lora(pipe, link, scale, widget, hf_token, civit_token, base_path):
         lora_file_path = ""
         if url not in unique_lora_urls:
             if url.startswith("https://") or url.startswith("http://"):
-                lora_file_path = downloader.download_file(url, "LoRAs", hf_token, civit_token)
+                lora_file_path = downloader.download_file(url, "LoRAs", hf_token, civit_token, base_path)
             else:
                 if url.startswith("/content/LoRAs/"):
                     lora_check = os.path.basename(url)
                 else:
                     lora_check = url
-                lora_file_path = downloader.download_file(lora_check, "LoRAs", hf_token, civit_token)
+                lora_file_path = downloader.download_file(lora_check, "LoRAs", hf_token, civit_token, base_path)
                         
             if lora_file_path:
                 unique_lora_urls.append(url)
