@@ -171,10 +171,6 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
         vae_key = "weight"
     
     if (url.startswith("https://") or url.startswith("http://")) and not url.startswith("/content/gdrive/MyDrive"):
-        if subfolder:
-            vae_key = "config"
-        else:
-            vae_key = "weight"
         key = dict_type.get("url_to_keyname").get(url) if type != "VAE" else dict_type.get("url_to_keyname").get(vae_key).get(url)
         if key:
             if is_exist(f"/content", key, type):
