@@ -162,8 +162,8 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
     saved_urls = load_param(f"{base_path}/Saved Parameters/URL/urls.json")
     dict_type = saved_urls[type] if type != "VAE" else saved_urls[type]["weight"]
     
-    if url.startswith("https://") and url.startswith("http://") and not url.startswith("/content/gdrive/MyDrive"):
-        key = dict_type.get(url).get("url_to_keyname")
+    if (url.startswith("https://") or url.startswith("http://")) and not url.startswith("/content/gdrive/MyDrive"):
+        key = dict_type.get("url_to_keyname") if type != "VAE" else dict_type.get("url_to_keyname").get("weight")
         if key:
             if is_exist(f"/content/{type}", key, type):
                 returned_path = f"/content/{type}/{search(type, key)}"
