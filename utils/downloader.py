@@ -162,14 +162,17 @@ def download(url, type, hf_token, civit_token, key=None):
 
 # Validate if the url has been downloaded before (even in previous instance)
 def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
+    # Load the dictionary from urls.json
     saved_urls = load_param(f"{base_path}/Saved Parameters/URL/urls.json")
     dict_type = saved_urls[type]
 
+    # Select the key when loading VAE
     if subfolder:
         vae_key = "config"
     else:
         vae_key = "weight"
-    
+   
+    # Handle URL input
     if (url.startswith("https://") or url.startswith("http://")) and not url.startswith("/content/gdrive/MyDrive"):
         key = dict_type.get("url_to_keyname").get(url) if type != "VAE" else dict_type.get("url_to_keyname").get(vae_key).get(url)
         if key:
@@ -180,22 +183,23 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
         else:
             returned_path = download(url, type, hf_token, civit_token)
             if type == "VAE":
-                vae_name, _ = os.path.splitext(os.path.basename(returned_path))
+                if vae_key == "weight":
+                    vae_name, _ = os.path.splitext(os.path.basename(returned_path))
+                elif vae_key == "config":
+                    vae_name = subfolder
 
-                if "config.json" in returned_path:
-                    saved_urls[type]["url_to_keyname"]["config"][url] = subfolder
-                    saved_urls[type]["keyname_to_url"]["config"][subfolder] = url
-                else:
-                    saved_urls[type]["url_to_keyname"]["weight"][url] = vae_name
-                    saved_urls[type]["keyname_to_url"]["weight"][vae_name] = url
+                saved_urls[type]["url_to_keyname"][vae_key][url] = vae_name
+                saved_urls[type]["keyname_to_url"][vae_key][vae_name] = url
             else:
                 file_name, _ = os.path.splitext(os.path.basename(returned_path))
                 saved_urls[type]["url_to_keyname"][url] = file_name
                 saved_urls[type]["keyname_to_url"][file_name] = url
-                
+
+    # Unused, but can handle file from Google Drive
     elif url.startswith("/content/gdrive/MyDrive"):
         returned_path = url
-        
+
+    # Handle key input
     else:
         key = url
         link = dict_type.get("keyname_to_url").get(key) if type != "VAE" else dict_type.get("keyname_to_url").get(vae_key).get(key)
@@ -210,6 +214,7 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
             else:
                 returned_path = download(link, type, hf_token, civit_token)
         else:
+            print(f"It seems like {url} doesn't exist in /content/{type}. Is it a correct path?")
             returned_path = url
 
     save_param(f"{base_path}/Saved Parameters/URL/urls.json", saved_urls)
