@@ -110,8 +110,12 @@ class UIWrapper:
     def merge_first_phase(self, index, text2img, img2img, controlnet): # Giving options
         merge_buttons = [self.send_text2img, self.send_img2img, self.send_controlnet]
         merge_buttons.pop(index)
+
+        self.merge_buttons_options.children = []
+        for button in merge_buttons:
+            self.merge_buttons_options.children += button
         
-        self.merge_options.children = [widgets.HBox([tuple(merge_buttons)]), self.merge_back]
+        self.merge_options.children = [widgets.HBox([]), self.merge_back]
         type_for_init = self.select_key(index)
 
         self.send_text2img._click_handlers.callbacks.clear()
@@ -213,6 +217,7 @@ class UIWrapper:
         self.send_controlnet = widgets.Button(description="ControlNet")
         self.merge_back = widgets.Button(description="Back", layout=widgets.Layout(width="100%"))
 
+        self.merge_buttons_options = widgets.HBox()
         self.merge_options = widgets.VBox([self.merge_button])
         self.merge_options.layout = widgets.Layout(margin='0 0 0 auto')
 
