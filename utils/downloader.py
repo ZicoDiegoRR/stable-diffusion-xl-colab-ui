@@ -84,10 +84,13 @@ def is_exist(folder, name, type):
             subfolder = name
             weight_file = search(type, name)
 
-    full_path = f"{folder}/{type}/{subfolder}" if type == "VAE" else f"{folder}/{type}/{weight_file}"
+    full_path = f"{folder}/{subfolder}" if type == "VAE" else f"{folder}/{weight_file}"
 
     if type == "VAE":
-        return bool(os.listdir(full_path))
+        try:
+          return bool(os.listdir(full_path))
+        except FileNotFoundError:
+          return False
     if not os.path.exists(full_path):
         return False
     return True
@@ -160,46 +163,59 @@ def download(url, type, hf_token, civit_token, key=None):
 # Validate if the url has been downloaded before (even in previous instance)
 def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
     saved_urls = load_param(f"{base_path}/Saved Parameters/URL/urls.json")
-    dict_type = saved_urls[type] if type != "VAE" else saved_urls[type]["weight"]
+    dict_type = saved_urls[type]
+
+    if subfolder:
+        vae_key = "config"
+    else:
+        vae_key = "weight"
     
     if (url.startswith("https://") or url.startswith("http://")) and not url.startswith("/content/gdrive/MyDrive"):
-        key = dict_type.get("url_to_keyname") if type != "VAE" else dict_type.get("url_to_keyname").get("weight")
+        if subfolder:
+            vae_key = "config"
+        else:
+            vae_key = "weight"
+        key = dict_type.get("url_to_keyname").get(url) if type != "VAE" else dict_type.get("url_to_keyname").get(vae_key).get(url)
         if key:
-            if is_exist(f"/content/{type}", key, type):
+            if is_exist(f"/content", key, type):
                 returned_path = f"/content/{type}/{search(type, key)}"
             else:
                 returned_path = download(url, type, hf_token, civit_token)
         else:
-            raw_returned_path = download(url, type, hf_token, civit_token)
+            returned_path = download(url, type, hf_token, civit_token)
             if type == "VAE":
-                vae_name = raw_returned_path.strip("/").split("/")
-                vae_name_second = vae_name[-2]
+                vae_name, _ = os.path.splitext(os.path.basename(returned_path))
 
-                if "config.json" in raw_returned_path:
+                if "config.json" in returned_path:
                     saved_urls[type]["url_to_keyname"]["config"][url] = subfolder
-                    saved_urls[type]["url_to_keyname"]["config"][subfolder] = url
+                    saved_urls[type]["keyname_to_url"]["config"][subfolder] = url
                 else:
-                    saved_urls[type]["url_to_keyname"]["weight"][url] = vae_name_second
-                    saved_urls[type]["url_to_keyname"]["weight"][vae_name_second] = url
+                    saved_urls[type]["url_to_keyname"]["weight"][url] = vae_name
+                    saved_urls[type]["keyname_to_url"]["weight"][vae_name] = url
             else:
-                file_name,  = os.path.splitext(os.path.basename(raw_returned_path))
+                file_name, _ = os.path.splitext(os.path.basename(returned_path))
                 saved_urls[type]["url_to_keyname"][url] = file_name
-                saved_urls[type]["url_to_keyname"][file_name] = url
+                saved_urls[type]["keyname_to_url"][file_name] = url
                 
     elif url.startswith("/content/gdrive/MyDrive"):
         returned_path = url
         
     else:
         key = url
-        returned_path = download(url, type, hf_token, civit_token)
-        link = dict_type.get(key).get("keyname_to_url")
-        if key:
-            if is_exist(f"/content/{type}", key, type):
+        link = dict_type.get("keyname_to_url").get(key) if type != "VAE" else dict_type.get("keyname_to_url").get(vae_key).get(key)
+        if link and not subfolder:
+            if is_exist(f"/content", key, type):
                 returned_path = f"/content/{type}/{search(type, key)}"
+            else:
+                returned_path = download(link, type, hf_token, civit_token)
+        elif subfolder:
+            if is_exist(f"/content/VAE/{subfolder}", "config", type):
+                returned_path = f"/content/VAE/{subfolder}/config.json"
             else:
                 returned_path = download(link, type, hf_token, civit_token)
         else:
             returned_path = url
 
+    save_param(f"{base_path}/Saved Parameters/URL/urls.json", saved_urls)
+
     return returned_path
-    
