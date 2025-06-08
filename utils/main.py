@@ -345,7 +345,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         controlnets=controlnets, 
         active_inpaint=active_inpaint, 
         hf_token=HF_Token, 
-        civit_token=Civit_Token
+        civit_token=Civit_Token,
+        base_path
     )
 
     # Handling VAE
@@ -357,7 +358,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             VAE_Config, 
             widgets_change[0], 
             HF_Token, 
-            Civit_Token
+            Civit_Token,
+            base_path
         )
         vae_current = loaded_vae
         if vae is not None:
@@ -428,12 +430,28 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Loading LoRA if not empty
     if LoRA_URLs:
-        lora_loader.process(pipeline, lora[0], lora[1], widgets_change[2], HF_Token, Civit_Token)
+        lora_loader.process(
+            pipeline, 
+            lora[0], 
+            lora[1], 
+            widgets_change[2], 
+            HF_Token, 
+            Civit_Token,
+            base_path
+        )
         torch.cuda.empty_cache()
 
     # Loading embeddings if not empty
     if Textual_Inversion_URLs:
-        embeddings_loader.process(pipeline, embeddings[0], embeddings[1], widgets_change[3], HF_Token, Civit_Token)
+        embeddings_loader.process(
+            pipeline, 
+            embeddings[0], 
+            embeddings[1], 
+            widgets_change[3], 
+            HF_Token, 
+            Civit_Token,
+            base_path
+        )
         torch.cuda.empty_cache()
 
     # Handling IP-Adapter
