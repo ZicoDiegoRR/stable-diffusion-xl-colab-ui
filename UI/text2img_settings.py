@@ -59,8 +59,8 @@ class Text2ImgSettings:
             self.vpred_bool.value,
             self.sgmuniform_bool.value,
             self.res_betas_zero_snr.value,
-            self.vae_link_widget.value if self.check_if_link(self.vae_link_widget.value) else "",
-            self.vae_config.value if self.check_if_link(self.vae_config.value) else "",
+            self.vae_link_widget.value,
+            self.vae_config.value,
         ]
         
      # Function to show or hide scheduler booleans
