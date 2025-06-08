@@ -49,21 +49,6 @@ class ControlNetSettings:
             self.openpose_toggle,
             self.openpose_strength_slider
         ]
-
-    def validation(self, value):
-        root_dir_list = os.listdir("/content")
-        for folder in root_dir_list:
-            if os.path.isdir(folder):
-                file_in_folder = os.listdir(f"/content/{folder}")
-                for file in file_in_folder:
-                    if value in file:
-                        return True
-        return False
-
-    # Check if the path is link
-    def check_if_link(self, value):
-        pass_check = ["", "controlnet", "inpaint"]
-        return (value.startswith("https://") or value.startswith("http://")) or (value.startswith("/content/gdrive/MyDrive")) or value in pass_check or self.validation(value)
         
     # Collect all values from the widgets and turn them into a single list
     def collect_values(self):
@@ -81,17 +66,17 @@ class ControlNetSettings:
             self.vpred_bool.value,
             self.sgmuniform_bool.value,
             self.res_betas_zero_snr.value,
-            self.vae_link_widget.value if self.check_if_link(self.vae_link_widget.value) else "",
-            self.vae_config.value if self.check_if_link(self.vae_config.value) else "",
-            self.canny_link_widget.value if self.check_if_link(self.canny_link_widget.value) else "",
+            self.vae_link_widget.value,
+            self.vae_config.value,
+            self.canny_link_widget.value,
             self.canny_min_slider.value,
             self.canny_max_slider.value,
             self.canny_toggle.value,
             self.canny_strength_slider.value,
-            self.depth_map_link_widget.value if self.check_if_link(self.depth_map_link_widget.value) else "",
+            self.depth_map_link_widget.value,
             self.depth_map_toggle.value,
             self.depth_strength_slider.value,
-            self.openpose_link_widget.value if self.check_if_link(self.openpose_link_widget.value) else "",
+            self.openpose_link_widget.value,
             self.openpose_toggle.value,
             self.openpose_strength_slider.value,
         ]
