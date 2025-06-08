@@ -42,24 +42,24 @@ Simply open the notebook on Google Colab to start using it. No installation is n
   
 |     | Features                                                                              |
 |-----|---------------------------------------------------------------------------------------|
-| 1.  | Base pipelines and autoencoder (ControlNet, Inpainting, VAE, Text2Img)                                |
-| 2.  | Base adapters (LoRA, IP-Adapter)                                                      |
-| 3.  | IPyWidgets                                                                            |
-| 4.  | Saving and loading parameters                                                         |
-| 5.  | Interactive UI                                                                        |
-| 6.  | Linking widgets                                                                       |
-| 7.  | History system                                                                        |
-| 8.  | Upload images directly                                                                |
-| 9.  | Image-to-image                                                                        |
-| 10. | Textual inversion or embeddings                                                       |
-| 11. | Send images from history to Image-to-image, ControlNet, Inpainting, and/or IP-Adapter |
-| 12. | Reset button (defaulting the parameters)                                              |
-| 13. | Compatibility with saved parameters from previous versions                            |
-| 14. | Preset system (saving and loading custom parameters)                                  |
-| 15. | GPT-2 Prompt Generator                                                                |
-| 16. | Hugging Face token integration                                                        |
-| 17. | Real-ESRGAN Image Upscaling                                                           |
-| 18. | New saving system and a conversion method to convert old saves to the new ones      |
+| 1.  | Base pipelines and autoencoder (ControlNet, Inpainting, VAE, Text2Img)                                             |
+| 2.  | Base adapters (LoRA, IP-Adapter)                                                                                         |
+| 3.  | IPyWidgets                                                                                                               |
+| 4.  | Saving and loading parameters                                                                                            |
+| 5.  | Interactive UI                                                                                                           |
+| 6.  | Linking widgets                                                                                                          |
+| 7.  | History system                                                                                                           |
+| 8.  | Upload images directly                                                                                                   |
+| 9.  | Image-to-image                                                                                                           |
+| 10. | Textual inversion or embeddings                                                                                          |
+| 11. | Send images from history to Image-to-image, ControlNet, Inpainting, and/or IP-Adapter                                |
+| 12. | Reset button (defaulting the parameters)                                                                         |
+| 13. | Compatibility with saved parameters from previous versions                                                              |
+| 14. | Preset system (saving and loading custom parameters)                                                                  |
+| 15. | GPT-2 Prompt Generator                                                                                                   |
+| 16. | Hugging Face token integration                                                                                           |
+| 17. | Real-ESRGAN Image Upscaling                                                                                              |
+| 18. | New saving system (from a flat list to a dictionary) and a conversion method to convert old saves to the new ones      |
 
 </details>
 
