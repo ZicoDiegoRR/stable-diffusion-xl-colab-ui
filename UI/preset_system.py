@@ -61,6 +61,13 @@ class PresetSystem:
             self.save_param(f"{self.base_path}/Saved Parameters/{name}.json", save_params)
             self.reset_options()
             self.show_message(self.save_output, f"Saved {name}.json in {self.base_path} folder.", "success")
+
+        self.save_preset_display.children = [
+            self.save_output, 
+            self.save_preset_name_widget, 
+            self.save_preset_button,
+            widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")
+        ]
             
         self.save_preset_button._click_handlers.callbacks.clear()
         self.save_preset_button.on_click(lambda b: self.save_preset_on_click(self.save_preset_name_widget.value, text2img, img2img, controlnet, inpaint, ip, lora, embeddings))
@@ -68,6 +75,17 @@ class PresetSystem:
     # First phase of saving preset if another file with the same name exists
     def save_warning_if_preset_exists(self, name, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
         self.save_warning_back_button._click_handlers.callbacks.clear()
+        self.save_preset_display.children = [
+            self.save_output, 
+            self.save_preset_name_widget, 
+            widgets.HBox(
+                [
+                    self.save_preset_button, 
+                    self.save_warning_back_button
+                ]
+            ), 
+            widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")
+        ]
 
         self.show_message(self.save_output, f"{name}.json already exists. Saving the current parameters with the same name will overwrite the original saved parameters. Do you wish to continue?", "warn")
         self.save_warning_back_button.on_click(lambda b: self.save_warning_evaluate("back", name, text2img, img2img, controlnet, inpaint, ip, lora, embeddings))
@@ -115,6 +133,16 @@ class PresetSystem:
             self.reset_options()
             self.show_message(self.rename_output, f"Renamed {old}.json to {new}.json.", "success")
 
+        self.rename_preset_display.children = [
+            self.rename_output,
+            widgets.HBox([
+                widgets.VBox([self.rename_preset_selection_dropdown_label, self.rename_preset_selection_dropdown]), 
+                widgets.VBox([self.rename_preset_widget_label, self.rename_preset_widget])
+            ]),
+            self.rename_preset_button, 
+            widgets.HTML(value="Clicking the button will rename your selected saved preset.")
+        ]
+
         self.rename_preset_button._click_handlers.callbacks.clear()
         self.rename_preset_button.on_click(lambda b: self.rename_preset_on_click(self.rename_preset_selection_dropdown.value, self.rename_preset_widget.value))
 
@@ -128,6 +156,16 @@ class PresetSystem:
             self.rename_back_button._click_handlers.callbacks.clear()
             self.show_message(self.rename_output, f"{new}.json already exists. Renaming the current parameters with the same name will overwrite the original saved parameters. Do you wish to continue?", "warn")
             self.rename_preset_button._click_handlers.callbacks.clear()
+            
+            self.rename_preset_display.children = [
+                self.rename_output,
+                widgets.HBox([
+                    widgets.VBox([self.rename_preset_selection_dropdown_label, self.rename_preset_selection_dropdown]), 
+                    widgets.VBox([self.rename_preset_widget_label, self.rename_preset_widget])
+                ]),
+                widgets.HBox([self.rename_preset_button, self.rename_back_button]), 
+                widgets.HTML(value="Clicking the button will rename your selected saved preset.")
+            ]
 
             self.rename_back_button.on_click(lambda b: self.rename_preset_evaluate("back", old, new))
             self.rename_preset_button.on_click(lambda b: self.rename_preset_evaluate("overwrite", old, new))
@@ -145,6 +183,13 @@ class PresetSystem:
             self.reset_options()
             self.show_message(self.delete_output, f"Deleted {name}.json.", "success")
 
+        self.delete_preset_display.children = [
+            self.delete_output, 
+            self.delete_preset_selection_dropdown_label, 
+            self.delete_preset_selection_dropdown, 
+            self.delete_preset_button, 
+            widgets.HTML(value="Clicking the button will delete your selected saved preset from Google Drive.")]
+
         self.delete_preset_button._click_handlers.callbacks.clear()
         self.delete_preset_button.on_click(lambda b: self.delete_preset_on_click(self.delete_preset_selection_dropdown.value))
 
@@ -154,6 +199,13 @@ class PresetSystem:
 
         self.show_message(self.delete_output, f"Do you wish to delete {name}.json from your saved presets?", "warn")
         self.delete_preset_button._click_handlers.callbacks.clear()
+
+        self.delete_preset_display.children = [
+            self.delete_output, 
+            self.delete_preset_selection_dropdown_label, 
+            self.delete_preset_selection_dropdown, 
+            widgets.HBox([self.delete_preset_button, self.delete_back_button]), 
+            widgets.HTML(value="Clicking the button will delete your selected saved preset from Google Drive.")]
 
         self.delete_back_button.on_click(lambda b: self.delete_preset_evaluate("back", name))
         self.delete_preset_button.on_click(lambda b: self.delete_preset_evaluate("delete", name))
@@ -181,7 +233,7 @@ class PresetSystem:
         self.rename_preset_selection_dropdown = widgets.Dropdown()
         self.rename_preset_widget_label = widgets.Label(value="Input your new name:")
         self.rename_preset_widget = widgets.Text(placeholder="New name")
-        self.rename_preset_display = widgets.VBox([widgets.HBox([widgets.VBox([self.rename_output, self.rename_preset_selection_dropdown_label, self.rename_preset_selection_dropdown]), widgets.VBox([self.rename_preset_widget_label, self.rename_preset_widget])]), self.rename_preset_button, widgets.HTML(value="Clicking the button will rename your selected saved preset.")])
+        self.rename_preset_display = widgets.VBox([self.rename_output, widgets.HBox([widgets.VBox([self.rename_preset_selection_dropdown_label, self.rename_preset_selection_dropdown]), widgets.VBox([self.rename_preset_widget_label, self.rename_preset_widget])]), self.rename_preset_button, widgets.HTML(value="Clicking the button will rename your selected saved preset.")])
 
         self.delete_preset_button = widgets.Button(description="Delete this preset", button_style="danger")
         self.delete_back_button = widgets.Button(description="Back")
