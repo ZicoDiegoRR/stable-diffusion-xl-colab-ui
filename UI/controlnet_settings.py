@@ -53,10 +53,11 @@ class ControlNetSettings:
     def validation(self, value):
         root_dir_list = os.listdir("/content")
         for folder in root_dir_list:
-            file_in_folder = os.lisdir(f"/content/{folder}")
-            for file in file_in_folder:
-                if value in file:
-                    return True
+            if os.path.isdir(folder):
+                file_in_folder = os.listdir(f"/content/{folder}")
+                for file in file_in_folder:
+                    if value in file:
+                        return True
         return False
 
     # Check if the path is link
