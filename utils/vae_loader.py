@@ -52,12 +52,24 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
                 vae_subfolder, _ = os.path.splitext(os.path.basename(model_path)) 
                 vae_path_collected = [os.path.join(f"/content/VAE/{vae_subfolder}", path) for path in os.listdir(f"/content/VAE/{vae_subfolder}") if os.path.isfile(os.path.join(f"/content/VAE/{vae_subfolder}", path))]
 
-            vae_path = ["", ""]
+            vae_path_first = ["", ""]
             for element in vae_path_collected:
                 if element.endswith(".json"):
-                    vae_path[1] = element
+                    vae_path_first[1] = element
                 else:
-                    vae_path[0] = element
+                    vae_path_first[0] = element
+
+            if not vae_path[0]:
+                vae_weight_download = downloader.download_file(model_path, "VAE", hf_token, civit_token)
+                vae_weight_name, _ = os.path.splitext(os.path.basename(vae_weight_download)) 
+                vae_config_download = downloader.download_file(
+                    model_path, 
+                    "VAE",
+                    hf_token, 
+                    civit_token,
+                    subfolder=vae_weight_name
+                )
+                vae_path = [vae_weight_download, vae_config_download]
             for_vae_current = os.path.splitext(os.path.basename(vae_path[0])) 
 
         # Load
