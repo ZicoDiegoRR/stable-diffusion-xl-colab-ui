@@ -107,6 +107,25 @@ def get_depth_map_display(image, depth_estimator):
     image = np.concatenate([image, image, image], axis=2)
     return image
 
+# Selecting image path for ControlNet
+def controlnet_path_selector(path, type):
+    try:
+        if path == "inpaint":
+            cn_path = load_last(last_generation_loading, 'inpaint')
+        elif Canny_Link == "controlnet":
+            cn_path = load_last(last_generation_loading, 'controlnet')
+        elif not Canny_Link:
+            cn_path = load_last(last_generation_loading, 'text2img')
+        else:
+            cn_path = Canny_Link
+        cn_image = load_image(Canny_path)
+        pipeline_type = "controlnet"
+    except Exception as e:
+        print(f"Couldn't load {path}.")
+        cn_image = ""
+        pipeline_type = type
+    return cn_image, pipeline_type
+
 # Initializing image generation
 def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary, widgets_change):
     # Initialization
@@ -126,11 +145,15 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     if not seed_list[1] and seed_list[0].value == -1:
         generator_seed = random.randint(1, 1000000000000)
-    elif seed_list[1] or seed_list[0].value > -1:
+    elif seed_list[1] and seed_list[0].value > -1:
         generator_seed = seed_list[0].value
     elif seed_list[0].value < -1:
         print("Seed cannot be less than -1. Randomizing the seed instead...")
         generator_seed = random.randint(1, 1000000000000)
+    else:
+        generator_seed = random.randint(1, 1000000000000)
+
+    seed_list[0].value = generator_seed
 
     base_path = "/content/gdrive/MyDrive" if os.path.exists("/content/gdrive/MyDrive") else "/content"
 
@@ -196,74 +219,46 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     # Selecting image and pipeline
     last_generation_loading = os.path.join(base_path, "last_generation.json")
     if Canny and selected_tab_for_pipeline == 2:
-        if Canny_Link == "inpaint":
-            Canny_link = load_last(last_generation_loading, 'inpaint')
-        elif Canny_Link == "controlnet":
-            Canny_link = load_last(last_generation_loading, 'controlnet')
-        elif not Canny_Link:
-            Canny_link = load_last(last_generation_loading, 'text2img')
-        else:
-            Canny_link = Canny_Link
-        if Canny_link or os.path.exists(Canny_link):
-            pipeline_type = "controlnet"
+        Canny_link, pipeline_type = controlnet_path_selector(Canny_Link, pipeline_type)
     else:
         Canny_link = ""
 
     if Depth_Map and selected_tab_for_pipeline == 2:
-        if DepthMap_Link == "inpaint":
-            Depthmap_Link = load_last(last_generation_loading, 'inpaint')
-        elif DepthMap_Link == "controlnet":
-            Depthmap_Link = load_last(last_generation_loading, 'controlnet')
-        elif not DepthMap_Link:
-            Depthmap_Link = load_last(last_generation_loading, 'text2img')
-        else:
-            Depthmap_Link = DepthMap_Link
-        if Depthmap_Link or os.path.exists(Depthmap_Link):
-            pipeline_type = "controlnet"
+        Depthmap_Link, pipeline_type = controlnet_path_selector(DepthMap_Link, pipeline_type)
     else:
         Depthmap_Link = ""
 
     if Open_Pose and selected_tab_for_pipeline == 2:
-        if OpenPose_Link == "inpaint":
-            Openpose_Link = load_last(last_generation_loading, 'inpaint')
-        elif OpenPose_Link == "controlnet":
-            Openpose_Link = load_last(last_generation_loading, 'controlnet')
-        elif not OpenPose_Link:
-            Openpose_Link = load_last(last_generation_loading, 'text2img')
-        else:
-            Openpose_Link = OpenPose_Link
-        if Openpose_Link or os.path.exists(Openpose_Link):
-            pipeline_type = "controlnet"
+        Openpose_Link, pipeline_type = controlnet_path_selector(OpenPose_Link, pipeline_type)
     else:
         Openpose_Link = ""
 
     active_inpaint = False
-    if Inpainting and selected_tab_for_pipeline == 3:
-        if Canny or Depth_Map or Open_Pose:
-            raise TypeError("You checked both ControlNet and Inpainting, which will cause incompatibility issues during your run. As of now, there's no alternative way to merge StableDiffusionXLControlNetPipeline and StableDiffusionXLInpaintingPipeline without causing any issues. Perhaps you want to use only one of them?")
+    if Inpainting and selected_tab_for_pipeline == 3:        
         if not Mask_Image:
-            raise ValueError("You checked Inpainting while you're leaving Mask_Image empty. Mask_Image is required for Inpainting!")
-        if Inpainting_Image == "pre-generated text2image image":
-            inpaint_img = load_last(last_generation_loading, 'text2img')
-        elif Inpainting_Image == "pre-generated controlnet image":
-            inpaint_img = load_last(last_generation_loading, 'controlnet')
-        elif Inpainting_Image == "previous inpainting image":
-            inpaint_img = load_last(last_generation_loading, 'inpaint')
+            print("You checked Inpainting while you're leaving mask image empty. Mask image is required for Inpainting.")
         else:
-            inpaint_image = Inpainting_Image
-        if inpaint_img is not None and os.path.exists(inpaint_img):
-            pipeline_type = "inpaint"
-            inpaint_image = load_image(inpaint_img).resize((1024, 1024))
-            mask_image = load_image(Mask_Image).resize((1024, 1024))
-            active_inpaint = True
-            display(make_image_grid([inpaint_image, mask_image], rows=1, cols=2))
+            if Inpainting_Image == "pre-generated text2image image":
+                inpaint_img = load_last(last_generation_loading, 'text2img')
+            elif Inpainting_Image == "pre-generated controlnet image":
+                inpaint_img = load_last(last_generation_loading, 'controlnet')
+            elif Inpainting_Image == "previous inpainting image":
+                inpaint_img = load_last(last_generation_loading, 'inpaint')
+            else:
+                inpaint_img = Inpainting_Image
+            if inpaint_img is not None and os.path.exists(inpaint_img):
+                pipeline_type = "inpaint"
+                inpaint_image = load_image(inpaint_img).resize((1024, 1024))
+                mask_image = load_image(Mask_Image).resize((1024, 1024))
+                active_inpaint = True
+                display(make_image_grid([inpaint_image, mask_image], rows=1, cols=2))
 
     if Reference_Image and selected_tab_for_pipeline == 1:
-      ref_image = load_image(Reference_Image)
-      if ref_image or os.path.exists(ref_image):
-        pipeline_type = "img2img"
+        ref_image = load_image(Reference_Image)
+        if ref_image or os.path.exists(ref_image):
+            pipeline_type = "img2img"
     else:
-      ref_image = None
+        ref_image = None
 
     if not IP_Image_Link and IP_Adapter != "None":
         print(f"You selected {IP_Adapter}, but left the IP_Image_Link empty. Skipping IP-Adapter...")
@@ -271,7 +266,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     if selected_tab_for_pipeline == 0 or (not Canny_link and not Depthmap_Link and not Openpose_Link and not active_inpaint and not ref_image):
         pipeline_type = "text2img"
         if selected_tab_for_pipeline != 0:
-            print("No reference image. Defaulting to Text-to-Image...")
+            print("No reference image was inputted. Defaulting to Text-to-Image...")
 
     # Saving the set parameters (first phase)
     save_param(f"{base_path}/Saved Parameters/main_parameters.json", dictionary)
@@ -289,7 +284,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
           loaded_controlnet_model[0] = "canny"
           controlnets[0] = canny_model
         print("🏞️ | Converting image with Canny Edge Detection...")
-        c_img = load_image(Canny_link)
+        c_img = Canny_link
         image_canny = np.array(c_img)
         image_canny = cv2.Canny(image_canny, minimum_canny_threshold, maximum_canny_threshold)
         image_canny = image_canny[:, :, None]
@@ -308,7 +303,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
           depthmap_model = ControlNetModel.from_pretrained("diffusers/controlnet-depth-sdxl-1.0", torch_dtype=torch.float16, use_safetensors=True, low_cpu_mem_usage=True).to("cuda")
           controlnets[1] = depthmap_model
         print("🏞️ | Converting image with Depth Map...")
-        image_depth = load_image(Depthmap_Link).resize((1024, 1024))
+        image_depth = Depthmap_Link.resize((1024, 1024))
         depth_estimator = pipe("depth-estimation")
         depth_map = get_depth_map(image_depth, depth_estimator).unsqueeze(0).half().to("cpu")
         images[1] = depth_map
@@ -326,7 +321,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
           openpose_model = ControlNetModel.from_pretrained("thibaud/controlnet-openpose-sdxl-1.0", torch_dtype=torch.float16, low_cpu_mem_usage=True).to("cuda")
           controlnets[2] = openpose_model
         print("🏞️ | Converting image with Open Pose...")
-        image_openpose = load_image(Openpose_Link)
+        image_openpose = Openpose_Link
         openpose_image = openpose(image_openpose)
         images[2] = openpose_image.resize((1024, 1024))
         print("✅ | Open Pose is done.")
