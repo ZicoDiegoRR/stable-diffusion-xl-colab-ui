@@ -23,17 +23,18 @@ class PresetSystem:
             return []
 
     # Showing an error message 
-    def show_message(self, widget, msg, type, sec=2):
+    def show_message(self, widget, msg, type):
         widget.clear_output()
-        with widget:
-            if type == "error":
-                display(HTML(f"<span style='color: red;'>Error:</span> {msg}"))
-            elif type == "warn":
-                display(HTML(f"<span style='color: orange;'>Warning:</span> {msg}"))
-            elif type == "success":
-                display(HTML(f"<span style='color: lime;'>Success:</span> {msg}"))
-        if type != "warn":
-            threading.Timer(sec, widget.clear_output).start()
+        if type != "clear":
+            with widget:
+                if type == "error":
+                    display(HTML(f"<span style='color: red;'>Error:</span> {msg}"))
+                elif type == "warn":
+                    display(HTML(f"<span style='color: orange;'>Warning:</span> {msg}"))
+                elif type == "success":
+                    display(HTML(f"<span style='color: lime;'>Success:</span> {msg}"))
+            if type != "warn":
+                threading.Timer(5.0, widget.clear_output).start()
 
     # Validating and converting old preset to the new one
     def list_or_dict(self, cfg, path):
@@ -61,6 +62,9 @@ class PresetSystem:
             self.save_param(f"{self.base_path}/Saved Parameters/{name}.json", save_params)
             self.reset_options()
             self.show_message(self.save_output, f"Saved {name}.json in {self.base_path} folder.", "success")
+            self.save_preset_name_widget.value = ""
+        else:
+            self.show_message(self.save_output, "", "clear")
 
         self.save_preset_display.children = [
             self.save_output, 
@@ -99,6 +103,7 @@ class PresetSystem:
             save_params = all_widgets.import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
             self.save_param(f"{self.base_path}/Saved Parameters/{name}.json", save_params)
             self.show_message(self.save_output, f"Saved {name}.json in {self.base_path} folder.", "success")
+            self.save_preset_name_widget.value = ""
             self.reset_options()
         elif name in self.list_all_saved_preset():
             self.save_warning_if_preset_exists(name, text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
@@ -132,6 +137,9 @@ class PresetSystem:
             os.rename(os.path.join(f"{self.base_path}/Saved Parameters/", f"{old}.json"), os.path.join(f"{self.base_path}/Saved Parameters/", f"{new}.json"))
             self.reset_options()
             self.show_message(self.rename_output, f"Renamed {old}.json to {new}.json.", "success")
+            self.rename_preset_widget.value = ""
+        else:
+            self.show_message(self.rename_output, "", "clear")
 
         self.rename_preset_display.children = [
             self.rename_output,
@@ -152,6 +160,7 @@ class PresetSystem:
             os.rename(os.path.join(f"{self.base_path}/Saved Parameters/", f"{old}.json"), os.path.join(f"{self.base_path}/Saved Parameters/", f"{new}.json"))
             self.reset_options()
             self.show_message(self.rename_output, f"Renamed {old}.json to {new}.json.", "success")
+            self.rename_preset_widget.value = ""
         elif new in self.list_all_saved_preset() and new and new != old:
             self.rename_back_button._click_handlers.callbacks.clear()
             self.show_message(self.rename_output, f"{new}.json already exists. Renaming the current parameters with the same name will overwrite the original saved parameters. Do you wish to continue?", "warn")
@@ -182,6 +191,8 @@ class PresetSystem:
             os.remove(os.path.join(f"{self.base_path}/Saved Parameters/", f"{name}.json"))
             self.reset_options()
             self.show_message(self.delete_output, f"Deleted {name}.json.", "success")
+        else:
+            self.show_message(self.rename_output, "", "clear")
 
         self.delete_preset_display.children = [
             self.delete_output, 
