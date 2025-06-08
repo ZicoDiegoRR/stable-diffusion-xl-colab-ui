@@ -65,7 +65,7 @@ def verify(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type):
     elif not model_check and not pipe_check:
         return False
 
-def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeline_type, format="safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token=""):
+def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeline_type, format="safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token="", base_path="/content"):
     # For Hugging Face repository with "author/repo_name" format
     if model_url.count("/") == 1 and (not model_url.startswith("https://") or not model_url.startswith("http://")):
         if verify(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type) or pipe is None:
@@ -88,15 +88,13 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
     else:
         # Download
         if model_url.startswith("https://") or model_url.startswith("http://"):
-            Model_path = downloader.download_file(model_url, "Checkpoint", hf_token, civit_token)
+            Model_path = downloader.download_file(model_url, "Checkpoint", hf_token, civit_token, base_path)
             model_name, _ = os.path.splitext(os.path.basename(Model_path))
             widget.value = model_name
         else:
             if not model_url.startswith("/content/Checkpoint"):
-                for model in os.listdir("/content/Checkpoint"):
-                    if model_url in model:
-                        Model_path = f"/content/Checkpoint/{model}"
-                        model_name = model_url
+                Model_path = downloader.download_file(model_url, "Checkpoint", hf_token, civit_token, base_path)
+                model_name, _ = os.path.splitext(os.path.basename(Model_path))
             else:
                 Model_path = model_url
                 model_name = model_url
