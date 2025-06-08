@@ -19,15 +19,33 @@ def autoencoderkl_load(vae_path):
         print(f"Reason: {e}")
         return None
 
+def download_vae(model_path, type, hf_token, civit_token, base_path, config=None):
+    vae_weight_download = downloader.download_file(model_path, "VAE", hf_token, civit_token)
+    vae_weight_name, _ = os.path.splitext(os.path.basename(vae_weight_download)) 
+    vae_config_download = downloader.download_file(
+        config if config else vae_weight_name, 
+        "VAE",
+        hf_token, 
+        civit_token,
+        subfolder=vae_weight_name
+    )
+    vae_path = [vae_weight_download, vae_config_download]
+    return vae_path
 
-def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token):
+def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token, base_path):
     # Checking if the provided vae has been loaded
     if model_path != current_vae:
         # Determining the path, whether the VAE has been downloaded or not
         if vae_url_checker(model_path):
-            vae_download_path = [downloader.download_file(model_path, "VAE", hf_token, civit_token), downloader.download_file(config_path, "VAE", hf_token, civit_token)]
-            vae_save_folder, _ = os.path.splitext(os.path.basename(vae_download_path[0]))
-            os.makedirs(f"/content/VAE/{vae_save_folder}", exist_ok=True)
+            vae_download_path = download_vae(
+                model_path, 
+                type, 
+                hf_token, 
+                civit_token, 
+                base_path, 
+                config=config_path, 
+            )
+            
             vae_path = []
             for i, path in enumerate(vae_download_path):
                 vae_filename = os.path.basename(path)
@@ -60,16 +78,14 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
                     vae_path_first[0] = element
 
             if not vae_path[0]:
-                vae_weight_download = downloader.download_file(model_path, "VAE", hf_token, civit_token)
-                vae_weight_name, _ = os.path.splitext(os.path.basename(vae_weight_download)) 
-                vae_config_download = downloader.download_file(
+                vae_path = download_vae(
                     model_path, 
-                    "VAE",
+                    type, 
                     hf_token, 
-                    civit_token,
-                    subfolder=vae_weight_name
-                )
-                vae_path = [vae_weight_download, vae_config_download]
+                    civit_token, 
+                    base_path, 
+                    config=config_path, 
+               )
             for_vae_current = os.path.splitext(os.path.basename(vae_path[0])) 
 
         # Load
