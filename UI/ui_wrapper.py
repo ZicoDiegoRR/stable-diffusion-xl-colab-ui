@@ -104,12 +104,14 @@ class UIWrapper:
                 self.ui_tab.selected_index = 1
             elif destination == "controlnet":
                 self.ui_tab.selected_index = 2
-        else:
-            self.merge_options.children = [self.merge_button]
+        self.merge_options.children = [self.merge_button]
 
     # First phase of merging a pipeline's general parameters to the selected pipeline
     def merge_first_phase(self, index, text2img, img2img, controlnet): # Giving options
-        self.merge_options.children = [widgets.HBox([self.send_text2img, self.send_img2img, self.send_controlnet]), self.merge_back]
+        merge_buttons = [self.send_text2img, self.send_img2img, self.send_controlnet]
+        merge_buttons.pop(index)
+        
+        self.merge_options.children = [widgets.HBox([merge_buttons]), self.merge_back]
         type_for_init = self.select_key(index)
 
         self.send_text2img._click_handlers.callbacks.clear()
