@@ -14,7 +14,7 @@ def load_downloaded_lora(pipe, link, scales, names):
             print(f"Skipped {name}. Reason: {e}")
     pipe.set_adapters(name_list, adapter_weights=scale_list)
 
-def download_lora(pipe, link, scale, widget, hf_token, civit_token):
+def download_lora(pipe, link, scale, widget, hf_token, civit_token, base_path):
     lora_names = []
     lora_paths = []
     scales = []
@@ -30,10 +30,7 @@ def download_lora(pipe, link, scale, widget, hf_token, civit_token):
                     lora_check = os.path.basename(url)
                 else:
                     lora_check = url
-                for lora in os.listdir("/content/LoRAs/"):
-                    if lora_check in lora:
-                        lora_file_path = f"/content/LoRAs/{lora}"
-                        break
+                lora_file_path = downloader.download_file(lora_check, "LoRAs", hf_token, civit_token)
                         
             if lora_file_path:
                 unique_lora_urls.append(url)
@@ -51,9 +48,9 @@ def download_lora(pipe, link, scale, widget, hf_token, civit_token):
 
     load_downloaded_lora(pipe, lora_paths, scales, lora_names)
 
-def process(pipe, link, scale, widget, hf_token, civit_token):
+def process(pipe, link, scale, widget, hf_token, civit_token, base_path):
     os.makedirs("/content/LoRAs", exist_ok=True)
     lora_links = re.split(r"\s*,\s*", link)
     lora_scales = [float(num) for num in re.split(r"\s*,\s*", scale)]
     
-    download_lora(pipe, lora_links, lora_scales, widget, hf_token, civit_token)
+    download_lora(pipe, lora_links, lora_scales, widget, hf_token, civit_token, base_path)
