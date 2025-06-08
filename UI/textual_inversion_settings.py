@@ -15,9 +15,6 @@ class TextualInversionLoader:
             self.ti_urls_widget,
             self.ti_tokens_widget
         ]
-    
-    def check_if_link(self, value): # Function to check whether the given path is a link or a file
-        return value.startswith("https://") or value.startswith("http://") or value.startswith("/content/gdrive/MyDrive") or os.path.exists(f"/content/Embeddings/{value}")
         
     def sanitize(self, cfg, token): # Function to filter out empty strings and invalid path
         if cfg:
@@ -26,9 +23,8 @@ class TextualInversionLoader:
             sanitized_cfg = ""
             sanitized_token = ""
             for item, tag in zip(split_cfg, split_token):
-                if self.check_if_link(item):
-                    sanitized_cfg += item + ","
-                    sanitized_token += tag + ","
+                sanitized_cfg += item + ","
+                sanitized_token += tag + ","
             return sanitized_cfg.rstrip(","), sanitized_token.rstrip(",")
         else:
             return "", ""
