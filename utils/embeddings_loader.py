@@ -25,16 +25,13 @@ def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token)
         textual_inversion_path = ""
         if url not in unique_ti_urls:
             if url.startswith("https://") or url.startswith("http://"):
-                textual_inversion_path = downloader.download_file(url, "Embeddings", hf_token, civit_token)
+                textual_inversion_path = downloader.download_file(url, "Embeddings", hf_token, civit_token, base_path)
             else:
                 if url.startswith("/content/LoRAs/"):
                     ti_check = os.path.basename(url)
                 else:
                     ti_check = url
-                for embed in os.listdir("/content/Embeddings/"):
-                    if ti_check in embed:
-                        textual_inversion_path = f"/content/Embeddings/{embed}"
-                        break
+                textual_inversion_path = downloader.download_file(url, "Embeddings", hf_token, civit_token, base_path)
 
             if textual_inversion_path:
                 unique_ti_urls.append(url)
@@ -52,12 +49,12 @@ def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token)
 
     load_textual_inversion_from_link(pipe, ti_path, tokens, ti_list)
         
-def process(pipe, link, token, widget, hf_token, civit_token):
+def process(pipe, link, token, widget, hf_token, civit_token, base_path):
     # Preprocessing the urls and weight before downloading
     ti_links = [word for word in re.split(r"\s*,\s*", link)]
     ti_tokens = [word for word in re.split(r"\s*,\s*", token)]
     
     os.makedirs("/content/Embeddings", exist_ok=True)
 
-    download_textual_inversion(pipe, ti_links, ti_tokens, widget, hf_token, civit_token)
+    download_textual_inversion(pipe, ti_links, ti_tokens, widget, hf_token, civit_token, base_path)
 
