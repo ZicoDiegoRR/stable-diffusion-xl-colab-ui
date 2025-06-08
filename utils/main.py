@@ -346,7 +346,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         active_inpaint=active_inpaint, 
         hf_token=HF_Token, 
         civit_token=Civit_Token,
-        base_path
+        base_path=base_path
     )
 
     # Handling VAE
@@ -359,7 +359,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             widgets_change[0], 
             HF_Token, 
             Civit_Token,
-            base_path
+            base_path=base_path
         )
         vae_current = loaded_vae
         if vae is not None:
@@ -437,7 +437,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             widgets_change[2], 
             HF_Token, 
             Civit_Token,
-            base_path
+            base_path=base_path
         )
         torch.cuda.empty_cache()
 
@@ -450,7 +450,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             widgets_change[3], 
             HF_Token, 
             Civit_Token,
-            base_path
+            base_path=base_path
         )
         torch.cuda.empty_cache()
 
