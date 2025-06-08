@@ -211,7 +211,7 @@ class UIWrapper:
         self.send_text2img = widgets.Button(description="Text-to-Image")
         self.send_img2img = widgets.Button(description="Image-to-Image")
         self.send_controlnet = widgets.Button(description="ControlNet")
-        self.merge_back = widgets.Button(description="Back", button_style='danger', layout=widgets.Layout(width="100%"))
+        self.merge_back = widgets.Button(description="Back", layout=widgets.Layout(width="100%"))
 
         self.merge_options = widgets.VBox([self.merge_button])
         self.merge_options.layout = widgets.Layout(margin='0 0 0 auto')
