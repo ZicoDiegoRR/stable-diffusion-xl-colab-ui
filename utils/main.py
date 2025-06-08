@@ -111,14 +111,14 @@ def get_depth_map_display(image, depth_estimator):
 def controlnet_path_selector(path, type):
     try:
         if path == "inpaint":
-            cn_path = load_last(last_generation_loading, 'inpaint')
-        elif Canny_Link == "controlnet":
+            cn_path = load_last(last_generation_loading, 'inpaint')                     
+        elif path == "controlnet":
             cn_path = load_last(last_generation_loading, 'controlnet')
-        elif not Canny_Link:
+        elif not path:
             cn_path = load_last(last_generation_loading, 'text2img')
         else:
-            cn_path = Canny_Link
-        cn_image = load_image(Canny_path)
+            cn_path = path
+        cn_image = load_image(cn_path)
         pipeline_type = "controlnet"
     except Exception as e:
         print(f"Couldn't load {path}.")
