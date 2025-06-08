@@ -113,9 +113,9 @@ class UIWrapper:
 
         self.merge_buttons_options.children = []
         for button in merge_buttons:
-            self.merge_buttons_options.children += button
+            self.merge_buttons_options.children += (button,)
         
-        self.merge_options.children = [widgets.HBox([]), self.merge_back]
+        self.merge_options.children = [widgets.HBox([self.merge_buttons_options]), self.merge_back]
         type_for_init = self.select_key(index)
 
         self.send_text2img._click_handlers.callbacks.clear()
