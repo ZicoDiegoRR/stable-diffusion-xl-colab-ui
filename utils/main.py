@@ -48,7 +48,7 @@ controlnets_scale = [None] * 3
 # Saving the set parameters
 def save_param(path, data):
     with open(path, 'w') as file:
-        json.dump(data, file)
+        json.dump(data, file, indent=4)
 
 # Saving the path of the latest generated images
 def save_last(filename, data, type):
