@@ -39,10 +39,6 @@ class Text2ImgSettings:
             self.vae_config,
         ]
         
-    # Check if the path is link
-    def check_if_link(self, value):
-        return value.startswith("https://") or value.startswith("http://") or value.startswith("/content/gdrive/MyDrive") or os.path.exists(f"/content/VAE/{value}")
-        
     # Collect all values from the widgets and turn them into a single list
     def collect_values(self):
         return [
