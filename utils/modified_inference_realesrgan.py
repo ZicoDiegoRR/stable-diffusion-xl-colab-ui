@@ -51,7 +51,7 @@ class ESRGANWidget:
             self.face,
             self.upsampler
         ])
-       self.base_path = base_path
+        self.base_path = base_path
         
     def execute_realesrgan(self, tab):
         # execute
