@@ -91,6 +91,8 @@ def run():
     else:
         base_path = "/content"
 
+    os.makedirs(f"{base_path}/Saved Parameters", exist_ok=True)
+
     # Loading the save file
     cfg = None
     if os.path.exists(f"{base_path}/parameters.json"):
