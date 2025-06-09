@@ -40,6 +40,8 @@ def download_vae(model_path, type, hf_token, civit_token, base_path, config=None
     return vae_path
 
 def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token, base_path):
+    os.makedirs("/content/VAE", exist_ok=True)
+    
     # Checking if the provided vae has been loaded
     if model_path != current_vae:
         # Determining the path, whether the VAE has been downloaded or not
