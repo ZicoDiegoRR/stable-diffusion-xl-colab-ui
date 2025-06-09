@@ -13,10 +13,10 @@ This is a simple Google Colab notebook made by an 18-years-old junior programmer
 - **User-Friendly UI:** Simplified complexity with an easy-to-understand user interface.
 - **IPyWidgets:** Simplified UI so that you don't need to scroll up and down. 
 - **Built-in History System:** Can show all of your previously generated images in Google Drive without opening it, just with a few simple clicks.
+- **Preset System:** Enables saving, loading, renaming, and deleting presets containing your saved parameters.
 - **CivitAI Token Support:** Pass your CivitAI token for additional functionality, but remember **never share it with anyone.**
 - **Hugging Face Token Support:** Pass your Hugging Face token for accessing private files, but remember **never share it with anyone.**
 - **Simplicity:** Consists of two cells only.
-- **Written Guide:** Can keep you on track with the flow of this notebook.
 
 > [!IMPORTANT]\
 > With the current update, the Inpainting feature is under development and it may fail. Please use the older version in the "Legacy" branch if you wish to use Inpainting.
