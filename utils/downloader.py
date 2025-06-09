@@ -165,6 +165,7 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
     # Load the dictionary from urls.json
     saved_urls = load_param(f"{base_path}/Saved Parameters/URL/urls.json")
     dict_type = saved_urls[type]
+    os.makedirs(f"{base_path}/Saved Parameters/URL", exist_ok=True)
 
     # Select the key when loading VAE
     if subfolder:
