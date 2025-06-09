@@ -154,7 +154,7 @@ class UIWrapper:
         self.ip = IPAdapterLoader(cfg["ip"])
         self.lora = LoRALoader(cfg["lora"])
         self.embeddings = TextualInversionLoader(cfg["embeddings"])
-        self.upscaler = modified_inference_realesrgan.ESRGANWidget()
+        self.upscaler = modified_inference_realesrgan.ESRGANWidget(self.base_path)
         self.reset_generate = ResetGenerateSettings(
             self.text2img,
             self.img2img,
