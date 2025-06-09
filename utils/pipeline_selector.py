@@ -86,6 +86,8 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
 
     # For non-Hugging Face repository or Hugging Face direct link
     else:
+        os.makedirs("/content/Checkpoint", exist_ok=True)
+        
         # Download
         if model_url.startswith("https://") or model_url.startswith("http://"):
             Model_path = downloader.download_file(model_url, "Checkpoint", hf_token, civit_token, base_path)
