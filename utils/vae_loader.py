@@ -60,6 +60,8 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
             for i, path in enumerate(vae_download_path):
                 vae_filename = os.path.basename(path)
                 vae_destination = f"/content/VAE/{vae_save_folder}/{vae_filename}"
+                os.makedirs(f"/content/VAE/{vae_save_folder}", exist_ok=True)
+                
                 os.rename(path, vae_destination)
                 vae_path.append(vae_destination)
 
