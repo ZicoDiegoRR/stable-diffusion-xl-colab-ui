@@ -19,6 +19,18 @@ def autoencoderkl_load(vae_path):
         print(f"Reason: {e}")
         return None
 
+def post_download(vae_download_path):
+    vae_path = []
+    vae_save_folder, _ = os.path.splitext(os.path.basename(vae_download_path[0]))
+    os.makedirs(f"/content/VAE/{vae_save_folder}", exist_ok=True)
+    for path in vae_download_path:
+        vae_filename = os.path.basename(path)
+        vae_destination = f"/content/VAE/{vae_save_folder}/{vae_filename}"
+                
+        os.rename(path, vae_destination)
+        vae_path.append(vae_destination)
+    return vae_path
+
 def download_vae(model_path, type, hf_token, civit_token, base_path, config=None):
     vae_weight_download = downloader.download_file(
         model_path, 
@@ -36,7 +48,11 @@ def download_vae(model_path, type, hf_token, civit_token, base_path, config=None
         base_path=base_path,
         subfolder=vae_weight_name
     )
-    vae_path = [vae_weight_download, vae_config_download]
+    
+    vae_path = post_download([
+        vae_weight_download, 
+        vae_config_download
+    ])
     return vae_path
 
 def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token, base_path):
@@ -46,7 +62,7 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
     if model_path != current_vae:
         # Determining the path, whether the VAE has been downloaded or not
         if vae_url_checker(model_path):
-            vae_download_path = download_vae(
+            vae_path = download_vae(
                 model_path, 
                 type, 
                 hf_token, 
@@ -54,17 +70,7 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
                 base_path, 
                 config=config_path, 
             )
-            
-            vae_path = []
-            vae_save_folder, _ = os.path.splitext(os.path.basename(vae_download_path[0]))
-            for i, path in enumerate(vae_download_path):
-                vae_filename = os.path.basename(path)
-                vae_destination = f"/content/VAE/{vae_save_folder}/{vae_filename}"
-                os.makedirs(f"/content/VAE/{vae_save_folder}", exist_ok=True)
-                
-                os.rename(path, vae_destination)
-                vae_path.append(vae_destination)
-
+            for file in vae_path:
                 widget_value, _ = os.path.splitext(vae_filename)
                 widget[i].value = widget_value
             for_vae_current = os.path.splitext(os.path.basename(vae_path[0])) 
@@ -77,7 +83,10 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
         # For VAE from local files
         else:
             if not model_path.startswith("/content/VAE"):
-                vae_path_collected = [os.path.join(f"/content/VAE/{model_path}", path) for path in os.listdir(f"/content/VAE/{model_path}") if os.path.isfile(os.path.join(f"/content/VAE/{model_path}", path))]
+                if os.path.exists(f"/content/VAE/{model_path}"):
+                    vae_path_collected = [os.path.join(f"/content/VAE/{model_path}", path) for path in os.listdir(f"/content/VAE/{model_path}") if os.path.isfile(os.path.join(f"/content/VAE/{model_path}", path))]
+                else:
+                    vae_path_collected = ["", ""]
             else: 
                 vae_subfolder, _ = os.path.splitext(os.path.basename(model_path)) 
                 vae_path_collected = [os.path.join(f"/content/VAE/{vae_subfolder}", path) for path in os.listdir(f"/content/VAE/{vae_subfolder}") if os.path.isfile(os.path.join(f"/content/VAE/{vae_subfolder}", path))]
