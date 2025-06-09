@@ -69,7 +69,7 @@ Work in progress
 ## To-do List
 - Adding textual inversion ✅ 
 - Implementing Inpainting using IPyCanvas
-- Modularizing the code (in progress)
+- Modularizing the code (testing)
 - Overhauling the save system ✅
 - Adding Hugging Face's token integration ✅ 
 - Implementing Img2Img pipeline ✅ 
@@ -78,4 +78,4 @@ This project is open-source and free to use under the MIT License.
 
 ---
 
-This README was partially made by ChatGPT. (I suck at creating markdown)
+This README was partially made by ChatGPT.
