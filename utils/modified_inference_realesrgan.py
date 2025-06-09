@@ -26,7 +26,7 @@ class ESRGANWidget:
             self.input_link.value = f"/content/upscale/{filename}"
                 
     #creating widgets
-    def __init__(self):
+    def __init__(self, base_path):
         self.warning_upscale = widgets.HTML(value="It's recommended to upscale any image with up to 1024x1024 resolution or lower to avoid high VRAM usage.")
         self.input_link = widgets.Text(placeholder="Image link or path")
         self.input_upload = widgets.FileUpload(accept="image/*", multiple=False)
@@ -51,6 +51,7 @@ class ESRGANWidget:
             self.face,
             self.upsampler
         ])
+       self.base_path = base_path
         
     def execute_realesrgan(self, tab):
         # execute
@@ -60,6 +61,7 @@ class ESRGANWidget:
             model_name=self.model_name.value,
             denoise_strength=self.denoising.value,
             outscale=self.upscale_factor.value,
+            output=self.base_path,
             tile=self.tile_size.value,
             tile_pad=self.tile_padding.value,
             pre_pad=self.pre_padding.value,
