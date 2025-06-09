@@ -12,6 +12,8 @@ This folder contains the core functional components that power the image generat
 
 - `lora_loader.py` — Applies LoRA (Low-Rank Adaptation) weights to the model.
 
+- `main.py` — Controls the image generation logic and flow.
+
 - `modified_inference_realesrgan.py` — Performs image upscaling using Real-ESRGAN.
 
 - `pipeline_selector.py` — Selects the appropriate generation pipeline based on UI input.
