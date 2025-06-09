@@ -129,7 +129,7 @@ class Img2ImgSettings:
         self.vae_config = widgets.Text(value=cfg[14] if cfg else "", placeholder="VAE config link")
         self.vae_section = widgets.HBox([self.vae_link_widget, self.vae_config])
 
-        self.reference_image_link_widget = widgets.Text(placeholder="Img2Img reference link", description="Reference Image", value=cfg[15] if cfg else "")
+        self.reference_image_link_widget = widgets.Text(placeholder="Img2Img reference link", description="Reference Image", value=cfg[15] if cfg and not cfg[15].startswith("/content/img2img/") else "")
         self.reference_image_upload_widget = widgets.FileUpload(accept="image/*", multiple=False)
         self.denoising_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.01, description="Denoising Strength", value=cfg[16] if cfg else 0.3)
         self.reference_image_section = widgets.VBox([widgets.HBox([self.reference_image_link_widget, self.reference_image_upload_widget]), widgets.HBox([self.denoising_strength_slider, widgets.HTML(value="Low value means similar to the original image.")])])
