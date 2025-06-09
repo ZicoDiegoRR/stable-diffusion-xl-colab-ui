@@ -85,6 +85,8 @@ class UIWrapper:
                      ]
             )
             self.reload_submit_button()
+            self.lora.construct(self.lora.lora_urls_widget.value)
+            self.embeddings.construct(self.embeddings.ti_urls_widget.value)
         elif index == 7:
             self.submit_settings.layout.visibility = "hidden"
             self.upscaler.execute_realesrgan(self.ui)
