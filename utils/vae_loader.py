@@ -98,7 +98,7 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
                 else:
                     vae_path_first[0] = element
 
-            if not vae_path[0]:
+            if not vae_path_first[0]:
                 vae_path = download_vae(
                     model_path, 
                     type, 
@@ -107,6 +107,8 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
                     base_path, 
                     config=config_path, 
                )
+            else:
+                vae_path = vae_path_first
             for_vae_current = os.path.splitext(os.path.basename(vae_path[0])) 
 
         # Load
