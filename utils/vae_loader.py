@@ -20,13 +20,20 @@ def autoencoderkl_load(vae_path):
         return None
 
 def download_vae(model_path, type, hf_token, civit_token, base_path, config=None):
-    vae_weight_download = downloader.download_file(model_path, "VAE", hf_token, civit_token)
+    vae_weight_download = downloader.download_file(
+        model_path, 
+        "VAE", 
+        hf_token, 
+        civit_token,
+        base_path=base_path
+    )
     vae_weight_name, _ = os.path.splitext(os.path.basename(vae_weight_download)) 
     vae_config_download = downloader.download_file(
         config if config and (config.startswith("https://") or config.startswith("http://") or config.startswith("/content/")) else vae_weight_name, 
         "VAE",
         hf_token, 
         civit_token,
+        base_path=base_path,
         subfolder=vae_weight_name
     )
     vae_path = [vae_weight_download, vae_config_download]
