@@ -24,7 +24,7 @@ from diffusers import (DDPMScheduler,
 from PIL import Image as ImagePIL
 from controlnet_aux import OpenposeDetector
 from compel import Compel, ReturnedEmbeddingsType
-from transformers import CLIPVisionModelWithProjection
+from transformers import CLIPVisionModelWithProjection, pipeline as pipe
 from diffusers.utils import load_image, make_image_grid
 from IPython.display import display, clear_output
 from huggingface_hub import login
