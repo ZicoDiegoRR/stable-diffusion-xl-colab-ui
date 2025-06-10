@@ -19,6 +19,7 @@ from diffusers import (DDPMScheduler,
     UniPCMultistepScheduler, 
     DDIMScheduler, 
     PNDMScheduler,
+    ControlNetModel,
 )
 from PIL import Image as ImagePIL
 from controlnet_aux import OpenposeDetector
