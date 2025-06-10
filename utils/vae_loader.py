@@ -70,7 +70,7 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
                 base_path, 
                 config=config_path, 
             )
-            for file in vae_path:
+            for i, file in enumerate(vae_path):
                 vae_filename = os.path.basename(file)
                 widget_value, _ = os.path.splitext(vae_filename)
                 widget[i].value = widget_value
