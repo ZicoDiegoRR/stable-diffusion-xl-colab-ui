@@ -152,7 +152,10 @@ class ControlNetSettings:
     def canny_popup(self, change): # Function to display canny settings if true
         if change["new"]:
             self.canny_settings.children = [self.canny_toggle, self.canny_dropdown, self.canny_min_slider, self.canny_max_slider, self.canny_strength_slider]
-        else:
+            self.canny_dropdown_handler(
+                {"new": self.canny_dropdown.value}
+            )
+        else: 
             self.canny_settings.children = [self.canny_toggle]
 
     def canny_dropdown_handler(self, change): # Function to attach the canny dropdown to the controlnet dropdown handler
@@ -188,6 +191,9 @@ class ControlNetSettings:
     def depthmap_popup(self, change): # Function to display depth map settings if true
         if change["new"]:
             self.depth_settings.children = [self.depth_map_toggle, self.depthmap_dropdown, self.depth_strength_slider]
+            self.depthmap_dropdown_handler(
+                {"new": self.depthmap_dropdown.value}
+            )
         else:
             self.depth_settings.children = [self.depth_map_toggle]
 
@@ -225,6 +231,9 @@ class ControlNetSettings:
     def openpose_popup(self, change):  # Function to display openpose settings if true
         if change["new"]:
             self.openpose_settings.children = [self.openpose_toggle, self.openpose_dropdown, self.openpose_strength_slider]
+            self.openpose_dropdown_handler(
+                {"new": self.openpose_dropdown.value}
+            )
         else:
             self.openpose_settings.children = [self.openpose_toggle]
 
