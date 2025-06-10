@@ -71,6 +71,7 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
                 config=config_path, 
             )
             for file in vae_path:
+                vae_filename = os.path.basename(file)
                 widget_value, _ = os.path.splitext(vae_filename)
                 widget[i].value = widget_value
             for_vae_current = os.path.splitext(os.path.basename(vae_path[0])) 
