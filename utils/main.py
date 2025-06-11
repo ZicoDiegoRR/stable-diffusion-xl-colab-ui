@@ -133,7 +133,15 @@ def controlnet_path_selector(path, type, base_path):
         cn_image = load_image(cn_path)
         pipeline_type = "controlnet"
     except Exception as e:
-        print(f"Couldn't load {path}.")
+        if path == "inpaint":
+            cn_path = "last-generated Inpainting image."                     
+        elif path == "controlnet":
+            cn_path = "last-generated ControlNet image."
+        elif not path:
+            cn_path = "last-generated Text-to-image image."
+        else:
+            cn_path = path
+        print(f"Couldn't load {cn_path}.")
         cn_image = ""
         pipeline_type = type
     return cn_image, pipeline_type
