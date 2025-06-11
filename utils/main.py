@@ -302,9 +302,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Logic to handle ControlNet and/or MultiControlNets
     global controlnets, loaded_controlnet_model, images, controlnets_scale
-    
     # Flushing Canny model if deactivated after being used
-    elif not Canny and controlnets[0]: 
+    if not Canny and controlnets[0]: 
         controlnet_flush(canny_model, 0)
 
     # Flushing Depth Map model if deactivated after being used
