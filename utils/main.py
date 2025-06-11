@@ -317,7 +317,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         controlnet_flush(openpose, 2)
 
     # Loading ControlNet
-    elif pipeline_type == "controlnet" and (Canny or Depth_Map or Open_Pose) and (Canny_link, Depthmap_Link, Openpose_Link):
+    if pipeline_type == "controlnet" and (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
         # Handling Canny
         if Canny and Canny_link is not None:
             if "canny" not in loaded_controlnet_model:
