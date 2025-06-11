@@ -4,8 +4,8 @@ import os
 
 class TextualInversionLoader:
     def collect_values(self): # Function to collect values in this class
-        ti_collected_url, ti_collected_token = self.read()
-        return [ti_collected_url, ti_collected_token]
+        self.ti_urls_widget.value, self.ti_tokens_widget.value = self.read()
+        return [self.ti_urls_widget.value, self.ti_tokens_widget.value]
 
     def wrap_settings(self):
         return self.ti_settings
