@@ -138,7 +138,7 @@ class ControlNetSettings:
     '''
     
     def dropdown_selector_upon_starting(self, value):
-        if value == "":
+        if not value:
             return self.controlnet_dropdown_choice[2]
         elif value == "controlnet": 
             return self.controlnet_dropdown_choice[3] 
