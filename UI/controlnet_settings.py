@@ -148,7 +148,7 @@ class ControlNetSettings:
             return self.controlnet_dropdown_choice[0]
 
     def link_widget_verifier(self, data):
-        return os.path.exist(data) or data.startswith(("https://", "http://"))
+        return os.path.exists(data) or data.startswith(("https://", "http://"))
     # ________________________________________________________________________________________________________________________________________________________
 
     # Canny
