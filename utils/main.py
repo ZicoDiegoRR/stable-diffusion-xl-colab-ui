@@ -301,7 +301,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         os.remove(os.path.join(f"{base_path}", "parameters.json"))
 
     # Logic to handle ControlNet and/or MultiControlNets
-    global global openpose, openpose_model, depth_estimator, depthmap_model, canny_model, controlnets, loaded_controlnet_model, images, controlnets_scale
+    global openpose, openpose_model, depth_estimator, depthmap_model, canny_model, controlnets, loaded_controlnet_model, images, controlnets_scale
     # Flushing Canny model if deactivated after being used
     if not Canny and controlnets[0]: 
         controlnet_flush(canny_model, 0)
