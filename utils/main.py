@@ -79,6 +79,7 @@ def controlnet_flush(var, index):
         
     del var
     torch.cuda.empty_cache()
+    
     gc.collect()
 
 # Loading the path of the latest generated images
@@ -141,7 +142,7 @@ def controlnet_path_selector(path, type, base_path):
             cn_path = "last-generated Text-to-image image."
         else:
             cn_path = path
-        print(f"Couldn't load {cn_path}.")
+        print(f"Couldn't load {cn_path}. Reason: {e}")
         cn_image = ""
         pipeline_type = type
     return cn_image, pipeline_type
