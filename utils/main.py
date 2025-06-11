@@ -46,6 +46,11 @@ loaded_controlnet_model = [None] * 3
 controlnets = [None] * 3
 images = [None] * 3
 controlnets_scale = [None] * 3
+openpose = None 
+openpose_model = None 
+depth_estimator = None
+depthmap_model = None 
+canny_model = None
 
 # Saving the set parameters
 def save_param(path, data):
