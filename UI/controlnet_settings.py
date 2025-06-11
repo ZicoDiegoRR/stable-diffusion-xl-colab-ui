@@ -258,7 +258,7 @@ class ControlNetSettings:
             ] if self.openpose_toggle.value else [
                 self.openpose_toggle
             ]
-            self.depth_map_link_widget.value = self.controlnet_preset_ref(change["new"])
+            self.openpose_link_widget.value = self.controlnet_preset_ref(change["new"])
 
     def openpose_upload_handler(self, change): # Function to load the path of the uploaded image to the image link
         os.makedirs("/content/openpose", exist_ok=True)
