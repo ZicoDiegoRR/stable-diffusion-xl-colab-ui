@@ -34,6 +34,7 @@ import random
 import torch
 import json
 import time
+import gc
 import os
 
 # Variables to avoid loading the same model or pipeline twice
@@ -70,6 +71,15 @@ def save_last(filename, data, type):
             json.dump(existing_data, file, indent=4)
     except Exception as e:
         print(f"Error occurred: {e}")
+
+def controlnet_flush(var, index):
+    global controlnets_scale, images, loaded_controlnet_model, controlnets
+    for value in [controlnets_scale, images, loaded_controlnet_model, controlnets]:
+        value[index] = None
+        
+    del var
+    torch.cuda.empty_cache()
+    gc.collect()
 
 # Loading the path of the latest generated images
 def load_last(filename, type):
@@ -280,10 +290,10 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     global controlnets, loaded_controlnet_model, images, controlnets_scale
     if Canny and Canny_link is not None:
         if "canny" not in loaded_controlnet_model:
-          global canny_model
-          canny_model = ControlNetModel.from_pretrained("diffusers/controlnet-canny-sdxl-1.0", torch_dtype=torch.float16, use_safetensors=True, low_cpu_mem_usage=True)
-          loaded_controlnet_model[0] = "canny"
-          controlnets[0] = canny_model
+            global canny_model
+            canny_model = ControlNetModel.from_pretrained("diffusers/controlnet-canny-sdxl-1.0", torch_dtype=torch.float16, use_safetensors=True, low_cpu_mem_usage=True)
+            loaded_controlnet_model[0] = "canny"
+            controlnets[0] = canny_model
         print("🏞️ | Converting image with Canny Edge Detection...")
         c_img = Canny_link
         image_canny = np.array(c_img)
@@ -296,6 +306,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         display(make_image_grid([c_img, canny_image.resize((1024, 1024))], rows=1, cols=2))
         images[0] = canny_image.resize((1024, 1024))
         controlnets_scale[0] = Canny_Strength
+    elif not Canny and controlnets[0]:
+        controlnet_flush(canny_model, 0)
 
     if Depth_Map and Depthmap_Link is not None:
         if "depth" not in loaded_controlnet_model:
@@ -313,6 +325,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         controlnets_scale[1] = Depth_Strength
         time.sleep(1)
         display(make_image_grid([image_depth, depth_map_display], rows=1, cols=2))
+    elif not Depth_Map and controlnets[1]:
+        controlnet_flush(depthmap_model, 1)
 
     if Open_Pose and Openpose_Link is not None:
         if "openpose" not in loaded_controlnet_model:
@@ -328,6 +342,9 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         print("✅ | Open Pose is done.")
         controlnets_scale[2] = Open_Pose_Strength
         display(make_image_grid([image_openpose, openpose_image.resize((1024, 1024))], rows=1, cols=2))
+    elif not Open_Pose and controlnets[2]:
+        controlnet_flush(openpose_model, 2)
+        controlnet_flush(openpose, 2)
 
     # Handling pipeline and model loading
     global pipeline, loaded_model, loaded_pipeline
