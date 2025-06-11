@@ -74,6 +74,16 @@ def save_last(filename, data, type):
 
 def controlnet_flush():
     global pipeline, openpose, openpose_model, depth_estimator, depthmap_model, canny_model, controlnets, loaded_controlnet_model, images, controlnets_scale
+    cn_reset = ""
+    cn_reset_sanitized_list = [element for element in loaded_controlnet_model if element]
+    for weight in cn_reset_sanitized_list:
+        if cn_reset_sanitized_list.index(weight) == (len(cn_reset_sanitized_list) - 1) and len(cn_reset_sanitized_list) > 1:
+            cn_reset += f"and {weight} ControlNets"
+        elif len(cn_reset_sanitized_list) == 1:
+            cn_reset += f"{weight} ControlNet"
+        else:
+            cn_reset += f"{weight}, " if len(cn_reset_sanitized_list) == 3 else f"{weight} "
+    
     to_be_reset = [pipeline, depth_estimator, openpose, openpose_model, depthmap_model, canny_model, controlnets, loaded_controlnet_model, images, controlnets_scale]
     for value in to_be_reset:
         if isinstance(value, list):
@@ -91,16 +101,7 @@ def controlnet_flush():
                     print(f"Unable to move a weight to CPU. Reason: {e}")
                 del value
                 value = None
-    
-    cn_reset = ""
-    cn_reset_sanitized list = [element for element in loaded_controlnet_model if element]
-    for weight in cn_reset_sanitized:
-        if cn_reset_sanitized.index(weight) == (len(cn_reset_sanitized) - 1) and len(cn_reset_sanitized) > 1:
-            cn_reset += f"and {weight} ControlNets"
-        elif len(cn_reset_sanitized) == 1:
-            cn_reset += f"{weight} ControlNet"
-        else:
-            cn_reset += f"{weight}, " if len(cn_reset_sanitized) == 3 else f"{weight} "
+
     print(f"You previously activated the {cn_reset} ControlNet. Because of this, the pipeline must be reloaded to free up some VRAM.")
     print("Flushing...")
     
