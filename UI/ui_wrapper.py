@@ -82,7 +82,8 @@ class UIWrapper:
                         selected_class.model_widget,
                         self.lora.lora_urls_widget,
                         self.embeddings.ti_urls_widget,
-                     ]
+                     ],
+                     self.base_path,
             )
             self.reload_submit_button()
             self.lora.construct(self.lora.lora_urls_widget.value)
