@@ -311,13 +311,13 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     if Depth_Map and Depthmap_Link is not None:
         if "depth" not in loaded_controlnet_model:
-          global depthmap_model
-          loaded_controlnet_model[1] = "depth"
-          depthmap_model = ControlNetModel.from_pretrained("diffusers/controlnet-depth-sdxl-1.0", torch_dtype=torch.float16, use_safetensors=True, low_cpu_mem_usage=True).to("cuda")
-          controlnets[1] = depthmap_model
+            global depthmap_model, depth_estimator
+            depth_estimator = pipe("depth-estimation")
+            loaded_controlnet_model[1] = "depth"
+            depthmap_model = ControlNetModel.from_pretrained("diffusers/controlnet-depth-sdxl-1.0", torch_dtype=torch.float16, use_safetensors=True, low_cpu_mem_usage=True).to("cuda")
+            controlnets[1] = depthmap_model
         print("🏞️ | Converting image with Depth Map...")
         image_depth = Depthmap_Link.resize((1024, 1024))
-        depth_estimator = pipe("depth-estimation")
         depth_map = get_depth_map(image_depth, depth_estimator).unsqueeze(0).half().to("cpu")
         images[1] = depth_map
         depth_map_display = ImagePIL.fromarray(get_depth_map_display(image_depth, depth_estimator))
@@ -327,14 +327,15 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         display(make_image_grid([image_depth, depth_map_display], rows=1, cols=2))
     elif not Depth_Map and controlnets[1]:
         controlnet_flush(depthmap_model, 1)
+        controlnet_flush(depth_estimator, 1)
 
     if Open_Pose and Openpose_Link is not None:
         if "openpose" not in loaded_controlnet_model:
-          global openpose, openpose_model
-          loaded_controlnet_model[2] = "openpose"
-          openpose = OpenposeDetector.from_pretrained("lllyasviel/ControlNet").to("cpu")
-          openpose_model = ControlNetModel.from_pretrained("thibaud/controlnet-openpose-sdxl-1.0", torch_dtype=torch.float16, low_cpu_mem_usage=True).to("cuda")
-          controlnets[2] = openpose_model
+            global openpose, openpose_model
+            loaded_controlnet_model[2] = "openpose"
+            openpose = OpenposeDetector.from_pretrained("lllyasviel/ControlNet").to("cpu")
+            openpose_model = ControlNetModel.from_pretrained("thibaud/controlnet-openpose-sdxl-1.0", torch_dtype=torch.float16, low_cpu_mem_usage=True).to("cuda")
+            controlnets[2] = openpose_model
         print("🏞️ | Converting image with Open Pose...")
         image_openpose = Openpose_Link
         openpose_image = openpose(image_openpose)
