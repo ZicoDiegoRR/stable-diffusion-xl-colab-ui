@@ -77,8 +77,13 @@ def controlnet_flush(var, index):
     for value in [controlnets_scale, images, loaded_controlnet_model, controlnets]:
         value[index] = None
         
+    cn_reset = "Canny" if index == 0 else "Depth Map" if index == 1 else "Open Pose"
+    print(f"You previously activated the {cn_reset} ControlNet. Because of this, the pipeline must be reloaded to free up some VRAM.")
+    print("Flushing...")
+    if pipeline:
+        del pipeline
+        
     del var
-    del pipeline
     torch.cuda.empty_cache()
     gc.collect()
     pipeline = None
