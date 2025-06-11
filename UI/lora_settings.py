@@ -3,8 +3,8 @@ import re
 
 class LoRALoader:
     def collect_values(self): # Function to return the value
-        collected_lora_urls_values, collected_lora_scale_values = self.read()
-        return [collected_lora_urls_values, collected_lora_scale_values]
+        self.lora_urls_widget.value, self.weight_scale_widget.value = self.read()
+        return [self.lora_urls_widget.value, self.weight_scale_widget.value]
 
     def wrap_settings(self): # Function to collect every widget into a vbox for convenience
         return self.lora_settings
