@@ -16,16 +16,22 @@ class LoRALoader:
         ]
         
     def lora_click(self, link, scale, construct=False): # Function to add widgets after clicking the plus button
-        self.lora_url_input = widgets.Text(value=link, placeholder="Input the link here", description="Direct URL")
-        self.lora_scale_input = widgets.FloatSlider(value=scale, min=-5, max=5, step=0.1, description="Weight Scale")
-        self.lora_remove_button = widgets.Button(description="X", button_style='danger', layout=widgets.Layout(width='30px', height='30px'))
+        lora_url_input = widgets.Text(value=link, placeholder="Input the link here", description="Direct URL")
+        lora_scale_input = widgets.FloatSlider(value=scale, min=-5, max=5, step=0.1, description="Weight Scale")
+        lora_remove_button = widgets.Button(description="X", button_style='danger', layout=widgets.Layout(width='30px', height='30px'))
 
         if construct and not self.lora_construct_bool:
             self.lora_nested_vbox.children = []
             self.lora_construct_bool = True
             
-        self.lora_nested_vbox.children += (self.lora_url_input, self.lora_scale_input, self.lora_remove_button,)
-        self.lora_remove_button.on_click(lambda b: self.lora_remover(list(self.lora_nested_vbox.children).index(self.lora_remove_button) - 2, list(self.lora_nested_vbox.children).index(self.lora_remove_button) - 1, list(self.lora_nested_vbox.children).index(self.lora_remove_button)))
+        self.lora_nested_vbox.children += (lora_url_input, lora_scale_input, lora_remove_button, )
+        lora_remove_button.on_click(
+            lambda b: self.lora_remover(
+                list(self.lora_nested_vbox.children).index(lora_remove_button) - 2, 
+                list(self.lora_nested_vbox.children).index(lora_remove_button) - 1, 
+                list(self.lora_nested_vbox.children).index(lora_remove_button)
+            )
+        )
         self.lora_settings.children = [self.lora_add, self.lora_nested_vbox]
 
     def read(self): # Function to process every value from the widgets into two strings to be fed into the main logic 
