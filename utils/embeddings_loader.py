@@ -14,7 +14,7 @@ def load_textual_inversion_from_link(pipe, link, token, name):
         except Exception as e:
             print(f"Skipped {name}. Reason: {e}")
     
-def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token):
+def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token, base_path):
     # Download and handle duplication
     ti_list = []
     ti_path = []
