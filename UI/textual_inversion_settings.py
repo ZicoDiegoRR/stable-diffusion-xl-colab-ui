@@ -30,19 +30,19 @@ class TextualInversionLoader:
             return "", ""
         
     def ti_click(self, link, token, construct=False):  # Function to add widgets after clicking the plus button
-        self.ti_url_input = widgets.Text(value=link, placeholder="Input the link here", description="Direct URL")
-        self.ti_tokens_input = widgets.Text(value=token, placeholder="Activation tag", description="Token")
-        self.ti_remove_button = widgets.Button(description="X", button_style='danger', layout=widgets.Layout(width='30px', height='30px'))
+        ti_url_input = widgets.Text(value=link, placeholder="Input the link here", description="Direct URL")
+        ti_tokens_input = widgets.Text(value=token, placeholder="Activation tag", description="Token")
+        ti_remove_button = widgets.Button(description="X", button_style='danger', layout=widgets.Layout(width='30px', height='30px'))
 
         if construct and not self.ti_construct_bool:
             self.ti_construct_bool = True
             self.ti_nested_vbox.children = []
         
-        self.ti_nested_vbox.children += (self.ti_url_input, self.ti_tokens_input, self.ti_remove_button,)
-        self.ti_remove_button.on_click(lambda b: self.ti_remover(
-            list(self.ti_nested_vbox.children).index(self.ti_remove_button) - 2,
-            list(self.ti_nested_vbox.children).index(self.ti_remove_button) - 1,
-            list(self.ti_nested_vbox.children).index(self.ti_remove_button)
+        self.ti_nested_vbox.children += (ti_url_input, ti_tokens_input, ti_remove_button,)
+        ti_remove_button.on_click(lambda b: self.ti_remover(
+            list(self.ti_nested_vbox.children).index(ti_remove_button) - 2,
+            list(self.ti_nested_vbox.children).index(ti_remove_button) - 1,
+            list(self.ti_nested_vbox.children).index(ti_remove_button)
         ))
         self.ti_settings.children = [self.ti_tip, self.ti_add, self.ti_nested_vbox]
 
