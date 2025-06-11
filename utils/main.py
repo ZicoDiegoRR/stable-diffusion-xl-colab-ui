@@ -119,7 +119,8 @@ def get_depth_map_display(image, depth_estimator):
     return image
 
 # Selecting image path for ControlNet
-def controlnet_path_selector(path, type):
+def controlnet_path_selector(path, type, base_path):
+    last_generation_loading = os.path.join(base_path, "last_generation.json")
     try:
         if path == "inpaint":
             cn_path = load_last(last_generation_loading, 'inpaint')                     
@@ -138,7 +139,7 @@ def controlnet_path_selector(path, type):
     return cn_image, pipeline_type
 
 # Initializing image generation
-def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary, widgets_change):
+def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary, widgets_change, base_path):
     # Initialization
     pipeline_type = ""
     if len(values_in_list) == 15:
@@ -165,8 +166,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         generator_seed = random.randint(1, 1000000000000)
 
     seed_list[0].value = generator_seed
-
-    base_path = "/content/gdrive/MyDrive" if os.path.exists("/content/gdrive/MyDrive") else "/content"
 
     # Gathering values
     Prompt = values_in_list[0]
@@ -230,17 +229,17 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     # Selecting image and pipeline
     last_generation_loading = os.path.join(base_path, "last_generation.json")
     if Canny and selected_tab_for_pipeline == 2:
-        Canny_link, pipeline_type = controlnet_path_selector(Canny_Link, pipeline_type)
+        Canny_link, pipeline_type = controlnet_path_selector(Canny_Link, pipeline_type, base_path)
     else:
         Canny_link = ""
 
     if Depth_Map and selected_tab_for_pipeline == 2:
-        Depthmap_Link, pipeline_type = controlnet_path_selector(DepthMap_Link, pipeline_type)
+        Depthmap_Link, pipeline_type = controlnet_path_selector(DepthMap_Link, pipeline_type, base_path)
     else:
         Depthmap_Link = ""
 
     if Open_Pose and selected_tab_for_pipeline == 2:
-        Openpose_Link, pipeline_type = controlnet_path_selector(OpenPose_Link, pipeline_type)
+        Openpose_Link, pipeline_type = controlnet_path_selector(OpenPose_Link, pipeline_type, base_path)
     else:
         Openpose_Link = ""
 
