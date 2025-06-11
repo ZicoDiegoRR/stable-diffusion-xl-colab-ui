@@ -146,6 +146,9 @@ class ControlNetSettings:
             return self.controlnet_dropdown_choice[4] 
         else: 
             return self.controlnet_dropdown_choice[0]
+
+    def link_widget_verifier(self, data):
+        return os.path.exist(data) or data.startswith(("https://", "http://"))
     # ________________________________________________________________________________________________________________________________________________________
 
     # Canny
@@ -270,7 +273,7 @@ class ControlNetSettings:
         self.controlnet_dropdown_choice = ["Link", "Upload", "Last Generated Text2Img", "Last Generated ControlNet", "Last Generated Inpainting"]        
 
         self.canny_upload = widgets.FileUpload(accept="image/*", multiple=False)
-        self.canny_link_widget = widgets.Text(value=cfg[15] if cfg and not cfg[15].startswith("/content/canny") else "", description="Canny Link", placeholder="Image link")
+        self.canny_link_widget = widgets.Text(value=cfg[15] if self.link_widget_verifier(cfg[15]) else "", description="Canny Link", placeholder="Image link")
 
         self.canny_dropdown = widgets.Dropdown(options=self.controlnet_dropdown_choice, value=self.dropdown_selector_upon_starting(self.canny_link_widget.value), disabled=False, description="Reference Image")
         self.canny_min_slider = widgets.IntSlider(min=10, max=500, step=5, value=cfg[16] if cfg else 100, description="Min Threshold")
@@ -283,7 +286,7 @@ class ControlNetSettings:
         self.canny_upload.observe(self.canny_upload_handler, names="value")
 
         self.depth_upload = widgets.FileUpload(accept="image/*", multiple=False)
-        self.depth_map_link_widget = widgets.Text(value=cfg[20] if cfg and not cfg[20].startswith("/content/depthmap/") else "", description="DepthMap Link", placeholder="Image link")
+        self.depth_map_link_widget = widgets.Text(value=cfg[20] if self.link_widget_verifier(cfg[20]) else "", description="DepthMap Link", placeholder="Image link")
 
         self.depthmap_dropdown = widgets.Dropdown(options=self.controlnet_dropdown_choice, value=self.dropdown_selector_upon_starting(self.depth_map_link_widget.value), disabled=False, description="Reference Image")
         self.depth_map_toggle = widgets.Checkbox(value=cfg[21] if cfg else False, description="Enable Depth Map")
@@ -294,7 +297,7 @@ class ControlNetSettings:
         self.depth_upload.observe(self.depthmap_upload_handler, names="value")
 
         self.openpose_upload = widgets.FileUpload(accept="image/*", multiple=False)
-        self.openpose_link_widget = widgets.Text(value=cfg[23] if cfg and not cfg[23].startswith("/content/openpose") else "", description="OpenPose Link", placeholder="Image link")
+        self.openpose_link_widget = widgets.Text(value=cfg[23] if self.link_widget_verifier(cfg[23]) else "", description="OpenPose Link", placeholder="Image link")
 
         self.openpose_dropdown = widgets.Dropdown(options=self.controlnet_dropdown_choice, value=self.dropdown_selector_upon_starting(self.openpose_link_widget.value), disabled=False, description="Reference Image")
         self.openpose_toggle = widgets.Checkbox(value=cfg[24] if cfg else False, description="Enable OpenPose")
