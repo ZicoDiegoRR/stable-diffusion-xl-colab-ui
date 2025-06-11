@@ -72,21 +72,43 @@ def save_last(filename, data, type):
     except Exception as e:
         print(f"Error occurred: {e}")
 
-def controlnet_flush(var, index):
-    global pipeline, controlnets_scale, images, loaded_controlnet_model, controlnets
-    for value in [controlnets_scale, images, loaded_controlnet_model, controlnets]:
-        value[index] = None
-        
-    cn_reset = "Canny" if index == 0 else "Depth Map" if index == 1 else "Open Pose"
+def controlnet_flush():
+    global pipeline, openpose, openpose_model, depth_estimator, depthmap_model, canny_model, controlnets, loaded_controlnet_model, images, controlnets_scale
+    to_be_reset = [pipeline, depth_estimator, openpose, openpose_model, depthmap_model, canny_model, controlnets, loaded_controlnet_model, images, controlnets_scale]
+    for value in to_be_reset:
+        if isinstance(value, list):
+            for element in value:
+                if isinstance(element, ControlNetModel) and element:
+                    element.to("cpu")
+                    element = None
+                elif element:
+                    element = None
+        else:
+            if value:
+                try:
+                    value.to("cpu")
+                except Exception as e:
+                    print(f"Unable to move a weight to CPU. Reason: {e}")
+                del value
+                value = None
+    
+    cn_reset = ""
+    cn_reset_sanitized list = [element for element in loaded_controlnet_model if element]
+    for weight in cn_reset_sanitized:
+        if cn_reset_sanitized.index(weight) == (len(cn_reset_sanitized) - 1) and len(cn_reset_sanitized) > 1:
+            cn_reset += f"and {weight} ControlNets"
+        elif len(cn_reset_sanitized) == 1:
+            cn_reset += f"{weight} ControlNet"
+        else:
+            cn_reset += f"{weight}, " if len(cn_reset_sanitized) == 3 else f"{weight} "
     print(f"You previously activated the {cn_reset} ControlNet. Because of this, the pipeline must be reloaded to free up some VRAM.")
     print("Flushing...")
+    
     if pipeline:
-        del pipeline
-        
-    del var
+        pipeline.to("cpu")
+        pipeline = None
     torch.cuda.empty_cache()
     gc.collect()
-    pipeline = None
 
 # Loading the path of the latest generated images
 def load_last(filename, type):
@@ -302,19 +324,9 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Logic to handle ControlNet and/or MultiControlNets
     global openpose, openpose_model, depth_estimator, depthmap_model, canny_model, controlnets, loaded_controlnet_model, images, controlnets_scale
-    # Flushing Canny model if deactivated after being used
-    if not Canny and controlnets[0]: 
-        controlnet_flush(canny_model, 0)
-
-    # Flushing Depth Map model if deactivated after being used
-    elif not Depth_Map and controlnets[1]:
-        controlnet_flush(depthmap_model, 1)
-        controlnet_flush(depth_estimator, 1)
-
-    # Flushing Open Pose model if deactivated after being used
-    elif not Open_Pose and controlnets[2]:
-        controlnet_flush(openpose_model, 2)
-        controlnet_flush(openpose, 2)
+    # Flushing ControlNet model if deactivated after being used
+    if (not Canny and controlnets[0]) or (not Depth_Map and controlnets[1]) or (not Open_Pose and controlnets[2]): 
+        controlnet_flush()
 
     # Loading ControlNet
     if pipeline_type == "controlnet" and (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
@@ -342,7 +354,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         if Depth_Map and Depthmap_Link is not None:
             if "depth" not in loaded_controlnet_model:
                 print("Loading Depth Map...")
-                depth_estimator = pipe("depth-estimation")
+                depth_estimator = pipe("depth-estimation", device="cpu")
                 loaded_controlnet_model[1] = "depth"
                 depthmap_model = ControlNetModel.from_pretrained("diffusers/controlnet-depth-sdxl-1.0", torch_dtype=torch.float16, use_safetensors=True, low_cpu_mem_usage=True).to("cuda")
                 controlnets[1] = depthmap_model
