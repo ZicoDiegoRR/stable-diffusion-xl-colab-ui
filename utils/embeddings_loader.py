@@ -6,8 +6,8 @@ import os
 def load_textual_inversion_from_link(pipe, link, token, name):
     # Loading one by one
     for embed, tag, name in zip(link, token, name):
-        ti_dict = load_file(embed)
         try:
+            ti_dict = load_file(embed)
             print(f"Loading {name}...")
             pipe.load_textual_inversion(ti_dict["clip_g"], token=tag, text_encoder=pipe.text_encoder_2, tokenizer=pipe.tokenizer_2)
             pipe.load_textual_inversion(ti_dict["clip_l"], token=tag, text_encoder=pipe.text_encoder, tokenizer=pipe.tokenizer)
