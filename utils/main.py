@@ -301,7 +301,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         os.remove(os.path.join(f"{base_path}", "parameters.json"))
 
     # Logic to handle ControlNet and/or MultiControlNets
-    global controlnets, loaded_controlnet_model, images, controlnets_scale
+    global global openpose, openpose_model, depth_estimator, depthmap_model, canny_model, controlnets, loaded_controlnet_model, images, controlnets_scale
     # Flushing Canny model if deactivated after being used
     if not Canny and controlnets[0]: 
         controlnet_flush(canny_model, 0)
@@ -321,7 +321,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         # Handling Canny
         if Canny and Canny_link is not None:
             if "canny" not in loaded_controlnet_model:
-                global canny_model
                 print("Loading Canny...")
                 canny_model = ControlNetModel.from_pretrained("diffusers/controlnet-canny-sdxl-1.0", torch_dtype=torch.float16, use_safetensors=True, low_cpu_mem_usage=True)
                 loaded_controlnet_model[0] = "canny"
@@ -342,7 +341,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         # Handling Depth Map
         if Depth_Map and Depthmap_Link is not None:
             if "depth" not in loaded_controlnet_model:
-                global depthmap_model, depth_estimator
                 print("Loading Depth Map...")
                 depth_estimator = pipe("depth-estimation")
                 loaded_controlnet_model[1] = "depth"
@@ -361,7 +359,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         # Handling Open Pose
         if Open_Pose and Openpose_Link is not None:
             if "openpose" not in loaded_controlnet_model:
-                global openpose, openpose_model
                 print("Loading Open Pose...")
                 loaded_controlnet_model[2] = "openpose"
                 openpose = OpenposeDetector.from_pretrained("lllyasviel/ControlNet").to("cpu")
