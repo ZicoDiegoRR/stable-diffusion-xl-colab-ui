@@ -302,7 +302,23 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Logic to handle ControlNet and/or MultiControlNets
     global controlnets, loaded_controlnet_model, images, controlnets_scale
-    if pipeline_type == "controlnet" and (Canny or Depth_Map or Open_Pose) and (Canny_link, Depthmap_Link, Openpose_Link):
+    
+    # Flushing Canny model if deactivated after being used
+    elif not Canny and controlnets[0]: 
+        controlnet_flush(canny_model, 0)
+
+    # Flushing Depth Map model if deactivated after being used
+    elif not Depth_Map and controlnets[1]:
+        controlnet_flush(depthmap_model, 1)
+        controlnet_flush(depth_estimator, 1)
+
+    # Flushing Open Pose model if deactivated after being used
+    elif not Open_Pose and controlnets[2]:
+        controlnet_flush(openpose_model, 2)
+        controlnet_flush(openpose, 2)
+
+    # Loading ControlNet
+    elif pipeline_type == "controlnet" and (Canny or Depth_Map or Open_Pose) and (Canny_link, Depthmap_Link, Openpose_Link):
         # Handling Canny
         if Canny and Canny_link is not None:
             if "canny" not in loaded_controlnet_model:
@@ -360,20 +376,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             controlnets_scale[2] = Open_Pose_Strength
             display(make_image_grid([image_openpose, openpose_image.resize((1024, 1024))], rows=1, cols=2))
             
-    # Flushing Canny model if deactivated after being used
-    elif not Canny and controlnets[0]: 
-        controlnet_flush(canny_model, 0)
-
-    # Flushing Depth Map model if deactivated after being used
-    elif not Depth_Map and controlnets[1]:
-        controlnet_flush(depthmap_model, 1)
-        controlnet_flush(depth_estimator, 1)
-
-    # Flushing Open Pose model if deactivated after being used
-    elif not Open_Pose and controlnets[2]:
-        controlnet_flush(openpose_model, 2)
-        controlnet_flush(openpose, 2)
-
     # Handling pipeline and model loading
     global pipeline, loaded_model, loaded_pipeline
     pipeline, model_name = pipeline_selector.load_pipeline(
