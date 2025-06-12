@@ -38,19 +38,16 @@ import gc
 import os
 
 # Variables to avoid loading the same model or pipeline twice
-pipeline = None
-loaded_model = ""
-loaded_pipeline = ""
-vae_current = ""
-loaded_controlnet_model = [None] * 3
-controlnets = [None] * 3
-images = [None] * 3
-controlnets_scale = [None] * 3
-openpose = None 
-openpose_model = None 
-depth_estimator = None
-depthmap_model = None 
-canny_model = None
+class MainVar:
+    def __init__(self):
+        self.pipeline = None
+        self.loaded_model = ""
+        self.loaded_pipeline = ""
+        self.vae_current = None
+        self.loaded_controlnet_model = [None] * 3
+        self.controlnets = [None] * 3
+        self.images = [None] * 3
+        self.controlnets_scale = [None] * 3
 
 # Saving the set parameters
 def save_param(path, data):
@@ -328,21 +325,26 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     if os.path.exists(os.path.join(f"{base_path}", "parameters.json")):
         os.remove(os.path.join(f"{base_path}", "parameters.json"))
 
-    # Logic to handle ControlNet and/or MultiControlNets
-    global openpose, openpose_model, depth_estimator, depthmap_model, canny_model, controlnets, loaded_controlnet_model, images, controlnets_scale
+    # Instantiating the variables
+    main = MainVar()
+
     # Flushing ControlNet model if deactivated after being used
-    if (not Canny and controlnets[0]) or (not Depth_Map and controlnets[1]) or (not Open_Pose and controlnets[2]): 
+    if (not Canny and main.controlnets[0]) or (not Depth_Map and main.controlnets[1]) or (not Open_Pose and main.controlnets[2]): 
         controlnet_flush()
 
     # Loading ControlNet
     if pipeline_type == "controlnet" and (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
         # Handling Canny
         if Canny and Canny_link is not None:
-            if "canny" not in loaded_controlnet_model:
+            if "canny" not in main.loaded_controlnet_model:
                 print("Loading Canny...")
-                canny_model = ControlNetModel.from_pretrained("diffusers/controlnet-canny-sdxl-1.0", torch_dtype=torch.float16, use_safetensors=True, low_cpu_mem_usage=True)
-                loaded_controlnet_model[0] = "canny"
-                controlnets[0] = canny_model
+                main.loaded_controlnet_model[0] = "canny"
+                main.controlnets[0] = ControlNetModel.from_pretrained(
+                    "diffusers/controlnet-canny-sdxl-1.0", 
+                    torch_dtype=torch.float16, 
+                    use_safetensors=True, 
+                    low_cpu_mem_usage=True
+                )
             print("Converting image with Canny Edge Detection...")
             c_img = Canny_link
             image_canny = np.array(c_img)
@@ -353,24 +355,28 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             print("Canny Edge Detection is complete.")
             time.sleep(1)
             display(make_image_grid([c_img, canny_image.resize((1024, 1024))], rows=1, cols=2))
-            images[0] = canny_image.resize((1024, 1024))
-            controlnets_scale[0] = Canny_Strength
+            main.images[0] = canny_image.resize((1024, 1024))
+            main.controlnets_scale[0] = Canny_Strength
             
         # Handling Depth Map
         if Depth_Map and Depthmap_Link is not None:
             if "depth" not in loaded_controlnet_model:
                 print("Loading Depth Map...")
-                depth_estimator = pipe("depth-estimation", device="cpu")
-                loaded_controlnet_model[1] = "depth"
-                depthmap_model = ControlNetModel.from_pretrained("diffusers/controlnet-depth-sdxl-1.0", torch_dtype=torch.float16, use_safetensors=True, low_cpu_mem_usage=True).to("cuda")
-                controlnets[1] = depthmap_model
+                main.loaded_controlnet_model[1] = "depth"
+                main.controlnets[1] = ControlNetModel.from_pretrained(
+                    "diffusers/controlnet-depth-sdxl-1.0", 
+                    torch_dtype=torch.float16, 
+                    use_safetensors=True, 
+                    low_cpu_mem_usage=True
+                ).to("cuda")
             print("Converting image with Depth Map...")
+            depth_estimator = pipe("depth-estimation", device="cpu")
             image_depth = Depthmap_Link.resize((1024, 1024))
             depth_map = get_depth_map(image_depth, depth_estimator).unsqueeze(0).half().to("cpu")
-            images[1] = depth_map
+            main.images[1] = depth_map
+            main.controlnets_scale[1] = Depth_Strength
             depth_map_display = ImagePIL.fromarray(get_depth_map_display(image_depth, depth_estimator))
             print("Depth Map is complete.")
-            controlnets_scale[1] = Depth_Strength
             time.sleep(1)
             display(make_image_grid([image_depth, depth_map_display], rows=1, cols=2))
             
@@ -378,21 +384,23 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         if Open_Pose and Openpose_Link is not None:
             if "openpose" not in loaded_controlnet_model:
                 print("Loading Open Pose...")
-                loaded_controlnet_model[2] = "openpose"
-                openpose = OpenposeDetector.from_pretrained("lllyasviel/ControlNet").to("cpu")
-                openpose_model = ControlNetModel.from_pretrained("thibaud/controlnet-openpose-sdxl-1.0", torch_dtype=torch.float16, low_cpu_mem_usage=True).to("cuda")
-                controlnets[2] = openpose_model
+                main.loaded_controlnet_model[2] = "openpose"
+                main.controlnets[2] = ControlNetModel.from_pretrained(
+                    "thibaud/controlnet-openpose-sdxl-1.0", 
+                    torch_dtype=torch.float16, 
+                    use_safetensors=True,
+                    low_cpu_mem_usage=True
+                ).to("cuda")
             print("Converting image with Open Pose...")
-            image_openpose = Openpose_Link
-            openpose_image = openpose(image_openpose)
-            images[2] = openpose_image.resize((1024, 1024))
+            openpose = OpenposeDetector.from_pretrained("lllyasviel/ControlNet").to("cpu")
+            openpose_image = openpose(Openpose_Link)
+            main.images[2] = openpose_image.resize((1024, 1024))
+            main.controlnets_scale[2] = Open_Pose_Strength
             print("Open Pose is done.")
-            controlnets_scale[2] = Open_Pose_Strength
             display(make_image_grid([image_openpose, openpose_image.resize((1024, 1024))], rows=1, cols=2))
             
     # Handling pipeline and model loading
-    global pipeline, loaded_model, loaded_pipeline
-    pipeline, model_name = pipeline_selector.load_pipeline(
+    main.pipeline, model_name = pipeline_selector.load_pipeline(
         pipeline,
         Model, 
         widgets_change[1], 
@@ -407,10 +415,9 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     )
 
     # Handling VAE
-    global vae_current
-    if VAE_Link and (VAE_Link != vae_current or not vae_current):
+    if VAE_Link and (VAE_Link != main.vae_current or not main.vae_current):
         vae, loaded_vae = vae_loader.load_vae(
-            vae_current, 
+            main.vae_current, 
             VAE_Link, 
             VAE_Config, 
             widgets_change[0], 
@@ -418,26 +425,26 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             Civit_Token,
             base_path=base_path
         )
-        vae_current = loaded_vae
+        main.vae_current = loaded_vae
         if vae is not None:
-            pipeline.vae = vae
+            main.pipeline.vae = vae
 
     # Using a custom image encoder if IP-Adapter is True
     if IP_Adapter != "None":
-        pipeline.image_encoder = CLIPVisionModelWithProjection.from_pretrained(
+        main.pipeline.image_encoder = CLIPVisionModelWithProjection.from_pretrained(
             "h94/IP-Adapter",
             subfolder="models/image_encoder",
             torch_dtype=torch.float16,
         ).to("cuda")
 
     # Assigning new values 
-    loaded_model = model_name
-    loaded_pipeline = pipeline_type
+    main.loaded_model = model_name
+    main.loaded_pipeline = pipeline_type
 
     # Xformer, generator, and safety checker
-    pipeline.enable_xformers_memory_efficient_attention()
+    main.pipeline.enable_xformers_memory_efficient_attention()
     generator = torch.Generator("cpu").manual_seed(generator_seed)
-    pipeline.safety_checker = None
+    main.pipeline.safety_checker = None
 
     # Handling schedulers
     Prediction_type = "v_prediction" if V_Prediction else "epsilon"
@@ -453,42 +460,42 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     Scheduler_used[3] = "SGMUniform " if SGMUniform else ""
     Scheduler_used[4] = "with zero SNR betas rescaling" if Rescale_betas_to_zero_SNR else ""
     if Scheduler == "DPM++ 2M":
-        pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = DPMSolverMultistepScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "DPM++ 2M SDE":
-        pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config, algorithm_type="sde-dpmsolver++", **scheduler_args)
+        main.pipeline.scheduler = DPMSolverMultistepScheduler.from_config(main.pipeline.scheduler.config, algorithm_type="sde-dpmsolver++", **scheduler_args)
     elif Scheduler == "DPM++ SDE":
-        pipeline.scheduler = DPMSolverSinglestepScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = DPMSolverSinglestepScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "DPM2":
-        pipeline.scheduler = KDPM2DiscreteScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = KDPM2DiscreteScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "DPM2 a":
-        pipeline.scheduler = KDPM2AncestralDiscreteScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = KDPM2AncestralDiscreteScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "DDPM":
-        pipeline.scheduler = DDPMScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = DDPMScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "Euler":
-        pipeline.scheduler = EulerDiscreteScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = EulerDiscreteScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "Euler a":
-        pipeline.scheduler = EulerAncestralDiscreteScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = EulerAncestralDiscreteScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "Heun":
-        pipeline.scheduler = HeunDiscreteScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = HeunDiscreteScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "LMS":
-        pipeline.scheduler = LMSDiscreteScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = LMSDiscreteScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "DEIS":
-        pipeline.scheduler = DEISMultistepScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = DEISMultistepScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "UniPC":
-        pipeline.scheduler = UniPCMultistepScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = UniPCMultistepScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "DDIM":
-        pipeline.scheduler = DDIMScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = DDIMScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "PNDM":
-        pipeline.scheduler = PNDMScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+        main.pipeline.scheduler = PNDMScheduler.from_config(main.pipeline.scheduler.config, **scheduler_args)
 
     # Using prompt weighting with Compel
-    compel = Compel(tokenizer=[pipeline.tokenizer, pipeline.tokenizer_2], text_encoder=[pipeline.text_encoder, pipeline.text_encoder_2], returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED, requires_pooled=[False, True], truncate_long_prompts=False)
+    compel = Compel(tokenizer=[main.pipeline.tokenizer, main.pipeline.tokenizer_2], text_encoder=[main.pipeline.text_encoder, main.pipeline.text_encoder_2], returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED, requires_pooled=[False, True], truncate_long_prompts=False)
     conditioning, pooled = compel([Prompt, Negative_Prompt])
 
     # Loading LoRA if not empty
     if LoRA_URLs:
         lora_loader.process(
-            pipeline, 
+            main.pipeline, 
             lora[0], 
             lora[1], 
             widgets_change[2], 
@@ -501,7 +508,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     # Loading embeddings if not empty
     if Textual_Inversion_URLs:
         embeddings_loader.process(
-            pipeline, 
+            main.pipeline, 
             embeddings[0], 
             embeddings[1], 
             widgets_change[3], 
@@ -533,13 +540,13 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
         # Loading the images to the IP-Adapter
         image_embeds = [adapter_image]
-        pipeline.load_ip_adapter("h94/IP-Adapter", subfolder="sdxl_models", weight_name=IP_Adapter, low_cpu_mem_usage=True)
-        pipeline.set_ip_adapter_scale(IP_Adapter_Strength)
+        main.pipeline.load_ip_adapter("h94/IP-Adapter", subfolder="sdxl_models", weight_name=IP_Adapter, low_cpu_mem_usage=True)
+        main.pipeline.set_ip_adapter_scale(IP_Adapter_Strength)
     torch.cuda.empty_cache()
 
     # Generating image
     prefix, image = run_generation.generate(
-        pipeline,
+        main.pipeline,
         pipeline_type,
         conditioning,
         pooled,
