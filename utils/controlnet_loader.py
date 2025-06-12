@@ -141,7 +141,7 @@ def load(
         )
 
     # Loading ControlNet
-    if pipeline_type == "controlnet" and (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
+    if (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
         # Handling Canny
         if Canny and Canny_link is not None:
             if "canny" not in loaded_controlnet_model:
