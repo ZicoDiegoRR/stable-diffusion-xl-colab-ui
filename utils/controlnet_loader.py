@@ -6,6 +6,7 @@ from PIL import Image as ImagePIL
 import numpy as np
 import torch
 import gc
+import os
 
 # Loading the path of the latest generated images
 def load_last(filename, type):
