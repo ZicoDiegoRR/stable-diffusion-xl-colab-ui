@@ -259,7 +259,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Handling ControlNet
     controlnet_loader.load(
-        pipeline,
+        main.pipeline,
         Canny,
         Depth_Map,
         Open_Pose,
@@ -333,7 +333,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     image_embeds = None
     if IP_Adapter != "None" and IP_Image_Link:
         image_embeds = ip_adapter_loader.load(
-            pipeline,
+            main.pipeline,
             IP_Adapter,
             IP_Image_Link,
             IP_Adapter_Strength,
