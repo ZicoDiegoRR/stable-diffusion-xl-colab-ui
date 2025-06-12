@@ -289,7 +289,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     main.pipeline.safety_checker = None
 
     # Handling schedulers
-    scheduler_selector.scheduler(
+    Scheduler_used = scheduler_selector.scheduler(
         main.pipeline,
         V_Prediction,
         Karras,
