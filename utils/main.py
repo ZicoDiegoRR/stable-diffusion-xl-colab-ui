@@ -561,8 +561,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         image_embeds,
         Inpainting_Image,
         Mask_Image,
-        controlnets_scale,
-        images,
+        main.controlnets_scale,
+        main.images,
         ref_image,
         Denoising_Strength
     )
