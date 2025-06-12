@@ -29,7 +29,7 @@ def raise_error(Model_path):
             Warning = "Did you input the correct link or path? Or did you use the correct format?"
     if os.path.exists(Model_path):
         os.remove(Model_path)
-    raise TypeError(f"{Error}{Warning}")
+    raise TypeError(f"Program quit with an error: {Error}{Warning}")
 
 def flush(pipe, new, old, type):
     if type == "model":
@@ -70,12 +70,12 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
     if model_url.count("/") == 1 and (not model_url.startswith("https://") or not model_url.startswith("http://")):
         if verify(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type) or pipe is None:
             try:
-                if all(cn is None for cn in controlnets) and pipeline_type != "img2img" and not active_inpaint:
+                if pipeline_type == "text2img" and not active_inpaint:
                     pipeline = StableDiffusionXLPipeline.from_pretrained(model_url, torch_dtype=torch.float16).to("cuda")
-                elif active_inpaint and pipeline_type != "img2img" and all(cn is None for cn in controlnets):
+                elif active_inpaint and pipeline_type == "inpaint":
                     pipeline = StableDiffusionXLInpaintPipeline.from_pretrained(model_url, torch_dtype=torch.float16).to("cuda")
-                elif pipeline_type != "img2img":
-                    pipeline = StableDiffusionXLControlNetPipeline.from_pretrained(model_url, controlnet=[element for element in controlnets if element], torch_dtype=torch.float16).to("cuda")
+                elif pipeline_type == "controlnet":
+                    pipeline = StableDiffusionXLControlNetPipeline.from_pretrained(model_url, controlnet=None, torch_dtype=torch.float16).to("cuda")
                 elif pipeline_type == "img2img":
                     pipeline = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_url, torch_dtype=torch.float16).to("cuda")
                 model_name = model_url
@@ -104,12 +104,12 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
         # Load
         if verify(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type) or pipe is None:
             try:
-                if all(cn is None for cn in controlnets) and pipeline_type != "img2img" and not active_inpaint:
+                if pipeline_type == "text2img" and not active_inpaint:
                     pipeline = StableDiffusionXLPipeline.from_single_file(Model_path, torch_dtype=torch.float16, variant="fp16").to("cuda")
-                elif pipeline_type != "img2img" and active_inpaint and all(cn is None for cn in controlnets):
+                elif active_inpaint and pipeline_type == "inpaint":
                     pipeline = StableDiffusionXLInpaintPipeline.from_single_file(Model_path, torch_dtype=torch.float16, variant="fp16").to("cuda")
-                elif pipeline_type != "img2img":
-                    pipeline = StableDiffusionXLControlNetPipeline.from_single_file(Model_path, controlnet=[element for element in controlnets if element], torch_dtype=torch.float16, variant="fp16").to("cuda")
+                elif pipeline_type == "controlnet":
+                    pipeline = StableDiffusionXLControlNetPipeline.from_single_file(Model_path, controlnet=None torch_dtype=torch.float16, variant="fp16").to("cuda")
                 elif pipeline_type == "img2img":
                     pipeline = StableDiffusionXLImg2ImgPipeline.from_single_file(Model_path, torch_dtype=torch.float16, variant="fp16").to("cuda")
                 
