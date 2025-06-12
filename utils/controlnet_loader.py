@@ -2,9 +2,12 @@ from diffusers.utils import load_image, make_image_grid
 from controlnet_aux import OpenposeDetector
 from transformers import pipeline as pipe
 from diffusers import ControlNetModel
+from IPython.display import display
 from PIL import Image as ImagePIL
 import numpy as np
 import torch
+import json
+import cv2
 import gc
 import os
 
@@ -206,7 +209,7 @@ def load(
             display(make_image_grid([Openpose_Link, openpose_image.resize((1024, 1024))], rows=1, cols=2))
             del openpose
 
-        if len(controlnets) == 1:
+        if len([cn for cn in controlnets if cn]) == 1:
             for model in loaded_controlnet_model:
                 if model:
                     single_cn_index = loaded_controlnet_model.index(model)
