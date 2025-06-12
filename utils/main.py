@@ -266,21 +266,13 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         Canny_link,
         Depthmap_Link,
         Openpose_Link,
-        controlnets,
-        loaded_controlnet_model,
-        images,
-        controlnets_scale,
-        loaded_pipeline,
-        loaded_model,  
+        main.controlnets,
+        main.loaded_controlnet_model,
+        main.images,
+        main.controlnets_scale,
+        main.loaded_pipeline,
+        main.loaded_model,  
     )
-
-    # Using a custom image encoder if IP-Adapter is True
-    if IP_Adapter != "None":
-        main.pipeline.image_encoder = CLIPVisionModelWithProjection.from_pretrained(
-            "h94/IP-Adapter",
-            subfolder="models/image_encoder",
-            torch_dtype=torch.float16,
-        ).to("cuda")
 
     # Assigning new values 
     main.loaded_model = model_name
@@ -303,7 +295,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Using prompt weighting with Compel
     main.compel = Compel(tokenizer=[main.pipeline.tokenizer, main.pipeline.tokenizer_2], text_encoder=[main.pipeline.text_encoder, main.pipeline.text_encoder_2], returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED, requires_pooled=[False, True], truncate_long_prompts=False)
-    conditioning, pooled = compel([Prompt, Negative_Prompt])
+    conditioning, pooled = main.compel([Prompt, Negative_Prompt])
+    del main.compel
 
     # Loading LoRA if not empty
     if LoRA_URLs:
