@@ -109,7 +109,7 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
                 elif active_inpaint and pipeline_type == "inpaint":
                     pipeline = StableDiffusionXLInpaintPipeline.from_single_file(Model_path, torch_dtype=torch.float16, variant="fp16").to("cuda")
                 elif pipeline_type == "controlnet":
-                    pipeline = StableDiffusionXLControlNetPipeline.from_single_file(Model_path, controlnet=None torch_dtype=torch.float16, variant="fp16").to("cuda")
+                    pipeline = StableDiffusionXLControlNetPipeline.from_single_file(Model_path, controlnet=None, torch_dtype=torch.float16, variant="fp16").to("cuda")
                 elif pipeline_type == "img2img":
                     pipeline = StableDiffusionXLImg2ImgPipeline.from_single_file(Model_path, torch_dtype=torch.float16, variant="fp16").to("cuda")
                 
