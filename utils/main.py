@@ -94,7 +94,9 @@ def controlnet_flush(main_class):
         main_class.loaded_controlnet_model, 
         main_class.images, 
         main_class.controlnets_scale, 
-        main_class.self.loaded_pipeline
+        main_class.loaded_pipeline,
+        main_class.loaded_model,
+        main_class.loaded_pipeline
     ]
     for value in to_be_reset:
         if isinstance(value, list):
@@ -388,7 +390,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
                 main.controlnets[2] = ControlNetModel.from_pretrained(
                     "thibaud/controlnet-openpose-sdxl-1.0", 
                     torch_dtype=torch.float16, 
-                    use_safetensors=True,
                     low_cpu_mem_usage=True
                 ).to("cuda")
             print("Converting image with Open Pose...")
@@ -397,7 +398,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             main.images[2] = openpose_image.resize((1024, 1024))
             main.controlnets_scale[2] = Open_Pose_Strength
             print("Open Pose is done.")
-            display(make_image_grid([image_openpose, openpose_image.resize((1024, 1024))], rows=1, cols=2))
+            display(make_image_grid([Openpose_Link, openpose_image.resize((1024, 1024))], rows=1, cols=2))
             
     # Handling pipeline and model loading
     main.pipeline, model_name = pipeline_selector.load_pipeline(
