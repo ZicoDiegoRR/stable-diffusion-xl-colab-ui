@@ -1,4 +1,5 @@
 from diffusers.utils import load_image, make_image_grid
+from transformers import CLIPVisionModelWithProjection
 import re
 
 def load(
