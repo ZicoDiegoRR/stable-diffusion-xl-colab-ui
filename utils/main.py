@@ -37,6 +37,8 @@ import time
 import gc
 import os
 
+main = None
+
 # Variables to avoid loading the same model or pipeline twice
 class MainVar:
     def __init__(self):
@@ -322,7 +324,9 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         os.remove(os.path.join(f"{base_path}", "parameters.json"))
 
     # Instantiating the variables
-    main = MainVar()
+    global main
+    if not main:
+        main = MainVar()
 
     # Flushing ControlNet model if deactivated after being used
     if (not Canny and main.controlnets[0]) or (not Depth_Map and main.controlnets[1]) or (not Open_Pose and main.controlnets[2]): 
@@ -356,7 +360,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             
         # Handling Depth Map
         if Depth_Map and Depthmap_Link is not None:
-            if "depth" not in loaded_controlnet_model:
+            if "depth" not in main.loaded_controlnet_model:
                 print("Loading Depth Map...")
                 main.loaded_controlnet_model[1] = "depth"
                 main.controlnets[1] = ControlNetModel.from_pretrained(
@@ -378,7 +382,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             
         # Handling Open Pose
         if Open_Pose and Openpose_Link is not None:
-            if "openpose" not in loaded_controlnet_model:
+            if "openpose" not in main.loaded_controlnet_model:
                 print("Loading Open Pose...")
                 main.loaded_controlnet_model[2] = "openpose"
                 main.controlnets[2] = ControlNetModel.from_pretrained(
@@ -397,13 +401,13 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             
     # Handling pipeline and model loading
     main.pipeline, model_name = pipeline_selector.load_pipeline(
-        pipeline,
+        main.pipeline,
         Model, 
         widgets_change[1], 
-        loaded_model, 
-        loaded_pipeline,
+        main.loaded_model, 
+        main.loaded_pipeline,
         pipeline_type,
-        controlnets=controlnets, 
+        controlnets=main.controlnets, 
         active_inpaint=active_inpaint, 
         hf_token=HF_Token, 
         civit_token=Civit_Token,
