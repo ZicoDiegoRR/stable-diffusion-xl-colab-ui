@@ -74,10 +74,9 @@ def save_last(filename, data, type):
     except Exception as e:
         print(f"Error occurred: {e}")
 
-def controlnet_flush():
-    global pipeline, openpose, openpose_model, depth_estimator, depthmap_model, canny_model, controlnets, loaded_controlnet_model, images, controlnets_scale
+def controlnet_flush(main_class):
     cn_reset = ""
-    cn_reset_sanitized_list = [element for element in loaded_controlnet_model if element]
+    cn_reset_sanitized_list = [element for element in main_class.loaded_controlnet_model if element]
     for weight in cn_reset_sanitized_list:
         if cn_reset_sanitized_list.index(weight) == (len(cn_reset_sanitized_list) - 1) and len(cn_reset_sanitized_list) > 1:
             cn_reset += f"and {weight} ControlNets"
@@ -85,31 +84,28 @@ def controlnet_flush():
             cn_reset += f"{weight} ControlNet"
         else:
             cn_reset += f"{weight}, " if len(cn_reset_sanitized_list) == 3 else f"{weight} "
-    
-    to_be_reset = [pipeline, depth_estimator, openpose, openpose_model, depthmap_model, canny_model, controlnets, loaded_controlnet_model, images, controlnets_scale]
-    for value in to_be_reset:
-        if isinstance(value, list):
-            for element in value:
-                if isinstance(element, ControlNetModel) and element:
-                    element.to("cpu")
-                    element = None
-                elif element:
-                    element = None
-        else:
-            if value:
-                try:
-                    value.to("cpu")
-                except Exception as e:
-                    print(f"Unable to move a weight to CPU. Reason: {e}")
-                del value
-                value = None
-
     print(f"You previously activated the {cn_reset} ControlNet. Because of this, the pipeline must be reloaded to free up some VRAM.")
     print("Flushing...")
     
-    if pipeline:
-        pipeline.to("cpu")
-        pipeline = None
+    to_be_reset = [
+        main_class.controlnets, 
+        main_class.loaded_controlnet_model, 
+        main_class.images, 
+        main_class.controlnets_scale, 
+        main_class.self.loaded_pipeline
+    ]
+    for value in to_be_reset:
+        if isinstance(value, list):
+            for element in value:
+                element = None
+        else:
+            if value:
+                del value
+                value = None
+    if main_class.pipeline:
+        main_class.pipeline.to("cpu")
+        del main_class.pipeline
+        main_class.pipeline = None
     torch.cuda.empty_cache()
     gc.collect()
 
@@ -330,7 +326,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Flushing ControlNet model if deactivated after being used
     if (not Canny and main.controlnets[0]) or (not Depth_Map and main.controlnets[1]) or (not Open_Pose and main.controlnets[2]): 
-        controlnet_flush()
+        controlnet_flush(main)
 
     # Loading ControlNet
     if pipeline_type == "controlnet" and (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
