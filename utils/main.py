@@ -261,17 +261,22 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     controlnet_loader.load(
         main.pipeline,
         Canny,
-        Depth_Map,
-        Open_Pose,
         Canny_link,
+        minimum_canny_threshold,
+        maximum_canny_threshold,
+        Canny_Strength,
+        Depth_Map,
         Depthmap_Link,
+        Depth_Strength,
+        Open_Pose,
         Openpose_Link,
+        Open_Pose_Strength,
         main.controlnets,
         main.loaded_controlnet_model,
         main.images,
         main.controlnets_scale,
         main.loaded_pipeline,
-        main.loaded_model,  
+        main.loaded_model,
     )
 
     # Assigning new values 
