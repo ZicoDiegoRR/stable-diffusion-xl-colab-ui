@@ -7,6 +7,13 @@ def load(
     IP_Image_Link,
     IP_Adapter_Strength,
 ):
+    # Using a custom image encoder for IP-Adapter
+    pipeline.image_encoder = CLIPVisionModelWithProjection.from_pretrained(
+        "h94/IP-Adapter",
+        subfolder="models/image_encoder",
+        torch_dtype=torch.float16,
+    ).to("cuda")
+    
     # Loading the images
     adapter_image = []
     simple_Url = [word for word in re.split(r"\s*,\s*", IP_Image_Link) if word]
