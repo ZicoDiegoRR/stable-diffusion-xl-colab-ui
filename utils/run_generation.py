@@ -48,8 +48,18 @@ def generate(
 
     elif pipeline_type == "controlnet": # For ControlNet
         image_prefix = "[ControlNet]"
-        generation_arguments["image"] = [element for element in images if element is not None]
-        generation_arguments["controlnet_conditioning_scale"] = [element for element in controlnets_scale if element]
+        cn_image_filter = [element for element in images if element is not None]
+        if len(cn_image_filter) == 1:
+            cn_image = cn_image_filter[0]
+        else:
+            cn_image = cn_image_filter
+        cn_scale_filter = [element for element in controlnets_scale if element]
+        if len(cn_scale_filter) == 1:
+            cn_scale = cn_scale_filter[0]
+        else:
+            cn_scale = cn_scale_filter
+        generation_arguments["image"] = cn_image
+        generation_arguments["controlnet_conditioning_scale"] = cn_scale
 
     else: # For Img2img
         image_prefix = "[Image-to-Image]"
