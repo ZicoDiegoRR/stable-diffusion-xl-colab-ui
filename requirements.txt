@@ -6,4 +6,4 @@ peft
 tqdm
 huggingface_hub
 compel==2.0.3
-controlnet-aux
+controlnet-aux-openpose-fix
