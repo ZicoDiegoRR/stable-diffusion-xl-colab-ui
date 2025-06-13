@@ -66,6 +66,12 @@ def verify(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type):
         return False
 
 def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeline_type, format="safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token="", base_path="/content"):
+    # Filtering ControlNet's weight if exist
+    if not all(cn is None for cn in controlnets):
+        controlnet_weights = [cn for cn in controlnets if cn]
+        if len(controlnet_weights) == 1:
+            controlnet_weights = controlnet_weights[0]
+    
     # For Hugging Face repository with "author/repo_name" format
     if model_url.count("/") == 1 and (not model_url.startswith("https://") or not model_url.startswith("http://")):
         if verify(pipe, model_url, loaded_model, loaded_pipeline, pipeline_type) or pipe is None:
@@ -75,7 +81,7 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
                 elif active_inpaint and pipeline_type == "inpaint":
                     pipeline = StableDiffusionXLInpaintPipeline.from_pretrained(model_url, torch_dtype=torch.float16).to("cuda")
                 elif pipeline_type == "controlnet":
-                    pipeline = StableDiffusionXLControlNetPipeline.from_pretrained(model_url, controlnet=None, torch_dtype=torch.float16).to("cuda")
+                    pipeline = StableDiffusionXLControlNetPipeline.from_pretrained(model_url, controlnet=controlnet_weights, torch_dtype=torch.float16).to("cuda")
                 elif pipeline_type == "img2img":
                     pipeline = StableDiffusionXLImg2ImgPipeline.from_pretrained(model_url, torch_dtype=torch.float16).to("cuda")
                 model_name = model_url
@@ -109,7 +115,7 @@ def load_pipeline(pipe, model_url, widget, loaded_model, loaded_pipeline, pipeli
                 elif active_inpaint and pipeline_type == "inpaint":
                     pipeline = StableDiffusionXLInpaintPipeline.from_single_file(Model_path, torch_dtype=torch.float16, variant="fp16").to("cuda")
                 elif pipeline_type == "controlnet":
-                    pipeline = StableDiffusionXLControlNetPipeline.from_single_file(Model_path, controlnet=None, torch_dtype=torch.float16, variant="fp16").to("cuda")
+                    pipeline = StableDiffusionXLControlNetPipeline.from_single_file(Model_path, controlnet=controlnet_weights, torch_dtype=torch.float16, variant="fp16").to("cuda")
                 elif pipeline_type == "img2img":
                     pipeline = StableDiffusionXLImg2ImgPipeline.from_single_file(Model_path, torch_dtype=torch.float16, variant="fp16").to("cuda")
                 
