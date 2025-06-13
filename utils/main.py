@@ -258,7 +258,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         main.loaded_model, 
         main.loaded_pipeline,
         pipeline_type,
-        controlnets=main.controlnets
+        controlnets=main.controlnets,
         active_inpaint=active_inpaint, 
         hf_token=HF_Token, 
         civit_token=Civit_Token,
