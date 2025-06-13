@@ -48,22 +48,17 @@ def controlnet_path_selector(path, type, base_path):
     return cn_image, pipeline_type
 
 # Converting image into a depth map used for ControlNet
-def get_depth_map(image, depth_estimator):
+def get_depth_map(image, depth_estimator, output):
     image = depth_estimator(image)["depth"]
     image = np.array(image)
     image = image[:, :, None]
     image = np.concatenate([image, image, image], axis=2)
+    if output == "display":
+        return ImagePIL.fromarray(image) # For display
+
     detected_map = torch.from_numpy(image).float() / 255.0
     depth_map = detected_map.permute(2, 0, 1)
     return depth_map
-
-# Only for display in output for depth map, nothing crazy
-def get_depth_map_display(image, depth_estimator):
-    image = depth_estimator(image)["depth"]
-    image = np.array(image)
-    image = image[:, :, None]
-    image = np.concatenate([image, image, image], axis=2)
-    return image
 
 # Clearing VRAM
 def controlnet_flush(
@@ -105,6 +100,7 @@ def controlnet_flush(
                 del value
                 value = None
     if pipeline:
+        del pipeline.controlnet
         pipeline.controlnet = None
     torch.cuda.empty_cache()
     gc.collect()
@@ -133,7 +129,6 @@ def load(
     # Flushing if ControlNet is loaded but unused
     if (not Canny and controlnets[0]) or (not Depth_Map and controlnets[1]) or (not Open_Pose and controlnets[2]): 
         controlnet_flush(
-            controlnets,
             pipeline,
             controlnets,
             loaded_controlnet_model,
@@ -154,7 +149,8 @@ def load(
                     "diffusers/controlnet-canny-sdxl-1.0", 
                     torch_dtype=torch.float16, 
                     use_safetensors=True, 
-                    low_cpu_mem_usage=True
+                    low_cpu_mem_usage=True,
+                    variant="fp16"
                 )
             print("Converting image with Canny Edge Detection...")
             c_img = Canny_link
@@ -163,9 +159,10 @@ def load(
             image_canny = image_canny[:, :, None]
             image_canny = np.concatenate([image_canny, image_canny, image_canny], axis=2)
             canny_image = ImagePIL.fromarray(image_canny)
+            canny_width, canny_height = c_img.size
             print("Canny Edge Detection is complete.")
             display(make_image_grid([c_img, canny_image.resize((1024, 1024))], rows=1, cols=2))
-            images[0] = canny_image.resize((1024, 1024))
+            images[0] = canny_image.resize((canny_width, canny_height))
             controlnets_scale[0] = Canny_Strength
             
         # Handling Depth Map
@@ -174,20 +171,22 @@ def load(
                 print("Loading Depth Map...")
                 loaded_controlnet_model[1] = "depth"
                 controlnets[1] = ControlNetModel.from_pretrained(
-                    "diffusers/controlnet-depth-sdxl-1.0", 
+                    "diffusers/controlnet-canny-sdxl-1.0", 
                     torch_dtype=torch.float16, 
                     use_safetensors=True, 
-                    low_cpu_mem_usage=True
+                    low_cpu_mem_usage=True,
+                    variant="fp16"
                 ).to("cuda")
             print("Converting image with Depth Map...")
             depth_estimator = pipe("depth-estimation", device="cpu")
             image_depth = Depthmap_Link.resize((1024, 1024))
-            depth_map = get_depth_map(image_depth, depth_estimator).unsqueeze(0).half().to("cpu")
+            depth_map = get_depth_map(image_depth, depth_estimator, "depth").unsqueeze(0).half().to("cpu")
+            depth_map_display = get_depth_map(image_depth, depth_estimator, "display")
             images[1] = depth_map
+            depth_width, depth_height = Depthmap_Link.size
             controlnets_scale[1] = Depth_Strength
-            depth_map_display = ImagePIL.fromarray(get_depth_map_display(image_depth, depth_estimator))
             print("Depth Map is complete.")
-            display(make_image_grid([image_depth, depth_map_display], rows=1, cols=2))
+            display(make_image_grid([Depthmap_Link, depth_map_display.resize((depth_width, depth_height))], rows=1, cols=2))
             del depth_estimator
             
         # Handling Open Pose
@@ -196,17 +195,18 @@ def load(
                 print("Loading Open Pose...")
                 loaded_controlnet_model[2] = "openpose"
                 controlnets[2] = ControlNetModel.from_pretrained(
-                    "thibaud/controlnet-openpose-sdxl-1.0", 
+                    "xinsir/controlnet-openpose-sdxl-1.0", 
                     torch_dtype=torch.float16, 
                     low_cpu_mem_usage=True
                 ).to("cuda")
             print("Converting image with Open Pose...")
             openpose = OpenposeDetector.from_pretrained("lllyasviel/ControlNet").to("cpu")
+            openpose_width, openpose_height = Openpose_Link.size
             openpose_image = openpose(Openpose_Link)
             images[2] = openpose_image.resize((1024, 1024))
             controlnets_scale[2] = Open_Pose_Strength
             print("Open Pose is done.")
-            display(make_image_grid([Openpose_Link, openpose_image.resize((1024, 1024))], rows=1, cols=2))
+            display(make_image_grid([Openpose_Link, openpose_image.resize((openpose_width, openpose_height))], rows=1, cols=2))
             del openpose
 
         if len([cn for cn in controlnets if cn]) == 1:
