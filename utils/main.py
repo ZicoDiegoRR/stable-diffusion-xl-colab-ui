@@ -228,35 +228,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # RUNNING
     #____________________________________________________________________________________________________________________________________________________________________________
-    # Handling pipeline and model loading
-    main.pipeline, model_name = pipeline_selector.load_pipeline(
-        main.pipeline,
-        Model, 
-        widgets_change[1], 
-        main.loaded_model, 
-        main.loaded_pipeline,
-        pipeline_type,
-        active_inpaint=active_inpaint, 
-        hf_token=HF_Token, 
-        civit_token=Civit_Token,
-        base_path=base_path
-    )
-
-    # Handling VAE
-    if VAE_Link and (VAE_Link != main.vae_current or not main.vae_current):
-        vae, loaded_vae = vae_loader.load_vae(
-            main.vae_current, 
-            VAE_Link, 
-            VAE_Config, 
-            widgets_change[0], 
-            HF_Token, 
-            Civit_Token,
-            base_path=base_path
-        )
-        main.vae_current = loaded_vae
-        if vae is not None:
-            main.pipeline.vae = vae
-
     # Handling ControlNet
     controlnet_loader.load(
         main.pipeline,
@@ -278,6 +249,36 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         main.loaded_pipeline,
         main.loaded_model,
     )
+    
+    # Handling pipeline and model loading
+    main.pipeline, model_name = pipeline_selector.load_pipeline(
+        main.pipeline,
+        Model, 
+        widgets_change[1], 
+        main.loaded_model, 
+        main.loaded_pipeline,
+        pipeline_type,
+        controlnets=main.controlnets
+        active_inpaint=active_inpaint, 
+        hf_token=HF_Token, 
+        civit_token=Civit_Token,
+        base_path=base_path
+    )
+
+    # Handling VAE
+    if VAE_Link and (VAE_Link != main.vae_current or not main.vae_current):
+        vae, loaded_vae = vae_loader.load_vae(
+            main.vae_current, 
+            VAE_Link, 
+            VAE_Config, 
+            widgets_change[0], 
+            HF_Token, 
+            Civit_Token,
+            base_path=base_path
+        )
+        main.vae_current = loaded_vae
+        if vae is not None:
+            main.pipeline.vae = vae
 
     # Assigning new values 
     main.loaded_model = model_name
