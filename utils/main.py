@@ -31,7 +31,6 @@ class MainVar:
         self.loaded_model = ""
         self.loaded_pipeline = ""
         self.vae_current = None
-        self.compel = None
         self.loaded_controlnet_model = [None] * 3
         self.controlnets = [None] * 3
         self.images = [None] * 3
@@ -300,9 +299,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     )
 
     # Using prompt weighting with Compel
-    main.compel = Compel(tokenizer=[main.pipeline.tokenizer, main.pipeline.tokenizer_2], text_encoder=[main.pipeline.text_encoder, main.pipeline.text_encoder_2], returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED, requires_pooled=[False, True], truncate_long_prompts=False)
-    conditioning, pooled = main.compel([Prompt, Negative_Prompt])
-    del main.compel
+    compel = Compel(tokenizer=[main.pipeline.tokenizer, main.pipeline.tokenizer_2], text_encoder=[main.pipeline.text_encoder, main.pipeline.text_encoder_2], returned_embeddings_type=ReturnedEmbeddingsType.PENULTIMATE_HIDDEN_STATES_NON_NORMALIZED, requires_pooled=[False, True], truncate_long_prompts=False)
+    conditioning, pooled = compel([Prompt, Negative_Prompt])
 
     # Loading LoRA if not empty
     if LoRA_URLs:
