@@ -67,8 +67,6 @@ def controlnet_flush(
     loaded_controlnet_model,
     images,
     controlnets_scale,
-    loaded_pipeline,
-    loaded_model,
 ):
     cn_reset = ""
     cn_reset_sanitized_list = [element for element in loaded_controlnet_model if element]
@@ -81,6 +79,10 @@ def controlnet_flush(
             cn_reset += f"{weight}, " if len(cn_reset_sanitized_list) == 3 else f"{weight} "
     print(f"You previously activated the {cn_reset}. Because of this, the pipeline must be reloaded to free up some VRAM.")
     print("Flushing...")
+
+    if pipeline:
+        del pipeline
+        pipeline = None
     
     to_be_reset = [
         controlnets, 
@@ -99,9 +101,6 @@ def controlnet_flush(
             if value:
                 del value
                 value = None
-    if pipeline:
-        del pipeline
-        pipeline = None
     torch.cuda.empty_cache()
     gc.collect()
 
@@ -122,8 +121,6 @@ def load(
     loaded_controlnet_model,
     images,
     controlnets_scale,
-    loaded_pipeline,
-    loaded_model,
     
 ):
     # Flushing if ControlNet is loaded but unused
@@ -134,8 +131,6 @@ def load(
             loaded_controlnet_model,
             images,
             controlnets_scale,
-            loaded_pipeline,
-            loaded_model,
         )
 
     # Loading ControlNet
@@ -208,6 +203,12 @@ def load(
             print("Open Pose is done.")
             display(make_image_grid([Openpose_Link, openpose_image.resize((openpose_width, openpose_height))], rows=1, cols=2))
             del openpose
+
+        cn_select = [cn for cn in controlnets if cn]
+        if len(cn_select) == 1:
+            pipeline.controlnet = cn_select[0]
+        else:
+            pipeline.controlnet = cn_select
             
         torch.cuda.empty_cache()
         gc.collect()
