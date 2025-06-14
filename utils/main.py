@@ -28,8 +28,6 @@ main = None
 class MainVar:
     def __init__(self):
         self.pipeline = None
-        self.loaded_model = ""
-        self.loaded_pipeline = ""
         self.vae_current = None
         self.loaded_controlnet_model = [None] * 3
         self.controlnets = [None] * 3
@@ -60,16 +58,6 @@ def save_last(filename, data, type):
             json.dump(existing_data, file, indent=4)
     except Exception as e:
         print(f"Error occurred: {e}")
-
-# Restarting the runtime if the selected model or pipeline is different compared to the loaded ones
-def restart(new, old, type):
-    if type == "model":
-        warning_restart = f"You inputted a new model ({new}), which is different than the old one ({old})."
-    elif type == "pipeline":
-        warning_restart = f"You changed the pipeline from {old} to {new}."
-    print(f"{warning_restart} Restarting is required to free some memory and avoid OutOfMemory error. Restarting...")
-    time.sleep(0.5)
-    os.kill(os.getpid(), 9)
 
 # Initializing image generation
 def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary, widgets_change, base_path):
@@ -227,6 +215,19 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # RUNNING
     #____________________________________________________________________________________________________________________________________________________________________________
+    
+    # Handling pipeline and model loading
+    main.pipeline = pipeline_selector.load_pipeline(
+        main.pipeline,
+        Model, 
+        widgets_change[1], 
+        pipeline_type,
+        active_inpaint=active_inpaint, 
+        hf_token=HF_Token, 
+        civit_token=Civit_Token,
+        base_path=base_path
+    )
+
     # Handling ControlNet
     controlnet_loader.load(
         main.pipeline,
@@ -245,23 +246,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         main.loaded_controlnet_model,
         main.images,
         main.controlnets_scale,
-        main.loaded_pipeline,
-        main.loaded_model,
-    )
-    
-    # Handling pipeline and model loading
-    main.pipeline, model_name = pipeline_selector.load_pipeline(
-        main.pipeline,
-        Model, 
-        widgets_change[1], 
-        main.loaded_model, 
-        main.loaded_pipeline,
-        pipeline_type,
-        controlnets=main.controlnets,
-        active_inpaint=active_inpaint, 
-        hf_token=HF_Token, 
-        civit_token=Civit_Token,
-        base_path=base_path
     )
 
     # Handling VAE
@@ -278,10 +262,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         main.vae_current = loaded_vae
         if vae is not None:
             main.pipeline.vae = vae
-
-    # Assigning new values 
-    main.loaded_model = model_name
-    main.loaded_pipeline = pipeline_type
 
     # Xformer, generator, and safety checker
     main.pipeline.enable_xformers_memory_efficient_attention()
