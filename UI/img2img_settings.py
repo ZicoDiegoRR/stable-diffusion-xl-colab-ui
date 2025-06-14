@@ -7,7 +7,6 @@ class Img2ImgSettings:
     def wrap_settings(self):
         return widgets.VBox([
             self.prompts_section,
-            self.model_input_section,
             self.image_resolution_section,
             self.generation_parameter_section,
             self.reference_image_section,
@@ -24,7 +23,7 @@ class Img2ImgSettings:
         return [
             self.prompt_widget,
             self.negative_prompt_widget,
-            self.model_widget,
+            "",
             self.width_slider,
             self.height_slider,
             self.steps_slider,
@@ -81,21 +80,28 @@ class Img2ImgSettings:
             
     # Initialize widgets creation
     def __init__(self, cfg, ideas_line, gpt2_pipe):
-        self.prompt_widget = widgets.Textarea(value=cfg[0] if cfg else "", placeholder="Enter your prompt here")
-        self.negative_prompt_widget = widgets.Textarea(value=cfg[1] if cfg else "", placeholder="What you don't want to see?")
+        prompt_layout = widgets.Layout(width="50%")
+        self.prompt_widget = widgets.Textarea(value=cfg[0] if cfg else "", placeholder="Enter the prompt here.", layout=prompt_layout)
+        self.negative_prompt_widget = widgets.Textarea(value=cfg[1] if cfg else "", placeholder="What you don't want to see?", layout=prompt_layout)
         self.prompt_randomize_button = widgets.Button(description="🔄", layout=widgets.Layout(width="40px"))
         self.prompt_randomize_button_label = widgets.Label(value="Randomize or continue your prompt with GPT-2")
-
-        self.prompt_widget.layout.width = "100%"
-        self.negative_prompt_widget.layout.width = "100%"
         self.prompt_randomize_button.on_click(lambda b: self.generate_prompt_on_click(ideas_line, gpt2_pipe))
 
-        self.prompts_section = widgets.HBox()
-        self.prompts_section.children = [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget, widgets.HBox([self.prompt_randomize_button, self.prompt_randomize_button_label])]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])] if ideas_line else [widgets.VBox([widgets.Label(value="Prompt:"), self.prompt_widget]), widgets.VBox([widgets.Label(value="Negative prompt:"), self.negative_prompt_widget])]
-        self.prompts_section.layout.width = "100%"
+        self.prompts_section = widgets.VBox()
+        self.prompts_section.children = [
+            widgets.HBox([
+                widgets.Label(value="Prompt:", layout=prompt_layout),
+                widgets.Label(value="Negative Prompt:", layout=prompt_layout)
+            ]),
+            widgets.HBox([
+                self.prompt_widget, self.negative_prompt_widget
+            ]),
+            widgets.HBox([
+                self.prompt_randomize_button, self.prompt_randomize_button_label
+            ]),
+        ]
 
         self.model_widget = widgets.Text(value=cfg[2] if cfg else "", placeholder="HF's repository or direct URL")
-        self.model_input_section = widgets.HBox([widgets.Label(value="Model link"), self.model_widget])
 
         self.width_slider = widgets.IntSlider(min=512, max=1536, step=64, value=cfg[3] if cfg else 1024, description="Width")
         self.height_slider = widgets.IntSlider(min=512, max=1536, step=64, value=cfg[4] if cfg else 1024, description="Height")
