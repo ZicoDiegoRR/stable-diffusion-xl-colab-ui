@@ -8,10 +8,19 @@ from StableDiffusionXLColabUI.UI.textual_inversion_settings import TextualInvers
 from StableDiffusionXLColabUI.UI.reset_and_generate import ResetGenerateSettings
 from StableDiffusionXLColabUI.UI.preset_system import PresetSystem
 from StableDiffusionXLColabUI.UI.history import HistorySystem
-from StableDiffusionXLColabUI.utils import modified_inference_realesrgan, main
+from StableDiffusionXLColabUI.utils import modified_inference_realesrgan, main, downloader
 from StableDiffusionXLColabUI.UI import all_widgets
 from IPython.display import display, clear_output
 import ipywidgets as widgets
+import os
+
+def load_param(filename):
+    try:
+        with open(filename, 'r') as f:
+            params = json.load(f)
+        return params
+    except FileNotFoundError:
+        return None
 
 class UIWrapper:
     # Displaying the submit button and resetting the history
@@ -59,6 +68,9 @@ class UIWrapper:
 
     # Running the image generation
     def generate_value(self, index, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
+        text2img.model_widget.value = self.model_widget.value
+        img2img.model_widget.value = self.model_widget.value
+        controlnet.model_widget.value = self.model_widget.value
         values_dictionary_for_generation = all_widgets.import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         widgets_dictionary_for_generation = all_widgets.import_widgets(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         if index == 3:
@@ -67,7 +79,11 @@ class UIWrapper:
             key = self.select_key(index)
             selected_class = self.select_class(index)
             self.value_list = values_dictionary_for_generation[key]
+            if not self.has_load_model:
+                self.value_list[2] = self.model_widget.value
+                
             self.submit_settings.layout.visibility = "hidden"
+            self.model_output.clear_output()
             main.run(self.value_list, 
                      values_dictionary_for_generation["lora"], 
                      values_dictionary_for_generation["embeddings"], 
@@ -85,6 +101,10 @@ class UIWrapper:
                      ],
                      self.base_path,
             )
+            self.has_load_model = True
+            if self.model_widget.value.startswith(("https://", "http://")):
+                self.model_widget.value, _ = os.path.splitext(os.path.basename(downloader.download_file(self.model_widget.value, "Checkpoint", self.hf_token.value, self.civit_token.value, self.base_path)))
+                
             self.reload_submit_button()
             self.lora.construct(self.lora.lora_urls_widget.value)
             self.embeddings.construct(self.embeddings.ti_urls_widget.value)
@@ -97,6 +117,45 @@ class UIWrapper:
     def get_tab_index(self):
         return self.ui_tab.selected_index
 
+    def restart(self):
+        os.kill(os.getpid(), 9)
+
+    def refresh_model(self):
+        saved_models = load_param(f"{base_path}/Saved Parameters/URL/urls.json")["Checkpoint"]
+        self.model_widget.options = list(saved_models["url_to_keyname"].keys()) + saved_models["hugging_face"]
+
+    def load_model(self, url, hf_token, civit_token, base_path):
+        if not self.has_load_model:
+            with self.model_output:
+                if url.count("/") == 1:
+                        self.loaded_model = url
+                else:
+                    self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path)))
+                    self.text2img.model_widget.value = self.loaded_model
+                    self.model_output.clear_output()
+                    self.refresh_model()
+                    self.model_widget.value = self.loaded_model
+                    print(f'{self.loaded_model} has been downloaded. Click "Generate" to use it.')
+        else:
+            if url != self.loaded_model:
+                self.model_settings.children = [
+                    self.model_output,
+                    self.model_label,
+                    widgets.HBox([
+                        self.model_widget, self.model_load_widget
+                    ]),
+                    self.restart_button,
+                ]
+                with self.model_output:
+                    if url.count("/") == 1:
+                        self.loaded_model = url
+                    else:
+                        self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path)))
+                        self.model_output.clear_output()
+                        self.refresh_model()
+                        self.model_widget.value = self.loaded_model
+                        print(f'{self.loaded_model} has been downloaded. Restart the runtime first to apply changes in the model.')
+    
     # Final phase of merging a pipeline's general parameters to the selected pipeline
     def merge_final_phase(self, init, destination, index, text2img, img2img, controlnet): # Doing merging
         if destination != "back":
@@ -213,6 +272,31 @@ class UIWrapper:
         ])
         self.seed_and_token_section = widgets.VBox([self.seed_section, self.token_section])
 
+        # Wrapping the model widget
+        self.loaded_model = ""
+        self.has_load_model = False
+        self.restart_button = widgets.Button(description="Restart")
+        self.model_label = widgets.Label(value="Model:")
+        self.model_widget = widgets.Combobox(
+            options=self.refresh_model(),
+            value=self.text2img.model_widget.value,
+            ensure_option=False
+        )
+        self.model_load_widget = widgets.Button(description="🔄")
+        self.model_output = widgets.Output()
+
+        self.refresh_model()
+        self.model_load_widget.on_click(lambda b: self.load_model(self.model_widget.value, self.hf_token.value, self.civit_token.value, self.base_path))
+        self.restart_button.on_click(lambda b: self.restart())
+
+        self.model_settings = widgets.VBox([
+            self.model_output,
+            self.model_label,
+            widgets.HBox([
+                self.model_widget, self.model_load_widget
+            ]),
+        ])
+        
        # Wrapping widgets for merge
         self.merge_button = widgets.Button(description="Send parameters")
         self.send_text2img = widgets.Button(description="Text-to-Image")
@@ -233,9 +317,9 @@ class UIWrapper:
 
         # Creating the UI
         self.ui_tab.children = [
-            widgets.VBox([self.text2img.wrap_settings(), self.additional_widgets]),
-            widgets.VBox([self.img2img.wrap_settings(), self.additional_widgets]),
-            widgets.VBox([self.controlnet.wrap_settings(), self.additional_widgets]),
+            widgets.VBox([self.model_settings, self.text2img.wrap_settings(), self.additional_widgets]),
+            widgets.VBox([self.model_settings, self.img2img.wrap_settings(), self.additional_widgets]),
+            widgets.VBox([self.model_settings, self.controlnet.wrap_settings(), self.additional_widgets]),
             self.inpaint.wrap_settings(),
             self.lora.wrap_settings(),
             self.embeddings.wrap_settings(),
