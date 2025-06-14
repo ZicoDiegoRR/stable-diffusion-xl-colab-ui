@@ -12,6 +12,7 @@ from StableDiffusionXLColabUI.utils import modified_inference_realesrgan, main, 
 from StableDiffusionXLColabUI.UI import all_widgets
 from IPython.display import display, clear_output
 import ipywidgets as widgets
+import json
 import os
 
 def load_param(filename):
@@ -117,27 +118,43 @@ class UIWrapper:
     def get_tab_index(self):
         return self.ui_tab.selected_index
 
+    # To restart the runtime when users click the "Restart" button
     def restart(self):
         os.kill(os.getpid(), 9)
 
+    # Reload the combobox options
     def refresh_model(self):
-        saved_models = load_param(f"{base_path}/Saved Parameters/URL/urls.json")["Checkpoint"]
-        self.model_widget.options = list(saved_models["url_to_keyname"].keys()) + saved_models["hugging_face"]
+        saved_models = load_param(f"{self.base_path}/Saved Parameters/URL/urls.json")["Checkpoint"]
+        saved_hf_models = saved_models["hugging_face"] if "hugging_face" in saved_models else []
+        self.model_widget.options = list(saved_models["keyname_to_url"].keys()) + saved_hf_models
 
+    # Download models from model widget
     def load_model(self, url, hf_token, civit_token, base_path):
+        self.model_output.clear_output()
+        progress_bar = widgets.FloatProgress(value=0, min=0, max=1.0)
+        self.model_settings.children = [
+            progress_bar,
+            self.model_label,
+            widgets.HBox([
+                self.model_widget, self.model_load_widget
+            ]),
+        ]
         if not self.has_load_model:
-            with self.model_output:
-                if url.count("/") == 1:
-                        self.loaded_model = url
-                else:
-                    self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path)))
-                    self.text2img.model_widget.value = self.loaded_model
-                    self.model_output.clear_output()
-                    self.refresh_model()
-                    self.model_widget.value = self.loaded_model
-                    print(f'{self.loaded_model} has been downloaded. Click "Generate" to use it.')
+            if url.count("/") == 1:
+                self.loaded_model = url
+            else:
+                self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path, tqdm=False, widget=progress_bar)))
+                self.text2img.model_widget.value = self.loaded_model
+                self.refresh_model()
+                self.model_widget.value = self.loaded_model
+                print(f'{self.loaded_model} has been downloaded. Click "Generate" to use it.')
         else:
-            if url != self.loaded_model:
+            if url.count("/") == 1:
+                self.loaded_model = url
+            else:
+                self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path, tqdm=False, widget=progress_bar)))
+                self.refresh_model()
+                self.model_widget.value = self.loaded_model
                 self.model_settings.children = [
                     self.model_output,
                     self.model_label,
@@ -146,15 +163,7 @@ class UIWrapper:
                     ]),
                     self.restart_button,
                 ]
-                with self.model_output:
-                    if url.count("/") == 1:
-                        self.loaded_model = url
-                    else:
-                        self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path)))
-                        self.model_output.clear_output()
-                        self.refresh_model()
-                        self.model_widget.value = self.loaded_model
-                        print(f'{self.loaded_model} has been downloaded. Restart the runtime first to apply changes in the model.')
+                print(f'{self.loaded_model} has been downloaded. Restart the runtime first to apply changes in the model.')
     
     # Final phase of merging a pipeline's general parameters to the selected pipeline
     def merge_final_phase(self, init, destination, index, text2img, img2img, controlnet): # Doing merging
@@ -278,11 +287,13 @@ class UIWrapper:
         self.restart_button = widgets.Button(description="Restart")
         self.model_label = widgets.Label(value="Model:")
         self.model_widget = widgets.Combobox(
-            options=self.refresh_model(),
             value=self.text2img.model_widget.value,
             ensure_option=False
         )
-        self.model_load_widget = widgets.Button(description="🔄")
+        self.model_load_widget = widgets.Button(
+            description="🔄",
+            layout=widgets.Layout(width="40px")
+        )
         self.model_output = widgets.Output()
 
         self.refresh_model()
