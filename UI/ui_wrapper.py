@@ -68,9 +68,9 @@ class UIWrapper:
 
     # Running the image generation
     def generate_value(self, index, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
-        text2img.model_widget.value = self.model_widget.value
-        img2img.model_widget.value = self.model_widget.value
-        controlnet.model_widget.value = self.model_widget.value
+        for widget in [text2img.model_widget, img2img.model_widget, controlnet.model_widget]:
+            widget.value = self.model_widget.value
+            
         values_dictionary_for_generation = all_widgets.import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         widgets_dictionary_for_generation = all_widgets.import_widgets(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         if index == 3:
