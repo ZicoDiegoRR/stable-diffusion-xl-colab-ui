@@ -107,7 +107,7 @@ def is_exist(folder, name, type):
         return False
     return True
 
-def download(url, type, hf_token, civit_token, key=None):
+def download(url, type, hf_token, civit_token, key=None, tqdm=True, widget=None):
     # Folder creation if not exist
     download_folder = f"/content/{type}"
     os.makedirs(download_folder, exist_ok=True)
@@ -156,16 +156,24 @@ def download(url, type, hf_token, civit_token, key=None):
             return full_path
             
         # Save
-        with open(full_path, "wb") as f, tqdm(
-            desc=download_filename,
-            total=file_total_size,
-            unit="iB",
-            unit_scale=True,
-            unit_divisor=1024,
-        ) as bar:
-            for chunk in download_req.iter_content(chunk_size=1024):
-                f.write(chunk)
-                bar.update(len(chunk))
+        if tqdm:
+            with open(full_path, "wb") as f, tqdm(
+                desc=download_filename,
+                total=file_total_size,
+                unit="iB",
+                unit_scale=True,
+                unit_divisor=1024,
+            ) as bar:
+                for chunk in download_req.iter_content(chunk_size=1024):
+                    f.write(chunk)
+                    bar.update(len(chunk))
+        else:
+            with open(full_path, "wb") as f:
+                downloaded = 0
+                for chunk in download_req.iter_content(chunk_size=1024):
+                    f.write(chunk)
+                    downloaded += len(chunk)
+                    widget.value = downloaded / file_total_size
     else:
         full_path = url
 
@@ -173,11 +181,12 @@ def download(url, type, hf_token, civit_token, key=None):
     return full_path
 
 # Validate if the url has been downloaded before (even in previous instance)
-def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
+def download_file(url, type, hf_token, civit_token, base_path, subfolder=None, tqdm=True, widget=None):
     # Load the dictionary from urls.json
     saved_urls = load_param(f"{base_path}/Saved Parameters/URL/urls.json")
     dict_type = saved_urls[type]
     os.makedirs(f"{base_path}/Saved Parameters/URL", exist_ok=True)
+    os.makedirs(f"/content/{type}", exist_ok=True)
 
     # Select the key when loading VAE
     if subfolder:
@@ -192,9 +201,9 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
             if is_exist(f"/content", key, type):
                 returned_path = f"/content/{type}/{search(type, key)}"
             else:
-                returned_path = download(url, type, hf_token, civit_token)
+                returned_path = download(url, type, hf_token, civit_token, tqdm=tqdm, widget=widget)
         else:
-            returned_path = download(url, type, hf_token, civit_token)
+            returned_path = download(url, type, hf_token, civit_token, tqdm=tqdm, widget=widget)
             if type == "VAE":
                 if vae_key == "weight":
                     vae_name, _ = os.path.splitext(os.path.basename(returned_path))
@@ -215,6 +224,8 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
     # Handle HF models
     elif url.count("/") == 1:
         returned_path = url
+        if "hugging_face" not in saved_urls[type]:
+            saved_urls[type]["hugging_face"] = []
         if url not in saved_urls[type]["hugging_face"]:
             saved_urls[type]["hugging_face"].append(url)
 
@@ -226,12 +237,12 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
             if is_exist(f"/content", key, type):
                 returned_path = f"/content/{type}/{search(type, key)}"
             else:
-                returned_path = download(link, type, hf_token, civit_token)
+                returned_path = download(link, type, hf_token, civit_token, tqdm=tqdm, widget=widget)
         elif subfolder:
             if is_exist(f"/content/VAE/{subfolder}", "config", type):
                 returned_path = f"/content/VAE/{subfolder}/config.json"
             else:
-                returned_path = download(link, type, hf_token, civit_token)
+                returned_path = download(link, type, hf_token, civit_token, tqdm=tqdm, widget=widget)
         else:
             print(f"It seems like {url} doesn't exist in both /content/{type} directory and urls.json file. Is it a correct path?")
             returned_path = url
