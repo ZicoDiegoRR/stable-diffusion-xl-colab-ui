@@ -33,7 +33,10 @@ def load_param(filename):
                     "config": {
                     
                     }
-                }
+                },
+                "hugging_face": [
+                    
+                ],
             },
             "Checkpoint": {
                 "keyname_to_url": {
@@ -41,7 +44,10 @@ def load_param(filename):
                 },
                 "url_to_keyname": {
                     
-                }
+                },
+                "hugging_face": [
+                    
+                ],
             },
             "LoRAs": {
                 "keyname_to_url": {
@@ -49,7 +55,10 @@ def load_param(filename):
                 },
                 "url_to_keyname": {
                     
-                }
+                },
+                "hugging_face": [
+                    
+                ],
             },
             "Embeddings": {
                 "keyname_to_url": {
@@ -57,7 +66,10 @@ def load_param(filename):
                 },
                 "url_to_keyname": {
                     
-                }
+                },
+                "hugging_face": [
+                    
+                ],
             },
         }
 
@@ -174,7 +186,7 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
         vae_key = "weight"
    
     # Handle URL input
-    if (url.startswith("https://") or url.startswith("http://")) and not url.startswith("/content/gdrive/MyDrive"):
+    if url.startswith("https://") or url.startswith("http://"):
         key = dict_type.get("url_to_keyname").get(url) if type != "VAE" else dict_type.get("url_to_keyname").get(vae_key).get(url)
         if key:
             if is_exist(f"/content", key, type):
@@ -199,6 +211,12 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None):
     # Unused, but can handle file from Google Drive
     elif url.startswith("/content/gdrive/MyDrive"):
         returned_path = url
+
+    # Handle HF models
+    elif url.count("/") == 1:
+        returned_path = url
+        if url not in saved_urls[type]["hugging_face"]:
+            saved_urls[type]["hugging_face"].append(url)
 
     # Handle key input
     else:
