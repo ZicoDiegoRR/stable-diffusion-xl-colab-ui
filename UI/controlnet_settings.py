@@ -101,7 +101,7 @@ class ControlNetSettings:
         else:
             return "inpaint"
 
-    def preview(self, img, type, output, widget):
+    def preview(self, img, type, output, widget, ui, settings):
         output.clear_output()
         try:
             image, _ = controlnet_loader.controlnet_path_selector(img)
@@ -116,6 +116,7 @@ class ControlNetSettings:
                 factor = (width * height) / (512 * 512)
                 preview = preview.resize((width/sqrt(math.ceil(factor)), height/sqrt(math.ceil(factor))))
             widget.value = open(preview, "rb").read()
+            ui.children = [settings, widget]
         except Exception as e:
             with output:
                 print(f"Unable to load {img}. Reason: {e}")
@@ -301,7 +302,8 @@ class ControlNetSettings:
         self.canny_popup({"new": self.canny_toggle.value})
         self.canny_upload.observe(self.canny_upload_handler, names="value")
         self.canny_preview_button.on_click(lambda b: self.preview(
-            self.canny_link_widget.value, "canny", self.canny_output, self.canny_image
+            self.canny_link_widget.value, "canny", self.canny_output, 
+            self.canny_image, self.canny_ui, self.canny_settings,
         ))
         #___________________________________________________________________________________________________________________________
 
@@ -322,7 +324,8 @@ class ControlNetSettings:
         self.depthmap_popup({"new": self.depth_map_toggle.value})
         self.depth_upload.observe(self.depthmap_upload_handler, names="value")
         self.depth_preview_button.on_click(lambda b: self.preview(
-            self.depth_map_link_widget.value, "depth", self.depth_output, self.depth_image
+            self.depth_map_link_widget.value, "depth", self.depth_output, 
+            self.depth_image, self.depth_ui, self.depth_setting,
         ))
         #___________________________________________________________________________________________________________________________
         
@@ -343,7 +346,8 @@ class ControlNetSettings:
         self.openpose_popup({"new": self.openpose_toggle.value})
         self.openpose_upload.observe(self.openpose_upload_handler, names="value")
         self.depth_preview_button.on_click(lambda b: self.preview(
-            self.openpose_preview_button.value, "openpose", self.openpose_output, self.openpose_image
+            self.openpose_link_widget.value, "openpose", self.openpose_output, 
+            self.openpose_image, self.openpose_ui, self.openpose_settings,
         ))
         #___________________________________________________________________________________________________________________________
 
