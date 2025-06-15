@@ -33,10 +33,7 @@ def raise_error(Model_path):
 
 def load_pipeline(pipe, model_url, widget, pipeline_type, format="safetensors", controlnets=None, active_inpaint=False, vae=None, hf_token="", civit_token="", base_path="/content"):
     # Download or input the URL or path to urls.json
-    if model_url.startswith(("https://", "http://")) or model_url.count("/"):
-        Model_path = downloader.download_file(model_url, "Checkpoint", hf_token, civit_token, base_path)
-    else:
-        Model_path = url
+    Model_path = downloader.download_file(model_url, "Checkpoint", hf_token, civit_token, base_path)
     
     # For Hugging Face repository with "author/repo_name" format
     if model_url.count("/") == 1 and (not model_url.startswith("https://") or not model_url.startswith("http://")):
