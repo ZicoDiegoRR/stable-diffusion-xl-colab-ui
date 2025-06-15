@@ -173,7 +173,7 @@ def download(url, type, hf_token, civit_token, key=None, tqdm=True, widget=None)
                 for chunk in download_req.iter_content(chunk_size=1024):
                     f.write(chunk)
                     downloaded += len(chunk)
-                    widget.value = int(downloaded / file_total_size) * 100
+                    widget.value = int((downloaded / file_total_size) * 100)
     else:
         full_path = url
 
