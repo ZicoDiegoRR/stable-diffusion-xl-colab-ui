@@ -1,3 +1,4 @@
+from StableDiffusionXLColabUI.utils.get_controlnet_image import ControlNetImage
 from diffusers.utils import load_image, make_image_grid
 from controlnet_aux import OpenposeDetector
 from transformers import pipeline as pipe
@@ -8,7 +9,6 @@ import numpy as np
 import torch
 import json
 import cv2
-import gc
 import os
 
 # Loading the path of the latest generated images
@@ -20,6 +20,7 @@ def load_last(filename, type):
     except (FileNotFoundError, json.JSONDecodeError):
         return None
 
+# Selecting the image based on secret keywords
 def controlnet_path_selector(path, type, base_path):
     last_generation_loading = os.path.join(base_path, "last_generation.json")
     try:
@@ -47,19 +48,7 @@ def controlnet_path_selector(path, type, base_path):
         pipeline_type = type
     return cn_image, pipeline_type
 
-# Converting image into a depth map used for ControlNet
-def get_depth_map(image, depth_estimator, output):
-    image = depth_estimator(image)["depth"]
-    image = np.array(image)
-    image = image[:, :, None]
-    image = np.concatenate([image, image, image], axis=2)
-    if output == "display":
-        return ImagePIL.fromarray(image) # For display
-
-    detected_map = torch.from_numpy(image).float() / 255.0
-    depth_map = detected_map.permute(2, 0, 1)
-    return depth_map
-
+# Loading the ControlNet if activated
 def load(
     pipeline,
     Canny,
@@ -80,47 +69,48 @@ def load(
 ):
     # Loading ControlNet
     if (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
+        # Instantiating the class
+        cn = ControlNetImage()
+        
+        # Loading the weight if hasn't been loaded
         if not controlnet:
             controlnet = ControlNetUnionModel.from_pretrained("xinsir/controlnet-union-sdxl-1.0", torch_dtype=torch.float16)
             
         # Handling Canny
         if Canny and Canny_link is not None:
             print("Converting image with Canny Edge Detection...")
-            image_canny = cv2.Canny(np.array(Canny_link), minimum_canny_threshold, maximum_canny_threshold)
-            image_canny = image_canny[:, :, None]
-            image_canny = np.concatenate([image_canny, image_canny, image_canny], axis=2)
-            canny_image = ImagePIL.fromarray(image_canny)
-            canny_width, canny_height = c_img.size
+            canny_image = cn.get_canny(Canny_link)
+            canny_width, canny_height = Canny_link.size
+            
             print("Canny Edge Detection is complete.")
-            display(make_image_grid([c_img, canny_image.resize((1024, 1024))], rows=1, cols=2))
-            images[0] = canny_image.resize((canny_width, canny_height))
+            display(make_image_grid([Canny_link, canny_image.resize((canny_width, canny_height))], rows=1, cols=2))
+            
+            images[0] = canny_image.resize((1024, 1024))
             controlnets_scale[0] = Canny_Strength
             
         # Handling Depth Map
         if Depth_Map and Depthmap_Link is not None:
             print("Converting image with Depth Map...")
-            depth_estimator = pipe("depth-estimation", device="cpu")
             image_depth = Depthmap_Link.resize((1024, 1024))
-            depth_map = get_depth_map(image_depth, depth_estimator, "depth").unsqueeze(0).half().to("cpu")
-            depth_map_display = get_depth_map(image_depth, depth_estimator, "display")
-            images[1] = depth_map
+            
+            depth_map = cn.get_depth(image_depth).unsqueeze(0).half().to("cpu")
+            depth_map_display = cn.get_depth(image_depth, "display")
+            
             depth_width, depth_height = Depthmap_Link.size
             controlnets_scale[1] = Depth_Strength
+            images[1] = depth_map
+            
             print("Depth Map is complete.")
             display(make_image_grid([Depthmap_Link, depth_map_display.resize((depth_width, depth_height))], rows=1, cols=2))
-            del depth_estimator
             
         # Handling Open Pose
         if Open_Pose and Openpose_Link is not None:
             print("Converting image with Open Pose...")
-            openpose = OpenposeDetector.from_pretrained("lllyasviel/ControlNet").to("cpu")
             openpose_width, openpose_height = Openpose_Link.size
-            openpose_image = openpose(Openpose_Link)
+            openpose_image = cn.get_openpose(Openpose_Link)
+            
             images[2] = openpose_image.resize((1024, 1024))
             controlnets_scale[2] = Open_Pose_Strength
+            
             print("Open Pose is done.")
             display(make_image_grid([Openpose_Link, openpose_image.resize((openpose_width, openpose_height))], rows=1, cols=2))
-            del openpose
-            
-        torch.cuda.empty_cache()
-        gc.collect()
