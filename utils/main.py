@@ -216,18 +216,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     # RUNNING
     #____________________________________________________________________________________________________________________________________________________________________________
     
-    # Handling pipeline and model loading
-    main.pipeline = pipeline_selector.load_pipeline(
-        main.pipeline,
-        Model, 
-        widgets_change[1], 
-        pipeline_type,
-        active_inpaint=active_inpaint, 
-        hf_token=HF_Token, 
-        civit_token=Civit_Token,
-        base_path=base_path
-    )
-
     # Handling ControlNet
     controlnet_loader.load(
         main.pipeline,
@@ -246,6 +234,25 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         main.loaded_controlnet_model,
         main.images,
         main.controlnets_scale,
+    )
+    cn_weights = [element for element in main.controlnets if element]
+    if len(cn_weights) == 1:
+        used_cn = cn_weights[0]
+    else:
+        used_cn = cn_weights
+
+    
+    # Handling pipeline and model loading
+    main.pipeline = pipeline_selector.load_pipeline(
+        main.pipeline,
+        Model, 
+        widgets_change[1], 
+        pipeline_type,
+        active_inpaint=active_inpaint, 
+        controlnets=used_cn,
+        hf_token=HF_Token, 
+        civit_token=Civit_Token,
+        base_path=base_path
     )
 
     # Handling VAE
