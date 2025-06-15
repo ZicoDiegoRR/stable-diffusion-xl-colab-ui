@@ -3,6 +3,7 @@ from StableDiffusionXLColabUI.utils import controlnet_loader
 from StableDiffusionXLColabUI.utils import generate_prompt
 from diffusers.utils import load_image, make_image_grid
 import ipywidgets as widgets
+from io import BytesIO
 import math
 import os
 
@@ -103,20 +104,26 @@ class ControlNetSettings:
 
     def preview(self, img, type, output, widget, ui, settings):
         output.clear_output()
+        with output:
+            print("Please wait...")
         try:
             image, _ = controlnet_loader.controlnet_path_selector(img, "", self.base_path)
             if type == "canny":
-                preview = self.cn.get_canny(image)
+                preview = self.cn.get_canny(image, self.canny_min_slider.value, self.canny_max_slider.value)
             elif type == "depth":
-                preview = self.cn.get_depth(image)
+                preview = self.cn.get_depth(image, "display")
             elif type == "openpose":
                 preview = self.cn.get_openpose(image)
             width, height = preview.size
-            if (width * height) < (512 * 512):
-                factor = (width * height) / (512 * 512)
-                preview = preview.resize((width/sqrt(math.ceil(factor)), height/sqrt(math.ceil(factor))))
-            widget.value = open(preview, "rb").read()
+            if (width * height) > (128 * 128):
+                factor = (width * height) / (128 * 128)
+                preview = preview.resize((int(width/math.sqrt(math.ceil(factor))), int(height/math.sqrt(math.ceil(factor)))))
+            with BytesIO() as buffer:
+                preview.save(buffer, format="JPEG")
+                image_bytes = buffer.getvalue()
+            widget.value = image_bytes
             ui.children = [settings, widget]
+            output.clear_output()
         except Exception as e:
             with output:
                 print(f"Unable to load {img}. Reason: {e}")
@@ -297,7 +304,7 @@ class ControlNetSettings:
         self.canny_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[19] if cfg else 0.7, description="Canny Strength")
         self.canny_preview_button = widgets.Button(description="Preview")
         self.canny_settings = widgets.VBox([self.canny_output, self.canny_toggle])
-        self.canny_ui = widgets.HBox([self.canny_settings])
+        self.canny_ui = widgets.HBox([self.canny_settings], continuous_update=True)
 
         self.canny_popup({"new": self.canny_toggle.value})
         self.canny_upload.observe(self.canny_upload_handler, names="value")
@@ -319,7 +326,7 @@ class ControlNetSettings:
         self.depth_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[22] if cfg else 0.7, description="Depth Strength")
         self.depth_preview_button = widgets.Button(description="Preview")
         self.depth_settings = widgets.VBox([self.depth_output, self.depth_map_toggle])
-        self.depth_ui = widgets.HBox([self.depth_settings])
+        self.depth_ui = widgets.HBox([self.depth_settings], continuous_update=True)
 
         self.depthmap_popup({"new": self.depth_map_toggle.value})
         self.depth_upload.observe(self.depthmap_upload_handler, names="value")
@@ -341,7 +348,7 @@ class ControlNetSettings:
         self.openpose_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[25] if cfg else 0.7, description="OpenPose Strength")
         self.openpose_preview_button = widgets.Button(description="Preview")
         self.openpose_settings = widgets.VBox([self.openpose_output, self.openpose_toggle])
-        self.openpose_ui = widgets.HBox([self.openpose_settings])
+        self.openpose_ui = widgets.HBox([self.openpose_settings], continuous_update=True)
 
         self.openpose_popup({"new": self.openpose_toggle.value})
         self.openpose_upload.observe(self.openpose_upload_handler, names="value")
