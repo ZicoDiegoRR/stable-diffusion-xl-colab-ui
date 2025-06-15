@@ -104,7 +104,7 @@ class ControlNetSettings:
     def preview(self, img, type, output, widget, ui, settings):
         output.clear_output()
         try:
-            image, _ = controlnet_loader.controlnet_path_selector(img)
+            image, _ = controlnet_loader.controlnet_path_selector(img, "", self.base_path)
             if type == "canny":
                 preview = self.cn.get_canny(image)
             elif type == "depth":
@@ -345,7 +345,7 @@ class ControlNetSettings:
 
         self.openpose_popup({"new": self.openpose_toggle.value})
         self.openpose_upload.observe(self.openpose_upload_handler, names="value")
-        self.depth_preview_button.on_click(lambda b: self.preview(
+        self.openpose_preview_button.on_click(lambda b: self.preview(
             self.openpose_link_widget.value, "openpose", self.openpose_output, 
             self.openpose_image, self.openpose_ui, self.openpose_settings,
         ))
@@ -374,8 +374,9 @@ class ControlNetSettings:
         ])
 
     # Initialize widgets creation
-    def __init__(self, cfg, ideas_line, gpt2_pipe):
+    def __init__(self, cfg, ideas_line, gpt2_pipe, base_path):
         prompt_layout = widgets.Layout(width="50%")
+        self.base_path = base_path
         self.cn = ControlNetImage()
         self.cn.load_pipe()
         
