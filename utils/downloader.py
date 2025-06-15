@@ -107,7 +107,7 @@ def is_exist(folder, name, type):
         return False
     return True
 
-def download(url, type, hf_token, civit_token, key=None, tqdm=True, widget=None):
+def download(url, type, hf_token, civit_token, key=None, tqdm_bool=True, widget=None):
     # Folder creation if not exist
     download_folder = f"/content/{type}"
     os.makedirs(download_folder, exist_ok=True)
@@ -156,7 +156,7 @@ def download(url, type, hf_token, civit_token, key=None, tqdm=True, widget=None)
             return full_path
             
         # Save
-        if tqdm:
+        if tqdm_bool:
             with open(full_path, "wb") as f, tqdm(
                 desc=download_filename,
                 total=file_total_size,
@@ -201,9 +201,9 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None, t
             if is_exist(f"/content", key, type):
                 returned_path = f"/content/{type}/{search(type, key)}"
             else:
-                returned_path = download(url, type, hf_token, civit_token, tqdm=tqdm, widget=widget)
+                returned_path = download(url, type, hf_token, civit_token, tqdm_bool=tqdm, widget=widget)
         else:
-            returned_path = download(url, type, hf_token, civit_token, tqdm=tqdm, widget=widget)
+            returned_path = download(url, type, hf_token, civit_token, tqdm_bool=tqdm, widget=widget)
             if type == "VAE":
                 if vae_key == "weight":
                     vae_name, _ = os.path.splitext(os.path.basename(returned_path))
@@ -237,12 +237,12 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None, t
             if is_exist(f"/content", key, type):
                 returned_path = f"/content/{type}/{search(type, key)}"
             else:
-                returned_path = download(link, type, hf_token, civit_token, tqdm=tqdm, widget=widget)
+                returned_path = download(link, type, hf_token, civit_token, tqdm_bool=tqdm, widget=widget)
         elif subfolder:
             if is_exist(f"/content/VAE/{subfolder}", "config", type):
                 returned_path = f"/content/VAE/{subfolder}/config.json"
             else:
-                returned_path = download(link, type, hf_token, civit_token, tqdm=tqdm, widget=widget)
+                returned_path = download(link, type, hf_token, civit_token, tqdm_bool=tqdm, widget=widget)
         else:
             print(f"It seems like {url} doesn't exist in both /content/{type} directory and urls.json file. Is it a correct path?")
             returned_path = url
