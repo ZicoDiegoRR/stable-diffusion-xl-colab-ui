@@ -81,17 +81,16 @@ def controlnet_flush(
     print("Flushing...")
 
     if pipeline:
-        del pipeline
-        pipeline = None
+        pipeline.controlnet = None
     
     to_be_reset = [
-        controlnets, 
-        loaded_controlnet_model, 
-        images, 
-        controlnets_scale, 
-        loaded_pipeline,
-        loaded_model,
+        pipeline,
+        controlnets,
+        loaded_controlnet_model,
+        images,
+        controlnets_scale,
     ]
+    
     for value in to_be_reset:
         if isinstance(value, list):
             for element in value:
@@ -203,12 +202,6 @@ def load(
             print("Open Pose is done.")
             display(make_image_grid([Openpose_Link, openpose_image.resize((openpose_width, openpose_height))], rows=1, cols=2))
             del openpose
-
-        cn_select = [cn for cn in controlnets if cn]
-        if len(cn_select) == 1:
-            pipeline.controlnet = cn_select[0]
-        else:
-            pipeline.controlnet = cn_select
             
         torch.cuda.empty_cache()
         gc.collect()
