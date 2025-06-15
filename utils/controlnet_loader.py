@@ -1,7 +1,7 @@
 from diffusers.utils import load_image, make_image_grid
 from controlnet_aux import OpenposeDetector
 from transformers import pipeline as pipe
-from diffusers import ControlNetModel
+from diffusers import ControlNetUnionModel
 from IPython.display import display
 from PIL import Image as ImagePIL
 import numpy as np
@@ -60,49 +60,6 @@ def get_depth_map(image, depth_estimator, output):
     depth_map = detected_map.permute(2, 0, 1)
     return depth_map
 
-# Clearing VRAM
-def controlnet_flush(
-    pipeline,
-    controlnets,
-    loaded_controlnet_model,
-    images,
-    controlnets_scale,
-):
-    cn_reset = ""
-    cn_reset_sanitized_list = [element for element in loaded_controlnet_model if element]
-    for weight in cn_reset_sanitized_list:
-        if cn_reset_sanitized_list.index(weight) == (len(cn_reset_sanitized_list) - 1) and len(cn_reset_sanitized_list) > 1:
-            cn_reset += f"and {weight} ControlNets"
-        elif len(cn_reset_sanitized_list) == 1:
-            cn_reset += f"{weight} ControlNet"
-        else:
-            cn_reset += f"{weight}, " if len(cn_reset_sanitized_list) == 3 else f"{weight} "
-    print(f"You previously activated the {cn_reset}. Because of this, the pipeline must be reloaded to free up some VRAM.")
-    print("Flushing...")
-
-    if pipeline:
-        pipeline.controlnet = None
-    
-    to_be_reset = [
-        pipeline,
-        controlnets,
-        loaded_controlnet_model,
-        images,
-        controlnets_scale,
-    ]
-    
-    for value in to_be_reset:
-        if isinstance(value, list):
-            for element in value:
-                del element
-                element = None
-        else:
-            if value:
-                del value
-                value = None
-    torch.cuda.empty_cache()
-    gc.collect()
-
 def load(
     pipeline,
     Canny,
@@ -116,40 +73,20 @@ def load(
     Open_Pose,
     Openpose_Link,
     Open_Pose_Strength,
-    controlnets,
-    loaded_controlnet_model,
+    controlnet,
     images,
     controlnets_scale,
     
 ):
-    # Flushing if ControlNet is loaded but unused
-    if (not Canny and controlnets[0]) or (not Depth_Map and controlnets[1]) or (not Open_Pose and controlnets[2]): 
-        controlnet_flush(
-            pipeline,
-            controlnets,
-            loaded_controlnet_model,
-            images,
-            controlnets_scale,
-        )
-
     # Loading ControlNet
     if (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
+        if not controlnet:
+            controlnet = ControlNetUnionModel.from_pretrained("xinsir/controlnet-union-sdxl-1.0", torch_dtype=torch.float16)
+            
         # Handling Canny
         if Canny and Canny_link is not None:
-            if "canny" not in loaded_controlnet_model:
-                print("Loading Canny...")
-                loaded_controlnet_model[0] = "canny"
-                controlnets[0] = ControlNetModel.from_pretrained(
-                    "diffusers/controlnet-canny-sdxl-1.0", 
-                    torch_dtype=torch.float16, 
-                    use_safetensors=True, 
-                    low_cpu_mem_usage=True,
-                    variant="fp16"
-                )
             print("Converting image with Canny Edge Detection...")
-            c_img = Canny_link
-            image_canny = np.array(c_img)
-            image_canny = cv2.Canny(image_canny, minimum_canny_threshold, maximum_canny_threshold)
+            image_canny = cv2.Canny(np.array(Canny_link), minimum_canny_threshold, maximum_canny_threshold)
             image_canny = image_canny[:, :, None]
             image_canny = np.concatenate([image_canny, image_canny, image_canny], axis=2)
             canny_image = ImagePIL.fromarray(image_canny)
@@ -161,16 +98,6 @@ def load(
             
         # Handling Depth Map
         if Depth_Map and Depthmap_Link is not None:
-            if "depth" not in loaded_controlnet_model:
-                print("Loading Depth Map...")
-                loaded_controlnet_model[1] = "depth"
-                controlnets[1] = ControlNetModel.from_pretrained(
-                    "diffusers/controlnet-canny-sdxl-1.0", 
-                    torch_dtype=torch.float16, 
-                    use_safetensors=True, 
-                    low_cpu_mem_usage=True,
-                    variant="fp16"
-                ).to("cuda")
             print("Converting image with Depth Map...")
             depth_estimator = pipe("depth-estimation", device="cpu")
             image_depth = Depthmap_Link.resize((1024, 1024))
@@ -185,14 +112,6 @@ def load(
             
         # Handling Open Pose
         if Open_Pose and Openpose_Link is not None:
-            if "openpose" not in loaded_controlnet_model:
-                print("Loading Open Pose...")
-                loaded_controlnet_model[2] = "openpose"
-                controlnets[2] = ControlNetModel.from_pretrained(
-                    "xinsir/controlnet-openpose-sdxl-1.0", 
-                    torch_dtype=torch.float16, 
-                    low_cpu_mem_usage=True
-                ).to("cuda")
             print("Converting image with Open Pose...")
             openpose = OpenposeDetector.from_pretrained("lllyasviel/ControlNet").to("cpu")
             openpose_width, openpose_height = Openpose_Link.size
