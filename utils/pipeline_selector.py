@@ -48,7 +48,7 @@ def load_pipeline(pipe, model_url, widget, pipeline_type, format="safetensors", 
             elif active_inpaint and pipeline_type == "inpaint" and not isinstance(pipeline, StableDiffusionXLInpaintPipeline):
                 pipeline = StableDiffusionXLInpaintPipeline(**pipeline.components).to("cuda")
             elif pipeline_type == "controlnet" and not isinstance(pipeline, StableDiffusionXLControlNetPipeline):
-                pipeline = StableDiffusionXLControlNetPipeline(**pipeline.components, controlnet=None).to("cuda")
+                pipeline = StableDiffusionXLControlNetPipeline(**pipeline.components, controlnet=controlnets).to("cuda")
             elif pipeline_type == "img2img" and  not isinstance(pipeline, StableDiffusionXLImg2ImgPipeline):
                 pipeline = StableDiffusionXLImg2ImgPipeline(**pipeline.components).to("cuda")
         except (ValueError, OSError):
@@ -71,7 +71,7 @@ def load_pipeline(pipe, model_url, widget, pipeline_type, format="safetensors", 
             elif active_inpaint and pipeline_type == "inpaint" and not isinstance(pipeline, StableDiffusionXLInpaintPipeline):
                 pipeline = StableDiffusionXLInpaintPipeline(**pipeline.components).to("cuda")
             elif pipeline_type == "controlnet" and not isinstance(pipeline, StableDiffusionXLControlNetPipeline):
-                pipeline = StableDiffusionXLControlNetPipeline(**pipeline.components, controlnet=None).to("cuda")
+                pipeline = StableDiffusionXLControlNetPipeline(**pipeline.components, controlnet=controlnets).to("cuda")
             elif pipeline_type == "img2img" and  not isinstance(pipeline, StableDiffusionXLImg2ImgPipeline):
                 pipeline = StableDiffusionXLImg2ImgPipeline(**pipeline.components).to("cuda")
         except (ValueError, OSError):
