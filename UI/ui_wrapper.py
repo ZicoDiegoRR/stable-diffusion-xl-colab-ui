@@ -142,15 +142,28 @@ class UIWrapper:
         if not self.has_load_model:
             if url.count("/") == 1:
                 self.loaded_model = url
+                with self.model_output:
+                    print(f"{self.loaded_model} is a Hugging Face model's format. Click 'Generate to download and use it.'")
             else:
                 self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path, tqdm=False, widget=progress_bar)))
                 self.text2img.model_widget.value = self.loaded_model
                 self.refresh_model()
                 self.model_widget.value = self.loaded_model
-                print(f'{self.loaded_model} has been downloaded. Click "Generate" to use it.')
+                with self.model_output:
+                    print(f"{self.loaded_model} has been downloaded. Click 'Generate' to use it.")
+                
+            self.model_settings.children = [
+                self.model_output,
+                self.model_label,
+                widgets.HBox([
+                    self.model_widget, self.model_load_widget
+                ]),
+            ]
         else:
             if url.count("/") == 1:
                 self.loaded_model = url
+                with self.model_output:
+                    print(f"{self.loaded_model} is a Hugging Face model's format. Restart the runtime first to apply changes in the model.")
             else:
                 self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path, tqdm=False, widget=progress_bar)))
                 self.refresh_model()
@@ -163,7 +176,17 @@ class UIWrapper:
                     ]),
                     self.restart_button,
                 ]
-                print(f'{self.loaded_model} has been downloaded. Restart the runtime first to apply changes in the model.')
+                with self.model_output:
+                    print(f'{self.loaded_model} has been downloaded. Restart the runtime first to apply changes in the model.')
+                
+            self.model_settings.children = [
+                self.model_output,
+                self.model_label,
+                widgets.HBox([
+                    self.model_widget, self.model_load_widget
+                ]),
+                self.restart_button,
+            ]
     
     # Final phase of merging a pipeline's general parameters to the selected pipeline
     def merge_final_phase(self, init, destination, index, text2img, img2img, controlnet): # Doing merging
