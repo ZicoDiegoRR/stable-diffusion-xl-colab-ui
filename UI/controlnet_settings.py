@@ -297,7 +297,7 @@ class ControlNetSettings:
         self.canny_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[19] if cfg else 0.7, description="Canny Strength")
         self.canny_preview_button = widgets.Button(description="Preview")
         self.canny_settings = widgets.VBox([self.canny_output, self.canny_toggle])
-        self.canny_ui = widgets.HBox([self.canny_settings, self.canny_image])
+        self.canny_ui = widgets.HBox([self.canny_settings])
 
         self.canny_popup({"new": self.canny_toggle.value})
         self.canny_upload.observe(self.canny_upload_handler, names="value")
@@ -319,7 +319,7 @@ class ControlNetSettings:
         self.depth_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[22] if cfg else 0.7, description="Depth Strength")
         self.depth_preview_button = widgets.Button(description="Preview")
         self.depth_settings = widgets.VBox([self.depth_output, self.depth_map_toggle])
-        self.depth_ui = widgets.HBox([self.depth_settings, self.depth_image])
+        self.depth_ui = widgets.HBox([self.depth_settings])
 
         self.depthmap_popup({"new": self.depth_map_toggle.value})
         self.depth_upload.observe(self.depthmap_upload_handler, names="value")
@@ -341,7 +341,7 @@ class ControlNetSettings:
         self.openpose_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[25] if cfg else 0.7, description="OpenPose Strength")
         self.openpose_preview_button = widgets.Button(description="Preview")
         self.openpose_settings = widgets.VBox([self.openpose_output, self.openpose_toggle])
-        self.openpose_ui = widgets.HBox([self.openpose_settings, self.openpose_image])
+        self.openpose_ui = widgets.HBox([self.openpose_settings])
 
         self.openpose_popup({"new": self.openpose_toggle.value})
         self.openpose_upload.observe(self.openpose_upload_handler, names="value")
