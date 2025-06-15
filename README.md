@@ -61,7 +61,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 17. | Real-ESRGAN Image Upscaling                                                                                                  |
 | 18. | New parameters saving system (from a flat list to a dictionary) and a conversion method to convert old saves to the new ones |
 | 19. | URL saving system to save any previously-inputted URLs into a JSON file and access them with filenames only                  |
-| 20. | Previews of ControlNet's converted images before generating                                                                      |
+| 20. | Previews of the ControlNet's converted images before generating                                                                 |
 | 21. | `components` integration for memory-sharing between pipelines to avoid OutOFMemory error due to independent tensors          |
 
 </details>
@@ -72,6 +72,7 @@ Work in progress
 ## To-do List
 - Adding textual inversion ✅ 
 - Implementing Inpainting using IPyCanvas
+- Creating the UI preview
 - Modularizing the code (testing)
 - Overhauling the save system ✅
 - Adding Hugging Face's token integration ✅ 
