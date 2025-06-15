@@ -29,8 +29,7 @@ class MainVar:
     def __init__(self):
         self.pipeline = None
         self.vae_current = None
-        self.loaded_controlnet_model = [None] * 3
-        self.controlnets = [None] * 3
+        self.controlnet = None
         self.images = [None] * 3
         self.controlnets_scale = [None] * 3
 
@@ -230,17 +229,10 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         Open_Pose,
         Openpose_Link,
         Open_Pose_Strength,
-        main.controlnets,
-        main.loaded_controlnet_model,
+        main.controlnet,
         main.images,
         main.controlnets_scale,
     )
-    cn_weights = [element for element in main.controlnets if element]
-    if len(cn_weights) == 1:
-        used_cn = cn_weights[0]
-    else:
-        used_cn = cn_weights
-
     
     # Handling pipeline and model loading
     main.pipeline = pipeline_selector.load_pipeline(
@@ -249,7 +241,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         widgets_change[1], 
         pipeline_type,
         active_inpaint=active_inpaint, 
-        controlnets=used_cn,
+        controlnets=main.controlnet,
         hf_token=HF_Token, 
         civit_token=Civit_Token,
         base_path=base_path
