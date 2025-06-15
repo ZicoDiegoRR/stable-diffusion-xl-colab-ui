@@ -8,12 +8,13 @@ import cv2
 
 class ControlNetImage:
     # Return a Canny edge detection image
-    def get_canny(self, img, minimum_canny_threshold, maximum_canny_threshold):
-        image_canny = cv2.Canny(np.array(img), minimum_canny_threshold, maximum_canny_threshold)
-        image_canny = image_canny[:, :, None]
-        image_canny = np.concatenate([image_canny, image_canny, image_canny], axis=2)
-        canny_image = ImagePIL.fromarray(image_canny)
-        return canny_image
+    def get_canny(self, pil_image, minimum_canny_threshold, maximum_canny_threshold):
+        image = np.array(pil_image)
+        image = cv2.Canny(image, minimum_canny_threshold, maximum_canny_threshold)
+        image = image[:, :, None]
+        image = np.concatenate([image, image, image], axis=2)
+        image = ImagePIL.fromarray(image)
+        return image
 
     # Return a Depth Map image
     def get_depth(self, img, output="get"):
