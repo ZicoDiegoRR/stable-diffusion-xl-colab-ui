@@ -7,7 +7,7 @@ This is the legacy branch of this repository for containing the old versions of 
 - **Download and Load:** Ability to download and load images, checkpoint, LoRA weights, and VAE using direct URLs.
 - **Textual Inversion:** Ability to load embeddings for more output control. (Beta V3 only)
 - **Image-to-Image:** Turn your images into something more creative and unique. (Beta V3 only)
-- **Prompt Generator:** Generate creative prompt powered by GPT-2. (Thank you [Gustavosta](https://huggingface.co/Gustavosta) for the amazing model) (Beta V3 only)
+- **Prompt Generator:** Generate creative prompt powered by GPT-2. (Model by [Gustavosta](https://huggingface.co/Gustavosta)) (Beta V3 only)
 - **Image Upscaling:** Using [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) made by [xinntao](https://github.com/xinntao) and Real-ESRGAN's contributors. (Beta V3 only)
 - **Google Drive Integration:** Can connect to your Google Drive or disable it.
 - **User-Friendly UI:** Simplified complexity with an easy-to-understand user interface.
