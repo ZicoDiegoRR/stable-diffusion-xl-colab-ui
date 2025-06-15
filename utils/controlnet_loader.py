@@ -48,6 +48,10 @@ def controlnet_path_selector(path, type, base_path):
         pipeline_type = type
     return cn_image, pipeline_type
 
+def flush(index, images, controlnets_scale):
+    for element in [images, controlnets_scale]:
+        element[index] = None
+
 # Loading the ControlNet if activated
 def load(
     pipeline,
@@ -67,6 +71,14 @@ def load(
     controlnets_scale,
     
 ):
+    # Deleting images and scales for inactivated ControlNet
+    if not Canny and images[0]:
+        flush(index, images, controlnets_scale)
+    elif not Depth_Map and images[1]:
+        flush(index, images, controlnets_scale)
+    elif not Open_Pose and images[2]:
+        flush(index, images, controlnets_scale)
+    
     # Loading ControlNet
     if (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
         # Instantiating the class
