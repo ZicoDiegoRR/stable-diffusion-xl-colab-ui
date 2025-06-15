@@ -42,7 +42,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
   
 |     | Features                                                                                                                     |
 |-----|------------------------------------------------------------------------------------------------------------------------------|
-| 1.  | Base pipelines and autoencoder (ControlNet, Inpainting, VAE, Text2Img)                                                       |
+| 1.  | Base pipelines and autoencoder (ControlNetUnion, Inpainting, VAE, Text2Img)                                                  |
 | 2.  | Base adapters (LoRA, IP-Adapter)                                                                                             |
 | 3.  | IPyWidgets                                                                                                                   |
 | 4.  | Saving and loading parameters                                                                                                |
@@ -61,6 +61,8 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 17. | Real-ESRGAN Image Upscaling                                                                                                  |
 | 18. | New parameters saving system (from a flat list to a dictionary) and a conversion method to convert old saves to the new ones |
 | 19. | URL saving system to save any previously-inputted URLs into a JSON file and access them with filenames only                  |
+| 20. | Previews of ControlNet's converted images before generating                                                                      |
+| 21. | `components` integration for memory-sharing between pipelines to avoid OutOFMemory error due to independent tensors          |
 
 </details>
 
