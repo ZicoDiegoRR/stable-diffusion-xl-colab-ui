@@ -325,7 +325,7 @@ class ControlNetSettings:
         self.depth_upload.observe(self.depthmap_upload_handler, names="value")
         self.depth_preview_button.on_click(lambda b: self.preview(
             self.depth_map_link_widget.value, "depth", self.depth_output, 
-            self.depth_image, self.depth_ui, self.depth_setting,
+            self.depth_image, self.depth_ui, self.depth_settings,
         ))
         #___________________________________________________________________________________________________________________________
         
