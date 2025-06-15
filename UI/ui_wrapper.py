@@ -131,7 +131,7 @@ class UIWrapper:
     # Download models from model widget
     def load_model(self, url, hf_token, civit_token, base_path):
         self.model_output.clear_output()
-        progress_bar = widgets.FloatProgress(value=0, min=0, max=1.0)
+        progress_bar = widgets.IntProgress(value=0, min=0, max=10)
         self.model_settings.children = [
             progress_bar,
             self.model_label,
