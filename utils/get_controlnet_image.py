@@ -8,7 +8,7 @@ import cv2
 
 class ControlNetImage:
     # Return a Canny edge detection image
-    def get_canny(self, img):
+    def get_canny(self, img, minimum_canny_threshold, maximum_canny_threshold):
         image_canny = cv2.Canny(np.array(img), minimum_canny_threshold, maximum_canny_threshold)
         image_canny = image_canny[:, :, None]
         image_canny = np.concatenate([image_canny, image_canny, image_canny], axis=2)
