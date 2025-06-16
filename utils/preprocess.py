@@ -123,14 +123,18 @@ def run():
                 ideas_file.write(ideas_response.text)
             with open("/content/ideas.txt", "r") as ideas_file:
                 ideas_line = ideas_file.readlines()
+            print("Loading GPT-2 prompt generator...")
             gpt2_pipe = pipe('text-generation', model='Gustavosta/MagicPrompt-Stable-Diffusion', tokenizer='gpt2')
+            
         else:
             print("Failed to download ideas.txt from GitHub.")
             ideas_line = []
             gpt2_pipe = None
+            
     else:
         with open("/content/ideas.txt", "r") as ideas_file:
             ideas_line = ideas_file.readlines()
+        print("Loading GPT-2 prompt generator...")
         gpt2_pipe = pipe('text-generation', model='Gustavosta/MagicPrompt-Stable-Diffusion', tokenizer='gpt2')
 
     return cfg, ideas_line, gpt2_pipe, base_path
