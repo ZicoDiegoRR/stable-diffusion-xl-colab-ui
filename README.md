@@ -2,7 +2,7 @@
 
 This is the legacy branch of this repository for containing the old versions of the notebook.
 
-## Features
+## Features Overview
 - **Image Generation:** Uses Transformers and Diffusers as the major components for image generation, along with ControlNet, Inpainting, and IP-Adapter.
 - **Download and Load:** Ability to download and load images, checkpoint, LoRA weights, and VAE using direct URLs.
 - **Textual Inversion:** Ability to load embeddings for more output control. (Beta V3 only)
