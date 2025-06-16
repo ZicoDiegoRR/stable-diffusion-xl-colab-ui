@@ -32,7 +32,8 @@ class ControlNetImage:
         
     # Return an Open Pose image
     def get_openpose(self, image):
-        return self.openpose_estimator(image)
+        openpose_image = self.openpose_estimator(image)
+        return openpose_image
 
     # Initiate two image estimators
     def load_pipe(self):
