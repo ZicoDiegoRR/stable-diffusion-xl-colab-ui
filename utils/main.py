@@ -32,6 +32,7 @@ class MainVar:
         self.controlnet = None
         self.images = [None] * 3
         self.controlnets_scale = [None] * 3
+        self.controlnet_modes = [None] * 3
 
 # Saving the set parameters
 def save_param(path, data):
@@ -216,7 +217,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     #____________________________________________________________________________________________________________________________________________________________________________
     
     # Handling ControlNet
-    main.controlnet, main.images, main.controlnets_scale = controlnet_loader.load(
+    main.controlnet, main.images, main.controlnets_scale, main.controlnet_modes = controlnet_loader.load(
         main.pipeline,
         Canny,
         Canny_link,
@@ -232,6 +233,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         main.controlnet,
         main.images,
         main.controlnets_scale,
+        main.controlnet_modes,
         get_image_class,
     )
     
@@ -333,6 +335,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         image_embeds,
         Inpainting_Image,
         Mask_Image,
+        main.controlnet_modes,
         main.controlnets_scale,
         main.images,
         ref_image,
