@@ -1,4 +1,3 @@
-from StableDiffusionXLColabUI.utils.get_controlnet_image import ControlNetImage
 from diffusers.utils import load_image, make_image_grid
 from controlnet_aux import OpenposeDetector
 from transformers import pipeline as pipe
@@ -69,7 +68,7 @@ def load(
     controlnet,
     images,
     controlnets_scale,
-    
+    get_image_class,
 ):
     # Deleting images and scales for inactivated ControlNet
     if not Canny and images[0]:
@@ -81,9 +80,6 @@ def load(
     
     # Loading ControlNet
     if (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
-        # Instantiating the class
-        cn = ControlNetImage()
-        
         # Loading the weight if hasn't been loaded
         if not controlnet:
             controlnet = ControlNetUnionModel.from_pretrained("xinsir/controlnet-union-sdxl-1.0", torch_dtype=torch.float16)
@@ -91,7 +87,7 @@ def load(
         # Handling Canny
         if Canny and Canny_link is not None:
             print("Converting image with Canny Edge Detection...")
-            canny_image = cn.get_canny(Canny_link)
+            canny_image = get_image_class.get_canny(Canny_link)
             canny_width, canny_height = Canny_link.size
             
             print("Canny Edge Detection is complete.")
@@ -105,8 +101,8 @@ def load(
             print("Converting image with Depth Map...")
             image_depth = Depthmap_Link.resize((1024, 1024))
             
-            depth_map = cn.get_depth(image_depth).unsqueeze(0).half().to("cpu")
-            depth_map_display = cn.get_depth(image_depth, "display")
+            depth_map = get_image_class.get_depth(image_depth).unsqueeze(0).half().to("cpu")
+            depth_map_display = get_image_class.get_depth(image_depth, "display")
             
             depth_width, depth_height = Depthmap_Link.size
             controlnets_scale[1] = Depth_Strength
@@ -119,7 +115,7 @@ def load(
         if Open_Pose and Openpose_Link is not None:
             print("Converting image with Open Pose...")
             openpose_width, openpose_height = Openpose_Link.size
-            openpose_image = cn.get_openpose(Openpose_Link)
+            openpose_image = get_image_class.get_openpose(Openpose_Link)
             
             images[2] = openpose_image.resize((1024, 1024))
             controlnets_scale[2] = Open_Pose_Strength
