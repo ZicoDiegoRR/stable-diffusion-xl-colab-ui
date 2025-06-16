@@ -96,6 +96,9 @@ class ControlNetSettings:
     # ________________________________________________________________________________________________________________________________________________________
 
     # Parent
+    def return_get_image_class(self):
+        return self.cn
+    
     def controlnet_preset_ref(self, value): # Function to return values based on the dropdown values below "Upload"
         if value == "Last Generated Text2Img":
             return ""
