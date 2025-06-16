@@ -4,6 +4,7 @@ from StableDiffusionXLColabUI.utils import generate_prompt
 from diffusers.utils import load_image, make_image_grid
 import ipywidgets as widgets
 from io import BytesIO
+from PIL import Image
 import math
 import os
 
@@ -102,31 +103,38 @@ class ControlNetSettings:
         else:
             return "inpaint"
 
-    def preview(self, img, type, output, widget, ui, settings):
-        output.clear_output()
-        with output:
-            print("Please wait...")
-        try:
-            image, _ = controlnet_loader.controlnet_path_selector(img, "", self.base_path)
-            if type == "canny":
-                preview = self.cn.get_canny(image, self.canny_min_slider.value, self.canny_max_slider.value)
-            elif type == "depth":
-                preview = self.cn.get_depth(image, "display")
-            elif type == "openpose":
-                preview = self.cn.get_openpose(image)
-            width, height = preview.size
-            if (width * height) > (128 * 128):
-                factor = (width * height) / (128 * 128)
-                preview = preview.resize((int(width/math.sqrt(math.ceil(factor))), int(height/math.sqrt(math.ceil(factor)))))
+    def preview(self, img, type, output, blank=False):
+        if not blank:
+            output.clear_output()
+            with output:
+                print("Please wait...")
+                
+            try:
+                image, _ = controlnet_loader.controlnet_path_selector(img, "", self.base_path)
+                if type == "canny":
+                    preview = self.cn.get_canny(image, self.canny_min_slider.value, self.canny_max_slider.value)
+                elif type == "depth":
+                    preview = self.cn.get_depth(image, "display")
+                elif type == "openpose":
+                    preview = self.cn.get_openpose(image)
+                width, height = preview.size
+                if height != 256:
+                    height_factor = ((height/256)**(-1))
+                    new_width = width * height_factor
+                    preview = preview.resize((int(new_width), 256), Image.LANCZOS)
+                output.clear_output()
+            except Exception as e:
+                preview = None
+                with output:
+                    print(f"Unable to load {img}. Reason: {e}")
+        else:
+            preview = Image.new("RGB", (256, 256), color=(0, 0, 0))
+
+        if preview:
             with BytesIO() as buffer:
                 preview.save(buffer, format="JPEG")
                 image_bytes = buffer.getvalue()
-            widget.value = image_bytes
-            ui.children = [settings, widget]
-            output.clear_output()
-        except Exception as e:
-            with output:
-                print(f"Unable to load {img}. Reason: {e}")
+            self.preview_display.value = image_bytes
     
     def dropdown_selector_upon_starting(self, value):
         if not value:
@@ -288,7 +296,17 @@ class ControlNetSettings:
     # ________________________________________________________________________________________________________________________________________________________
     # Initialize widgets creation
     def controlnet_widgets_handler(self, cfg):
+        # Parent
+        #___________________________________________________________________________________________________________________________  
         self.controlnet_dropdown_choice = ["Link", "Upload", "Last Generated Text2Img", "Last Generated ControlNet", "Last Generated Inpainting"]        
+        self.preview_display = widgets.Image()
+        self.preview_vbox = widgets.VBox([
+            widgets.HTML(value="<hr>"),
+            widgets.HBox([widgets.Label(value="Preview")], layout=widgets.Layout(justify_content="center")),
+            self.preview_display,
+            widgets.HTML(value="<hr>"),
+        ])
+        self.preview(None, None, None, blank=True)
 
         # Canny
         #___________________________________________________________________________________________________________________________  
@@ -296,7 +314,6 @@ class ControlNetSettings:
         self.canny_link_widget = widgets.Text(value=cfg[15] if self.link_widget_verifier(cfg[15]) else "", description="Canny Link", placeholder="Image link")
 
         self.canny_output = widgets.Output()
-        self.canny_image = widgets.Image()
         self.canny_dropdown = widgets.Dropdown(options=self.controlnet_dropdown_choice, value=self.dropdown_selector_upon_starting(self.canny_link_widget.value), disabled=False, description="Reference Image")
         self.canny_min_slider = widgets.IntSlider(min=10, max=500, step=5, value=cfg[16] if cfg else 100, description="Min Threshold")
         self.canny_max_slider = widgets.IntSlider(min=100, max=750, step=5, value=cfg[17] if cfg else 240, description="Max Threshold")
@@ -304,13 +321,11 @@ class ControlNetSettings:
         self.canny_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[19] if cfg else 0.7, description="Canny Strength")
         self.canny_preview_button = widgets.Button(description="Preview")
         self.canny_settings = widgets.VBox([self.canny_output, self.canny_toggle])
-        self.canny_ui = widgets.HBox([self.canny_settings], continuous_update=True)
 
         self.canny_popup({"new": self.canny_toggle.value})
         self.canny_upload.observe(self.canny_upload_handler, names="value")
         self.canny_preview_button.on_click(lambda b: self.preview(
             self.canny_link_widget.value, "canny", self.canny_output, 
-            self.canny_image, self.canny_ui, self.canny_settings,
         ))
         #___________________________________________________________________________________________________________________________
 
@@ -320,19 +335,16 @@ class ControlNetSettings:
         self.depth_map_link_widget = widgets.Text(value=cfg[20] if self.link_widget_verifier(cfg[20]) else "", description="DepthMap Link", placeholder="Image link")
 
         self.depth_output = widgets.Output()
-        self.depth_image = widgets.Image()
         self.depthmap_dropdown = widgets.Dropdown(options=self.controlnet_dropdown_choice, value=self.dropdown_selector_upon_starting(self.depth_map_link_widget.value), disabled=False, description="Reference Image")
         self.depth_map_toggle = widgets.Checkbox(value=cfg[21] if cfg else False, description="Enable Depth Map")
         self.depth_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[22] if cfg else 0.7, description="Depth Strength")
         self.depth_preview_button = widgets.Button(description="Preview")
         self.depth_settings = widgets.VBox([self.depth_output, self.depth_map_toggle])
-        self.depth_ui = widgets.HBox([self.depth_settings], continuous_update=True)
 
         self.depthmap_popup({"new": self.depth_map_toggle.value})
         self.depth_upload.observe(self.depthmap_upload_handler, names="value")
         self.depth_preview_button.on_click(lambda b: self.preview(
             self.depth_map_link_widget.value, "depth", self.depth_output, 
-            self.depth_image, self.depth_ui, self.depth_settings,
         ))
         #___________________________________________________________________________________________________________________________
         
@@ -342,19 +354,16 @@ class ControlNetSettings:
         self.openpose_link_widget = widgets.Text(value=cfg[23] if self.link_widget_verifier(cfg[23]) else "", description="OpenPose Link", placeholder="Image link")
 
         self.openpose_output = widgets.Output()
-        self.openpose_image = widgets.Image()
         self.openpose_dropdown = widgets.Dropdown(options=self.controlnet_dropdown_choice, value=self.dropdown_selector_upon_starting(self.openpose_link_widget.value), disabled=False, description="Reference Image")
         self.openpose_toggle = widgets.Checkbox(value=cfg[24] if cfg else False, description="Enable OpenPose")
         self.openpose_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[25] if cfg else 0.7, description="OpenPose Strength")
         self.openpose_preview_button = widgets.Button(description="Preview")
         self.openpose_settings = widgets.VBox([self.openpose_output, self.openpose_toggle])
-        self.openpose_ui = widgets.HBox([self.openpose_settings], continuous_update=True)
 
         self.openpose_popup({"new": self.openpose_toggle.value})
         self.openpose_upload.observe(self.openpose_upload_handler, names="value")
         self.openpose_preview_button.on_click(lambda b: self.preview(
-            self.openpose_link_widget.value, "openpose", self.openpose_output, 
-            self.openpose_image, self.openpose_ui, self.openpose_settings,
+            self.openpose_link_widget.value, "openpose", self.openpose_output,
         ))
         #___________________________________________________________________________________________________________________________
 
@@ -372,11 +381,11 @@ class ControlNetSettings:
 
         self.controlnet_selections = widgets.VBox([
             widgets.HTML(value="<hr>"), 
-            self.canny_ui, 
+            self.canny_settings, 
             widgets.HTML(value="<hr>"), 
-            self.depth_ui, 
+            self.depth_settings, 
             widgets.HTML(value="<hr>"), 
-            self.openpose_ui, 
+            self.openpose_settings, 
             widgets.HTML(value="<hr>")
         ])
 
