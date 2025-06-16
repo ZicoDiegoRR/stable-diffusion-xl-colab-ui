@@ -12,6 +12,7 @@ class ControlNetSettings:
     # Collect every widget into a single VBox
     def wrap_settings(self):
         return widgets.VBox([
+            self.preview_vbox,
             self.prompts_section,
             self.image_resolution_section,
             self.generation_parameter_section,
@@ -103,7 +104,7 @@ class ControlNetSettings:
         else:
             return "inpaint"
 
-    def preview(self, img, type, output, blank=False):
+    def preview(self, img, type, output, blank=False): # Function to display the preview
         if not blank:
             output.clear_output()
             with output:
@@ -302,8 +303,8 @@ class ControlNetSettings:
         self.preview_display = widgets.Image()
         self.preview_vbox = widgets.VBox([
             widgets.HTML(value="<hr>"),
-            widgets.HBox([widgets.Label(value="Preview")], layout=widgets.Layout(justify_content="center")),
-            self.preview_display,
+            widgets.Label(value="Preview:"),
+            widgets.HBox([self.preview_display], layout=widgets.Layout(justify_content="center")),
             widgets.HTML(value="<hr>"),
         ])
         self.preview(None, None, None, blank=True)
