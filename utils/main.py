@@ -59,7 +59,7 @@ def save_last(filename, data, type):
         print(f"Error occurred: {e}")
 
 # Initializing image generation
-def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary, widgets_change, base_path):
+def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary, widgets_change, base_path, get_image_class):
     # Initialization
     pipeline_type = ""
     if len(values_in_list) == 15:
@@ -232,6 +232,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         main.controlnet,
         main.images,
         main.controlnets_scale,
+        get_image_class,
     )
     
     # Handling pipeline and model loading
