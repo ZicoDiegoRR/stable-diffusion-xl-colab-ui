@@ -47,8 +47,8 @@ def controlnet_path_selector(path, type, base_path):
         pipeline_type = type
     return cn_image, pipeline_type
 
-def flush(index, images, controlnets_scale):
-    for element in [images, controlnets_scale]:
+def flush(index, images, controlnets_scale, controlnet_modes):
+    for element in [images, controlnets_scale, controlnet_modes]:
         element[index] = None
 
 # Loading the ControlNet if activated
@@ -68,19 +68,21 @@ def load(
     controlnet,
     images,
     controlnets_scale,
+    controlnet_modes,
     get_image_class,
 ):
     controlnet_weight = controlnet
     image = images
     controlnet_scale = controlnets_scale
+    controlnet_mode = controlnet_modes
     
     # Deleting images and scales for inactivated ControlNet
     if not Canny and images[0]:
-        flush(index, images, controlnets_scale)
+        flush(index, image, controlnet_scale, controlnet_mode)
     elif not Depth_Map and images[1]:
-        flush(index, images, controlnets_scale)
+        flush(index, image, controlnet_scale, controlnet_mode)
     elif not Open_Pose and images[2]:
-        flush(index, images, controlnets_scale)
+        flush(index, image, controlnet_scale, controlnet_mode)
     
     # Loading ControlNet
     if (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
@@ -94,11 +96,12 @@ def load(
             canny_image = get_image_class.get_canny(Canny_link)
             canny_width, canny_height = Canny_link.size
             
-            print("Canny Edge Detection is complete.")
-            display(make_image_grid([Canny_link, canny_image.resize((canny_width, canny_height))], rows=1, cols=2))
-            
             image[0] = canny_image.resize((1024, 1024))
             controlnet_scale[0] = Canny_Strength
+            controlnet_mode[0] = 3 # For canny/lineart/anime_lineart/mlsd
+
+            print("Canny Edge Detection is complete.")
+            display(make_image_grid([Canny_link, canny_image.resize((canny_width, canny_height))], rows=1, cols=2))
             
         # Handling Depth Map
         if Depth_Map and Depthmap_Link is not None:
@@ -111,6 +114,7 @@ def load(
             depth_width, depth_height = Depthmap_Link.size
             controlnet_scale[1] = Depth_Strength
             image[1] = depth_map
+            controlnet_mode[0] = 1 # For depth
             
             print("Depth Map is complete.")
             display(make_image_grid([Depthmap_Link, depth_map_display.resize((depth_width, depth_height))], rows=1, cols=2))
@@ -123,8 +127,9 @@ def load(
             
             image[2] = openpose_image.resize((1024, 1024))
             controlnet_scale[2] = Open_Pose_Strength
+            controlnet_mode[0] = 0 # For openpose
             
             print("Open Pose is done.")
             display(make_image_grid([Openpose_Link, openpose_image.resize((openpose_width, openpose_height))], rows=1, cols=2))
 
-    return controlnet_weight, image, controlnet_scale
+    return controlnet_weight, image, controlnet_scale, controlnet_mode
