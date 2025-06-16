@@ -101,6 +101,7 @@ class UIWrapper:
                         self.embeddings.ti_urls_widget,
                      ],
                      self.base_path,
+                     self.controlnet.return_get_image_class()
             )
             self.has_load_model = True
             if self.model_widget.value.startswith(("https://", "http://")):
