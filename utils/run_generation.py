@@ -14,6 +14,7 @@ def generate(
     image_embeds=None,
     inpaint_image=None,
     mask_image=None,
+    controlnet_modes=None,
     controlnets_scale=None,
     images=None,
     ref_image=None,
@@ -49,6 +50,7 @@ def generate(
     elif pipeline_type == "controlnet": # For ControlNet
         image_prefix = "[ControlNet]"
         generation_arguments["control_image"] = [element for element in images if element is not None]
+        generation_arguments["control_mode"] = [element for element in controlnet_modes if element is not None]
         generation_arguments["controlnet_conditioning_scale"] = [element for element in controlnets_scale if element is not None]
 
     else: # For Img2img
