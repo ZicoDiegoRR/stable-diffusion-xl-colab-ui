@@ -37,5 +37,8 @@ class ControlNetImage:
 
     # Initiate two image estimators
     def load_pipe(self):
+        print("Loading Depth Map Estimator...")
         self.depth_estimator = pipe("depth-estimation", device="cpu")
+        
+        print("Loading Open Pose Detector...")
         self.openpose_estimator = OpenposeDetector.from_pretrained("lllyasviel/ControlNet").to("cpu")
