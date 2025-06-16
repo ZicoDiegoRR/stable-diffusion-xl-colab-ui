@@ -115,7 +115,7 @@ def load(
             depth_width, depth_height = Depthmap_Link.size
             controlnet_scale[1] = Depth_Strength
             image[1] = depth_map
-            controlnet_mode[0] = 1 # For depth
+            controlnet_mode[1] = 1 # For depth
             
             print("Depth Map is complete.")
             display(make_image_grid([Depthmap_Link, depth_map_display.resize((depth_width, depth_height))], rows=1, cols=2))
@@ -128,7 +128,7 @@ def load(
             
             image[2] = openpose_image.resize((1024, 1024))
             controlnet_scale[2] = Open_Pose_Strength
-            controlnet_mode[0] = 0 # For openpose
+            controlnet_mode[2] = 0 # For openpose
             
             print("Open Pose is done.")
             display(make_image_grid([Openpose_Link, openpose_image.resize((openpose_width, openpose_height))], rows=1, cols=2))
