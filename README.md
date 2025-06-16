@@ -42,7 +42,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
   
 |     | Features                                                                                                                     |
 |-----|------------------------------------------------------------------------------------------------------------------------------|
-| 1.  | Base pipelines and autoencoder (ControlNetUnion, Inpainting, VAE, Text2Img)                                                  |
+| 1.  | Base pipelines and autoencoder (ControlNet, Inpainting, VAE, Text2Img)                                                       |
 | 2.  | Base adapters (LoRA, IP-Adapter)                                                                                             |
 | 3.  | IPyWidgets                                                                                                                   |
 | 4.  | Saving and loading parameters                                                                                                |
@@ -63,6 +63,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 19. | URL saving system to save any previously-inputted URLs into a JSON file and access them with filenames only                  |
 | 20. | Preview buttons to display ControlNet's converted image                                                                      |
 | 21. | `components` integration for memory-sharing between pipelines to avoid OutOFMemory error due to independent tensors          |
+| 22. | Implementation of `ControlNetUnion` for better memory management and scalable approach                                       |
 
 </details>
 
