@@ -21,7 +21,7 @@ def load_param(filename):
             params = json.load(f)
         return params
     except FileNotFoundError:
-        return None
+        return {}
 
 class UIWrapper:
     # Displaying the submit button and resetting the history
@@ -125,9 +125,13 @@ class UIWrapper:
 
     # Reload the combobox options
     def refresh_model(self):
-        saved_models = load_param(f"{self.base_path}/Saved Parameters/URL/urls.json")["Checkpoint"]
-        saved_hf_models = saved_models["hugging_face"] if "hugging_face" in saved_models else []
-        self.model_widget.options = list(saved_models["keyname_to_url"].keys()) + saved_hf_models
+        saved_models = load_param(f"{self.base_path}/Saved Parameters/URL/urls.json").get("Checkpoint")
+        saved_hf_models = saved_models["hugging_face"] if saved_models and "hugging_face" in saved_models else []
+        if not saved_models:
+            model_options = []
+        else:
+            model_options = list(saved_models["keyname_to_url"].keys())
+        self.model_widget.options = model_options + saved_hf_models
 
     # Download models from model widget
     def load_model(self, url, hf_token, civit_token, base_path):
