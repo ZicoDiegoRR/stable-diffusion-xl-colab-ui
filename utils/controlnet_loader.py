@@ -88,6 +88,7 @@ def load(
     if (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
         # Loading the weight if hasn't been loaded
         if not controlnet:
+            print("Loading ControlNetUnion...")
             controlnet_weight = ControlNetUnionModel.from_pretrained("xinsir/controlnet-union-sdxl-1.0", torch_dtype=torch.float16)
             
         # Handling Canny
