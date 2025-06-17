@@ -135,6 +135,7 @@ class UIWrapper:
 
     # Download models from model widget
     def load_model(self, url, hf_token, civit_token, base_path):
+        # Initialize
         self.model_output.clear_output()
         progress_bar = widgets.IntProgress(value=0, min=0, max=100)
         self.model_settings.children = [
@@ -144,54 +145,39 @@ class UIWrapper:
                 self.model_widget, self.model_load_widget
             ]),
         ]
+
+        # Output
+        if url.count("/") == 1: # For Hugging Face's models
+            output_msg = f"{self.loaded_model} is a Hugging Face model's format."
+        else: # For any non-Hugging Face's models
+            output_msg = f"{self.loaded_model} has been downloaded."
+
         if not self.has_load_model:
-            if url.count("/") == 1:
-                self.loaded_model = url
-                with self.model_output:
-                    print(f"{self.loaded_model} is a Hugging Face model's format. Click 'Generate' to download and use it.")
-            else:
-                self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path, tqdm=False, widget=progress_bar)))
-                self.text2img.model_widget.value = self.loaded_model
-                self.refresh_model()
-                self.model_widget.value = self.loaded_model
-                with self.model_output:
-                    print(f"{self.loaded_model} has been downloaded. Click 'Generate' to use it.")
-                
-            self.model_settings.children = [
-                self.model_output,
-                self.model_label,
-                widgets.HBox([
-                    self.model_widget, self.model_load_widget
-                ]),
-            ]
+            follow_up_msg = "Click `Generate` to use it."
         else:
-            if url.count("/") == 1:
-                self.loaded_model = url
-                with self.model_output:
-                    print(f"{self.loaded_model} is a Hugging Face model's format. Restart the runtime first to apply changes in the model.")
-            else:
-                self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path, tqdm=False, widget=progress_bar)))
-                self.refresh_model()
-                self.model_widget.value = self.loaded_model
-                self.model_settings.children = [
-                    self.model_output,
-                    self.model_label,
-                    widgets.HBox([
-                        self.model_widget, self.model_load_widget
-                    ]),
-                    self.restart_button,
-                ]
-                with self.model_output:
-                    print(f'{self.loaded_model} has been downloaded. Restart the runtime first to apply changes in the model.')
-                
-            self.model_settings.children = [
-                self.model_output,
-                self.model_label,
-                widgets.HBox([
-                    self.model_widget, self.model_load_widget
-                ]),
-                self.restart_button,
-            ]
+            follow_up_msg = "Restart the runtime to apply changes of the model."
+
+        # Download
+        self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path, tqdm=False, widget=progress_bar)))
+        self.refresh_model()
+        self.model_widget.value = self.loaded_model
+        output_msg = f"{self.loaded_model} has been downloaded. Click 'Generate' to use it."      
+        self.model_settings.children = [
+            self.model_output,
+            self.model_label,
+            widgets.HBox([
+                self.model_widget, self.model_load_widget
+            ]),
+        ] if not self.has_load_model else [
+            self.model_output,
+            self.model_label,
+            widgets.HBox([
+                self.model_widget, self.model_load_widget
+            ]),
+            self.restart_button,
+        ]
+        with self.model_output:
+            print(f"{output_msg} {follow_up_msg}")
     
     # Final phase of merging a pipeline's general parameters to the selected pipeline
     def merge_final_phase(self, init, destination, index, text2img, img2img, controlnet): # Doing merging
