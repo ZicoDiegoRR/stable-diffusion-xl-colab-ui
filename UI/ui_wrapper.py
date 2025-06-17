@@ -160,8 +160,7 @@ class UIWrapper:
         # Download
         self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path, tqdm=False, widget=progress_bar)))
         self.refresh_model()
-        self.model_widget.value = self.loaded_model
-        output_msg = f"{self.loaded_model} has been downloaded. Click 'Generate' to use it."      
+        self.model_widget.value = self.loaded_model 
         self.model_settings.children = [
             self.model_output,
             self.model_label,
