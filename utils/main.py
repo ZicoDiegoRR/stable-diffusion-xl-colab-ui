@@ -218,7 +218,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     
     # Handling ControlNet
     main.controlnet, main.images, main.controlnets_scale, main.controlnet_modes = controlnet_loader.load(
-        main.pipeline,
         Canny,
         Canny_link,
         minimum_canny_threshold,
@@ -238,7 +237,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     )
     
     # Handling pipeline and model loading
-    main.pipeline = pipeline_selector.load_pipeline(
+    main.pipeline, used_pipeline = pipeline_selector.load_pipeline(
         main.pipeline,
         Model, 
         widgets_change[1], 
@@ -320,7 +319,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         
     # Generating image
     prefix, image = run_generation.generate(
-        main.pipeline,
+        used_pipeline,
         pipeline_type,
         conditioning,
         pooled,
