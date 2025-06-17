@@ -89,12 +89,15 @@ def load(
         # Loading the weight if hasn't been loaded
         if not controlnet:
             print("Loading ControlNetUnion...")
-            controlnet_weight = ControlNetUnionModel.from_pretrained("xinsir/controlnet-union-sdxl-1.0", torch_dtype=torch.float16)
+            controlnet_weight = ControlNetUnionModel.from_pretrained(
+                "xinsir/controlnet-union-sdxl-1.0", 
+                torch_dtype=torch.float16
+            )
             
         # Handling Canny
         if Canny and Canny_link is not None:
             print("Converting image with Canny Edge Detection...")
-            canny_image = get_image_class.get_canny(Canny_link)
+            canny_image = get_image_class.get_canny(Canny_link, minimum_canny_threshold, maximum_canny_threshold)
             canny_width, canny_height = Canny_link.size
             
             image[0] = canny_image.resize((1024, 1024))
