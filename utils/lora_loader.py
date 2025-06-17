@@ -13,6 +13,9 @@ def load_downloaded_lora(pipe, link, scales, names):
 
         except Exception as e:
             print(f"Skipped {name}. Reason: {e}")
+    
+    if name_list:
+        pipe.set_adapters(name_list, adapter_weights=scale_list)
 
 def download_lora(pipe, link, scale, widget, hf_token, civit_token, base_path):
     lora_names = []
