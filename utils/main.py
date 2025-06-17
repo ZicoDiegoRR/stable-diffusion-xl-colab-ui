@@ -350,7 +350,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     save_param(f"{base_path}/Saved Parameters/main_parameters.json", dictionary)
 
     # Saving the last generated image's path
-    last_generation_json = os.path.join(base_path, "last_generation.json")
+    last_generation_json = os.path.join(f"{base_path}/Saved Parameters", "last_generation.json")
     save_last(last_generation_json, generated_image_savefile, prefix)
 
     # Displaying the image
