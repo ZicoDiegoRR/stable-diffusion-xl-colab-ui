@@ -78,11 +78,11 @@ def load(
     
     # Deleting images and scales for inactivated ControlNet
     if not Canny and images[0]:
-        flush(index, image, controlnet_scale, controlnet_mode)
+        flush(0, image, controlnet_scale, controlnet_mode)
     elif not Depth_Map and images[1]:
-        flush(index, image, controlnet_scale, controlnet_mode)
+        flush(1, image, controlnet_scale, controlnet_mode)
     elif not Open_Pose and images[2]:
-        flush(index, image, controlnet_scale, controlnet_mode)
+        flush(2, image, controlnet_scale, controlnet_mode)
     
     # Loading ControlNet
     if (Canny or Depth_Map or Open_Pose) and (Canny_link or Depthmap_Link or Openpose_Link):
