@@ -23,7 +23,7 @@ class Img2ImgSettings:
         return [
             self.prompt_widget,
             self.negative_prompt_widget,
-            "",
+            self.model_widget,
             self.width_slider,
             self.height_slider,
             self.steps_slider,
