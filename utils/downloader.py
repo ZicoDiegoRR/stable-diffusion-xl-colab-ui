@@ -1,3 +1,4 @@
+from safetensors.torch import load_file
 from tqdm import tqdm
 import requests
 import json
@@ -20,56 +21,38 @@ def load_param(filename):
             "VAE": {
                 "keyname_to_url": {
                     "weight": {
-
                     },
                     "config": {
-                    
                     }
                 },
                 "url_to_keyname": {
                     "weight": {
-                    
                     },
                     "config": {
-                    
                     }
                 },
-                "hugging_face": [
-                    
-                ],
+                "hugging_face": [],
             },
             "Checkpoint": {
                 "keyname_to_url": {
-                    
                 },
                 "url_to_keyname": {
-                    
                 },
-                "hugging_face": [
-                    
-                ],
+                "hugging_face": [],
             },
             "LoRAs": {
                 "keyname_to_url": {
-                    
                 },
                 "url_to_keyname": {
-                    
                 },
-                "hugging_face": [
-                    
-                ],
+                "hugging_face": [],
             },
             "Embeddings": {
                 "keyname_to_url": {
-                    
                 },
                 "url_to_keyname": {
-                    
                 },
-                "hugging_face": [
-                    
-                ],
+                "hugging_face": [],
             },
         }
 
@@ -80,6 +63,21 @@ def sanitize_filename(filename):
 
     return safe_name + ext
 
+# Check if the download is corrupt
+def is_corrupt(path):
+    try:
+        if not path.endswith(".json"):
+            tensor_check = load_file(path)
+            _ = list(tensor_check.items())
+            return False
+        else:
+            with(path, "r") as f:
+                json.load(f)
+            return False
+            
+    except Exception as e:
+        return True
+        
 # Search for a match
 def search(type, name):
     for dir in os.listdir(f"/content/{type}"):
@@ -146,8 +144,11 @@ def download(url, type, hf_token, civit_token, key=None, tqdm_bool=True, widget=
         else:
             download_req = requests.get(download_url, stream=True)
 
+        # Request
         filename_content_disposition = download_req.headers.get("Content-Disposition")
         file_total_size = int(download_req.headers.get("content-length", 0))
+        
+        # Get the filename
         if filename_content_disposition:
             filename_find = re.search(r"filename=['\"]?([^'\"]+)['\"]?", filename_content_disposition)
             if filename_find:
@@ -158,11 +159,12 @@ def download(url, type, hf_token, civit_token, key=None, tqdm_bool=True, widget=
             download_filename = sanitize_filename(os.path.basename(url) + ".safetensors")
 
         full_path = f"{download_folder}/{download_filename}"
-        
+
+        # Return the full_path if exists
         if os.path.exists(full_path):
             return full_path
             
-        # Save
+        # Download the file
         if tqdm_bool:
             with open(full_path, "wb") as f, tqdm(
                 desc=download_filename,
@@ -181,6 +183,12 @@ def download(url, type, hf_token, civit_token, key=None, tqdm_bool=True, widget=
                     f.write(chunk)
                     downloaded += len(chunk)
                     widget.value = int((downloaded / file_total_size) * 100)
+
+        # Return an empty string if the file is corrupted
+        if is_corrupt(full_path):
+            os.remove(full_path)
+            return ""
+            
     else:
         full_path = url
 
