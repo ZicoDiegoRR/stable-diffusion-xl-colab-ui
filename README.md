@@ -65,6 +65,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 21. | Preview buttons to display ControlNet's converted image                                                                      |
 | 22. | `components` integration for memory-sharing between pipelines to avoid OutOFMemory error due to independent tensors          |
 | 23. | Implementation of `ControlNetUnion` for better memory management and scalable approach                                       |
+| 24. | Corrupted-download deletion logic for resilience                                                                           |
 
 </details>
 
