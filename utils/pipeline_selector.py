@@ -47,6 +47,8 @@ def load_pipeline(pipe, model_url, widget, pipeline_type, format="safetensors", 
                 os.makedirs("/content/Checkpoint", exist_ok=True)
                 widget.value, _ = os.path.splitext(os.path.basename(Model_path))
                 pipeline = StableDiffusionXLPipeline.from_single_file(Model_path, torch_dtype=torch.float16).to("cuda")
+        else:
+            pipeline = pipe
                 
         if pipeline_type == "text2img" and not active_inpaint:
             used_pipeline = StableDiffusionXLPipeline(**pipeline.components).to("cuda")
