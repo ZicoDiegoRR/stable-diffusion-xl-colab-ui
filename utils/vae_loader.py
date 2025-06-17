@@ -113,10 +113,14 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
             for_vae_current = os.path.splitext(os.path.basename(vae_path[0])) 
 
         # Load
-        vae = autoencoderkl_load(vae_path)
+        if vae_path[0]:
+            vae = autoencoderkl_load(vae_path)
 
-        # Add new value to the vae_current
-        loaded_vae, _ = os.path.splitext(os.path.basename(vae_path[0])) 
+            # Add new value to the vae_current
+            loaded_vae, _ = os.path.splitext(os.path.basename(vae_path[0])) 
+        
+        else:
+            return None, None
     
     # Skipping the VAE if the model is still in an URL form, but the config is empty
     elif vae_url_checker(model_path) and not config_path:
