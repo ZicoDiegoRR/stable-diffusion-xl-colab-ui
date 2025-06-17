@@ -1,13 +1,8 @@
 from diffusers.utils import load_image, make_image_grid
-from controlnet_aux import OpenposeDetector
-from transformers import pipeline as pipe
 from diffusers import ControlNetUnionModel
 from IPython.display import display
-from PIL import Image as ImagePIL
-import numpy as np
 import torch
 import json
-import cv2
 import os
 
 # Loading the path of the latest generated images
@@ -53,7 +48,6 @@ def flush(index, images, controlnets_scale, controlnet_modes):
 
 # Loading the ControlNet if activated
 def load(
-    pipeline,
     Canny,
     Canny_link,
     minimum_canny_threshold,
