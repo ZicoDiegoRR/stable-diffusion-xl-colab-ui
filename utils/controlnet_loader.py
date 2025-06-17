@@ -12,11 +12,11 @@ def load_last(filename, type):
             data = json.load(file)
             return data.get(type, None)
     except (FileNotFoundError, json.JSONDecodeError):
-        return None
+        return {}
 
 # Selecting the image based on secret keywords
 def controlnet_path_selector(path, type, base_path):
-    last_generation_loading = os.path.join(base_path, "last_generation.json")
+    last_generation_loading = os.path.join(f"{base_path}/Saved Parameters", "last_generation.json")
     try:
         if path == "inpaint":
             cn_path = load_last(last_generation_loading, 'inpaint')                     
