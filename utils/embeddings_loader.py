@@ -33,7 +33,7 @@ def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token,
                     ti_check = url
                 textual_inversion_path = downloader.download_file(url, "Embeddings", hf_token, civit_token, base_path)
 
-            if textual_inversion_path and token[i]:
+            if textual_inversion_path and token[i] and not token[i].isspace():
                 unique_ti_urls.append(url)
                 ti_path.append(textual_inversion_path)
 
