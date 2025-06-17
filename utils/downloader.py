@@ -76,9 +76,7 @@ def load_param(filename):
 # Filter out any unsafe characters
 def sanitize_filename(filename):
     name, ext = os.path.splitext(filename)
-
-    # Replace all unsafe characters with underscores
-    safe_name = re.sub(r'[^\w\-_.]', '_', name)
+    safe_name = re.sub(r'[\\/:"*?<>.|]+', "_", name) # Replace all unsafe characters with underscores
 
     return safe_name + ext
 
