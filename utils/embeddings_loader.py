@@ -33,7 +33,7 @@ def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token,
                     ti_check = url
                 textual_inversion_path = downloader.download_file(url, "Embeddings", hf_token, civit_token, base_path)
 
-            if textual_inversion_path:
+            if textual_inversion_path and token[i]:
                 unique_ti_urls.append(url)
                 ti_path.append(textual_inversion_path)
 
@@ -43,7 +43,10 @@ def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token,
 
                 widget_value = widget.value.replace(url, split_filename)
                 widget.value = widget_value
-            else:
+            elif not token[i] or token[i].isspace():
+                print(f"The token for {url} is empty or contains whitespaces only. This isn't supported in textual inversion.")
+                print(f"Skipped {url}.")
+            else: 
                 print(f"It seems like {url} is an invalid path or doesn't exist. Make sure to put a correct path to ensure the weight being loaded correctly.")
                 print(f"Skipped {url}.")
 
@@ -51,8 +54,8 @@ def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token,
         
 def process(pipe, link, token, widget, hf_token, civit_token, base_path):
     # Preprocessing the urls and weight before downloading
-    ti_links = [word for word in re.split(r"\s*,\s*", link)]
-    ti_tokens = [word for word in re.split(r"\s*,\s*", token)]
+    ti_links = re.split(r"\s*,\s*", link)
+    ti_tokens = re.split(r"\s*,\s*", token)
     
     os.makedirs("/content/Embeddings", exist_ok=True)
 
