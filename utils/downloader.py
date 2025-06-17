@@ -80,9 +80,6 @@ def sanitize_filename(filename):
     # Replace all unsafe characters with underscores
     safe_name = re.sub(r'[^\w\-_.]', '_', name)
 
-    # Optional: collapse multiple underscores
-    safe_name = re.sub(r'_+', '_', safe_name)
-
     return safe_name + ext
 
 # Search for a match
