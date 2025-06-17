@@ -11,7 +11,8 @@ from diffusers import (
 )
 from StableDiffusionXLColabUI.utils import downloader
 
-def raise_error(Model_path):
+# Will raise an error if the program fails to load the model
+def raise_error(Model_path, hf_token, civit_token):
     if not os.path.exists(Model_path):
         Error = f"Model {Model_path} doesn't exist."
         Warning = ""
@@ -40,19 +41,17 @@ def load_pipeline(pipe, model_url, widget, pipeline_type, format="safetensors", 
         try:
             if not pipe:
                 pipeline = StableDiffusionXLPipeline.from_pretrained(model_url, torch_dtype=torch.float16).to("cuda")
-            else: 
-                pipeline = pipe
                 
-            if pipeline_type == "text2img" and not active_inpaint and not isinstance(pipeline, StableDiffusionXLPipeline):
-                pipeline = StableDiffusionXLPipeline(**pipeline.components).to("cuda")
-            elif active_inpaint and pipeline_type == "inpaint" and not isinstance(pipeline, StableDiffusionXLInpaintPipeline):
-                pipeline = StableDiffusionXLInpaintPipeline(**pipeline.components).to("cuda")
-            elif pipeline_type == "controlnet" and not isinstance(pipeline, StableDiffusionXLControlNetUnionPipeline):
-                pipeline = StableDiffusionXLControlNetUnionPipeline(**pipeline.components, controlnet=controlnets).to("cuda")
-            elif pipeline_type == "img2img" and  not isinstance(pipeline, StableDiffusionXLImg2ImgPipeline):
-                pipeline = StableDiffusionXLImg2ImgPipeline(**pipeline.components).to("cuda")
+            if pipeline_type == "text2img" and not active_inpaint:
+                used_pipeline = StableDiffusionXLPipeline(**pipeline.components).to("cuda")
+            elif active_inpaint and pipeline_type == "inpaint":
+                used_pipeline = StableDiffusionXLInpaintPipeline(**pipeline.components).to("cuda")
+            elif pipeline_type == "controlnet":
+                used_pipeline = StableDiffusionXLControlNetUnionPipeline(**pipeline.components, controlnet=controlnets).to("cuda")
+            elif pipeline_type == "img2img":
+                used_pipeline = StableDiffusionXLImg2ImgPipeline(**pipeline.components).to("cuda")
         except (ValueError, OSError):
-            raise_error(model_url)
+            raise_error(model_url, hf_token, civit_token)
 
     # For non-Hugging Face repository or Hugging Face direct link
     else:
@@ -63,18 +62,16 @@ def load_pipeline(pipe, model_url, widget, pipeline_type, format="safetensors", 
         try:
             if not pipe:
                 pipeline = StableDiffusionXLPipeline.from_single_file(Model_path, torch_dtype=torch.float16).to("cuda")
-            else: 
-                pipeline = pipe
                 
-            if pipeline_type == "text2img" and not active_inpaint and not isinstance(pipeline, StableDiffusionXLPipeline):
-                pipeline = StableDiffusionXLPipeline(**pipeline.components).to("cuda")
-            elif active_inpaint and pipeline_type == "inpaint" and not isinstance(pipeline, StableDiffusionXLInpaintPipeline):
-                pipeline = StableDiffusionXLInpaintPipeline(**pipeline.components).to("cuda")
-            elif pipeline_type == "controlnet" and not isinstance(pipeline, StableDiffusionXLControlNetUnionPipeline):
-                pipeline = StableDiffusionXLControlNetUnionPipeline(**pipeline.components, controlnet=controlnets).to("cuda")
-            elif pipeline_type == "img2img" and  not isinstance(pipeline, StableDiffusionXLImg2ImgPipeline):
-                pipeline = StableDiffusionXLImg2ImgPipeline(**pipeline.components).to("cuda")
+            if pipeline_type == "text2img" and not active_inpaint:
+                used_pipeline = StableDiffusionXLPipeline(**pipeline.components).to("cuda")
+            elif active_inpaint and pipeline_type == "inpaint":
+                used_pipeline = StableDiffusionXLInpaintPipeline(**pipeline.components).to("cuda")
+            elif pipeline_type == "controlnet":
+                used_pipeline = StableDiffusionXLControlNetUnionPipeline(**pipeline.components, controlnet=controlnets).to("cuda")
+            elif pipeline_type == "img2img":
+                used_pipeline = StableDiffusionXLImg2ImgPipeline(**pipeline.components).to("cuda")
         except (ValueError, OSError):
-            raise_error(model_url)
+            raise_error(model_url, hf_token, civit_token)
 
-    return pipeline
+    return pipeline, used_pipeline
