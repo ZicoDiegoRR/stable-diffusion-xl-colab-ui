@@ -148,7 +148,7 @@ class UIWrapper:
             if url.count("/") == 1:
                 self.loaded_model = url
                 with self.model_output:
-                    print(f"{self.loaded_model} is a Hugging Face model's format. Click 'Generate to download and use it.'")
+                    print(f"{self.loaded_model} is a Hugging Face model's format. Click 'Generate' to download and use it.")
             else:
                 self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path, tqdm=False, widget=progress_bar)))
                 self.text2img.model_widget.value = self.loaded_model
