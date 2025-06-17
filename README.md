@@ -61,9 +61,10 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 17. | Real-ESRGAN Image Upscaling                                                                                                  |
 | 18. | New parameters saving system (from a flat list to a dictionary) and a conversion method to convert old saves to the new ones |
 | 19. | URL saving system to save any previously-inputted URLs into a JSON file and access them with filenames only                  |
-| 20. | Preview buttons to display ControlNet's converted image                                                                      |
-| 21. | `components` integration for memory-sharing between pipelines to avoid OutOFMemory error due to independent tensors          |
-| 22. | Implementation of `ControlNetUnion` for better memory management and scalable approach                                       |
+| 20. | One model at a time for all pipelines instead of multiple models for each pipeline to avoid OutOfMemory error                |
+| 21. | Preview buttons to display ControlNet's converted image                                                                      |
+| 22. | `components` integration for memory-sharing between pipelines to avoid OutOFMemory error due to independent tensors          |
+| 23. | Implementation of `ControlNetUnion` for better memory management and scalable approach                                       |
 
 </details>
 
