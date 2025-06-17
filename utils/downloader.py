@@ -71,8 +71,8 @@ def is_corrupt(path):
             _ = list(tensor_check.items())
             return False
         else:
-            with(path, "r") as f:
-                json.load(f)
+            with open(path, "r") as f:
+                _ = f.read()
             return False
             
     except Exception as e:
