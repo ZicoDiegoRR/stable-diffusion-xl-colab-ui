@@ -73,6 +73,21 @@ def load_param(filename):
             },
         }
 
+import re
+import os
+
+# Filter out any unsafe characters
+def sanitize_filename(filename):
+    name, ext = os.path.splitext(filename)
+
+    # Replace all unsafe characters with underscores
+    safe_name = re.sub(r'[^\w\-_.]', '_', name)
+
+    # Optional: collapse multiple underscores
+    safe_name = re.sub(r'_+', '_', safe_name)
+
+    return safe_name + ext
+
 # Search for a match
 def search(type, name):
     for dir in os.listdir(f"/content/{type}"):
@@ -144,11 +159,11 @@ def download(url, type, hf_token, civit_token, key=None, tqdm_bool=True, widget=
         if filename_content_disposition:
             filename_find = re.search(r"filename=['\"]?([^'\"]+)['\"]?", filename_content_disposition)
             if filename_find:
-                download_filename = filename_find.group(1)
+                download_filename = sanitize_filename(filename_find.group(1))
             else:
-                download_filename = os.path.basename(url) + ".safetensors"
+                download_filename = sanitize_filename(os.path.basename(url) + ".safetensors") 
         else:
-            download_filename = os.path.basename(url) + ".safetensors"
+            download_filename = sanitize_filename(os.path.basename(url) + ".safetensors")
 
         full_path = f"{download_folder}/{download_filename}"
         
