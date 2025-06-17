@@ -319,7 +319,7 @@ class UIWrapper:
             ensure_option=False
         )
         self.model_load_widget = widgets.Button(
-            description="🔄",
+            description="📥",
             layout=widgets.Layout(width="40px")
         )
         self.model_output = widgets.Output()
