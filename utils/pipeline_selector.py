@@ -36,42 +36,27 @@ def load_pipeline(pipe, model_url, widget, pipeline_type, format="safetensors", 
     # Download or input the URL or path to urls.json
     Model_path = downloader.download_file(model_url, "Checkpoint", hf_token, civit_token, base_path)
     
-    # For Hugging Face repository with "author/repo_name" format
-    if model_url.count("/") == 1 and (not model_url.startswith("https://") or not model_url.startswith("http://")):
-        try:
-            if not pipe:
+    try:
+        if not pipe:
+            # For Hugging Face repository with "author/repo_name" format
+            if model_url.count("/") == 1 and (not model_url.startswith("https://") or not model_url.startswith("http://")):
                 pipeline = StableDiffusionXLPipeline.from_pretrained(model_url, torch_dtype=torch.float16).to("cuda")
-                
-            if pipeline_type == "text2img" and not active_inpaint:
-                used_pipeline = StableDiffusionXLPipeline(**pipeline.components).to("cuda")
-            elif active_inpaint and pipeline_type == "inpaint":
-                used_pipeline = StableDiffusionXLInpaintPipeline(**pipeline.components).to("cuda")
-            elif pipeline_type == "controlnet":
-                used_pipeline = StableDiffusionXLControlNetUnionPipeline(**pipeline.components, controlnet=controlnets).to("cuda")
-            elif pipeline_type == "img2img":
-                used_pipeline = StableDiffusionXLImg2ImgPipeline(**pipeline.components).to("cuda")
-        except (ValueError, OSError):
-            raise_error(model_url, hf_token, civit_token)
 
-    # For non-Hugging Face repository or Hugging Face direct link
-    else:
-        os.makedirs("/content/Checkpoint", exist_ok=True)
-        widget.value, _ = os.path.splitext(os.path.basename(Model_path))
-                
-        # Load
-        try:
-            if not pipe:
+            # For non-Hugging Face repository or Hugging Face direct link
+            else:
+                os.makedirs("/content/Checkpoint", exist_ok=True)
+                widget.value, _ = os.path.splitext(os.path.basename(Model_path))
                 pipeline = StableDiffusionXLPipeline.from_single_file(Model_path, torch_dtype=torch.float16).to("cuda")
                 
-            if pipeline_type == "text2img" and not active_inpaint:
-                used_pipeline = StableDiffusionXLPipeline(**pipeline.components).to("cuda")
-            elif active_inpaint and pipeline_type == "inpaint":
-                used_pipeline = StableDiffusionXLInpaintPipeline(**pipeline.components).to("cuda")
-            elif pipeline_type == "controlnet":
-                used_pipeline = StableDiffusionXLControlNetUnionPipeline(**pipeline.components, controlnet=controlnets).to("cuda")
-            elif pipeline_type == "img2img":
-                used_pipeline = StableDiffusionXLImg2ImgPipeline(**pipeline.components).to("cuda")
-        except (ValueError, OSError):
-            raise_error(model_url, hf_token, civit_token)
+        if pipeline_type == "text2img" and not active_inpaint:
+            used_pipeline = StableDiffusionXLPipeline(**pipeline.components).to("cuda")
+        elif active_inpaint and pipeline_type == "inpaint":
+            used_pipeline = StableDiffusionXLInpaintPipeline(**pipeline.components).to("cuda")
+        elif pipeline_type == "controlnet":
+            used_pipeline = StableDiffusionXLControlNetUnionPipeline(**pipeline.components, controlnet=controlnets).to("cuda")
+        elif pipeline_type == "img2img":
+            used_pipeline = StableDiffusionXLImg2ImgPipeline(**pipeline.components).to("cuda")
+    except (ValueError, OSError):
+        raise_error(model_url, hf_token, civit_token)
 
     return pipeline, used_pipeline
