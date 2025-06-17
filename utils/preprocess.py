@@ -137,4 +137,12 @@ def run():
         print("Loading GPT-2 prompt generator...")
         gpt2_pipe = pipe('text-generation', model='Gustavosta/MagicPrompt-Stable-Diffusion', tokenizer='gpt2')
 
+    # Moving the last_generation.json to the Saved Parameters folder from previous versions
+    if os.path.exists(os.path.join(base_path, "last_generation.json")):
+        os.makedirs(f"{base_path}/Saved Parameters", exist_ok=True)
+        os.rename(
+            os.path.join(base_path, "last_generation.json"), 
+            os.path.join(f"{base_path}/Saved Parameters", "last_generation.json"),
+        )
+
     return cfg, ideas_line, gpt2_pipe, base_path
