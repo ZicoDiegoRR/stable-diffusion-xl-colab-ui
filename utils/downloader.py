@@ -73,9 +73,6 @@ def load_param(filename):
             },
         }
 
-import re
-import os
-
 # Filter out any unsafe characters
 def sanitize_filename(filename):
     name, ext = os.path.splitext(filename)
