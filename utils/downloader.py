@@ -260,7 +260,7 @@ def download_file(url, type, hf_token, civit_token, base_path, subfolder=None, t
                 returned_path = download(link, type, hf_token, civit_token, tqdm_bool=tqdm, widget=widget)
         else:
             print(f"It seems like {url} doesn't exist in both /content/{type} directory and urls.json file. Is it a correct path?")
-            returned_path = url
+            returned_path = ""
 
     save_param(f"{base_path}/Saved Parameters/URL/urls.json", saved_urls)
 
