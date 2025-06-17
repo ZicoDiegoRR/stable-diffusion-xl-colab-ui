@@ -59,7 +59,7 @@ class LoRALoader:
         for lora, scale in zip(lora_links, lora_scales):
             if lora:
                 self.lora_click(lora, float(scale), construct=True)
-        self.lora_construct_bool = True
+        self.lora_construct_bool = False
 
     def __init__(self, cfg):
         self.lora_urls_widget = widgets.Text(value=cfg[0] if cfg else "")
