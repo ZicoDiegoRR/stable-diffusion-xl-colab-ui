@@ -101,7 +101,7 @@ def is_exist(folder, name, type):
             subfolder = name
             weight_file = search(type, name)
 
-    full_path = f"{folder}/{subfolder}" if type == "VAE" else f"{folder}/{weight_file}"
+    full_path = f"{folder}/{type}/{subfolder}" if type == "VAE" else f"{folder}/{type}/{weight_file}"
 
     if type == "VAE":
         try:
