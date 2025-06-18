@@ -90,7 +90,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 </details>
 
 <details> <summary> Inpainting </summary>
-
+<br>
 Will be added soon.
 
 </details>
@@ -110,6 +110,18 @@ Will be added soon.
 <details> <summary> IP-Adapter </summary>
 
 ![ip_adapter](docs/ip_adapter.jpg)
+
+</details>
+
+<details> <summary> Real-ESRGAN </summary>
+
+![realesrgan](docs/realesrgan.jpg)
+
+</details>
+
+<details> <summary> History </summary>
+
+![history](docs/history.jpg)
 
 </details>
 
