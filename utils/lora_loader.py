@@ -33,6 +33,7 @@ def load_downloaded_lora(pipe, link, scales, names):
             print(f"Skipped {name}. Reason: {e}")
 
     if pipe.get_active_adapters():
+        pipe.set_adapters(name_list, scale_list)
         print("LoRA(s):")
         for name in pipe.get_active_adapters():
             print(name)
