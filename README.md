@@ -125,6 +125,26 @@ Will be added soon.
 
 </details>
 
+<details> <summary> Preset </summary>
+  
+<br>
+Save: <br>
+![save](docs/save.jpg)
+
+<br>
+Load: <br>
+![load](docs/load.jpg)
+
+<br>
+Renane: <br>
+![rename](docs/rename.jpg)
+
+<br>
+Delete: <br>
+![delete](docs/delete.jpg)
+
+</details>
+
 
 ## Token Saving (Optional)
 This notebook doesn't save your Hugging Face's token and CivitAI's token due to security concern. But, if you wish to save your tokens to your Google Drive or to your runtime, you can follow these steps.
