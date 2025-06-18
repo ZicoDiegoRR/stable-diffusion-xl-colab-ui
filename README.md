@@ -128,19 +128,23 @@ Will be added soon.
 <details> <summary> Preset </summary>
   
 <br>
-Save: <br>
+Save:
+
 ![save](docs/save.jpg)
 
 <br>
-Load: <br>
+Load: 
+
 ![load](docs/load.jpg)
 
 <br>
-Renane: <br>
+Renane: 
+
 ![rename](docs/rename.jpg)
 
 <br>
-Delete: <br>
+Delete: 
+
 ![delete](docs/delete.jpg)
 
 </details>
