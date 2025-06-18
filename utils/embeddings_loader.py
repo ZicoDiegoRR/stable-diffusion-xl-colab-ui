@@ -3,8 +3,24 @@ from safetensors.torch import load_file
 import re
 import os
 
+def unload_embeddings(pipe, loaded, tokens):
+    unload_ti = []
+    for ti in loaded:
+        if ti and ti not in tokens:
+            unload_ti.append(ti)
+
+    if unload_ti:
+        for ti in unload_ti:
+            print(f"Unloading {ti}...")
+            try:
+                pipe.unload_textual_inversion(tokens=ti, pipe=pipeline.text_encoder, tokenizer=pipe.tokenizer)
+                pipe.unload_textual_inversion(tokens=ti, text_encoder=pipe.text_encoder_2, tokenizer=pipe.tokenizer_2)
+            except Exception as e:
+                print(f"Unable to unload {ti}. Reason: {e}")
+
 def load_textual_inversion_from_link(pipe, link, token, name):
-    # Loading one by one
+    unload_embeddings(pipe, list(pipe.tokenizer.get_added_vocab().keys()), token)
+    
     for embed, tag, name in zip(link, token, name):
         try:
             ti_dict = load_file(embed)
