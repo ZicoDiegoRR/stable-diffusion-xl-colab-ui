@@ -138,7 +138,7 @@ Load:
 ![load](docs/load.jpg)
 
 <br>
-Renane: 
+Rename: 
 
 ![rename](docs/rename.jpg)
 
