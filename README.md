@@ -71,16 +71,9 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 
 ## Preview
 
-<details> <summary> Preview: </summary>
+<details> <summary> Text-to-image </summary>
 
-    <details> <summary> Tab:</summary>
 
-        <details> <summary> Text-to-image </summary>
-        
-        
-        </details>
-    
-    </details
 
 </details>
 
