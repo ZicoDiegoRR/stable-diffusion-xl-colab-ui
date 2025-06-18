@@ -73,7 +73,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 Work in progress
 
 ## Token saving (Optional)
-This notebook doesn't save your Hugging Face's token and CivitAI's token due to security concern. But, if you wish to save your tokens in your Google Drive or your runtime, you can follow these steps.
+This notebook doesn't save your Hugging Face's token and CivitAI's token due to security concern. But, if you wish to save your tokens to your Google Drive or your runtime, you can follow these steps.
 
 > [!CAUTION]\
 > I strongly don't recommend you to save your tokens anywhere else, especially if you share your Google Drive storage with anyone. Any potential exploitation or misuse of this method won't fall under my responsibility.
@@ -81,6 +81,7 @@ This notebook doesn't save your Hugging Face's token and CivitAI's token due to 
 Here are the steps to save your tokens to Google Drive storage or your runtime:
 1. Create a new cell first. This step is required to run the code.
 2. Copy this code and paste it into your new cell.
+
     ```python
     from google.colab import drive
     import json
@@ -104,8 +105,8 @@ Here are the steps to save your tokens to Google Drive storage or your runtime:
     with open(os.path.join(base_path, "token.json"), "w") as f:
         json.dump(token, f, indent=4)
     ```
-3. Fill the textboxes with your tokens. You can save it to your Google Drive storage by enabling `gdrive`.
-4. Run the cell. You'll see a file named `token.json` in the "Saved Parameters/Token" folder, indicating that the tokens are saved.
+4. Fill the textboxes with your tokens. You can save it to your Google Drive storage by enabling `gdrive`.
+5. Run the cell. You'll see a file named `token.json` in the "Saved Parameters/Token" folder, indicating that the tokens are saved.
 
 This step allows you to reuse the tokens without inputting them manually in the widgets. But, beware of any potential leak!
 
