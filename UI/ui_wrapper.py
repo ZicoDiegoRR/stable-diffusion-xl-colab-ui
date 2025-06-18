@@ -287,8 +287,8 @@ class UIWrapper:
         self.civit_label = widgets.Label(value="CivitAI:")
         self.hf_label = widgets.Label(value="Hugging Face:")
 
-        self.civit_token = widgets.Text(placeholder="Avoid unauthorized error", value=token_dict.get("civit_token", ""))
-        self.hf_token = widgets.Text(placeholder="Avoid unauthorized error", value=token_dict.get("hf_token", ""))
+        self.civit_token = widgets.Password(placeholder="Avoid unauthorized error", value=token_dict.get("civit_token", ""))
+        self.hf_token = widgets.Password(placeholder="Avoid unauthorized error", value=token_dict.get("hf_token", ""))
 
         self.token_section = widgets.HBox([
             widgets.VBox([self.civit_label, self.civit_token]),
