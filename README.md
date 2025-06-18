@@ -77,6 +77,19 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 
 </details>
 
+<details> <summary> Image-to-Image </summary>
+
+![img2img](docs/img2img.jpg)
+
+</details>
+
+<details> <summary> ControlNet </summary>
+
+![controlnet](docs/controlnet.jpg)
+
+</details>
+
+
 ## Token Saving (Optional)
 This notebook doesn't save your Hugging Face's token and CivitAI's token due to security concern. But, if you wish to save your tokens to your Google Drive or to your runtime, you can follow these steps.
 
