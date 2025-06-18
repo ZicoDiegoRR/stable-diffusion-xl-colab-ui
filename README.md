@@ -73,7 +73,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 
 <details> <summary> Text-to-image </summary>
 
-
+![text2img](docs/text2img.jpg)
 
 </details>
 
