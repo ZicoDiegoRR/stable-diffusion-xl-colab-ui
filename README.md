@@ -89,6 +89,30 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 
 </details>
 
+<details> <summary> Inpainting </summary>
+
+Will be added soon.
+
+</details>
+
+<details> <summary> LoRA </summary>
+
+![lora](docs/lora.jpg)
+
+</details>
+
+<details> <summary> Textual Inversion </summary>
+
+![embeddings](docs/embeddings.jpg)
+
+</details>
+
+<details> <summary> IP-Adapter </summary>
+
+![ip_adapter](docs/ip_adapter.jpg)
+
+</details>
+
 
 ## Token Saving (Optional)
 This notebook doesn't save your Hugging Face's token and CivitAI's token due to security concern. But, if you wish to save your tokens to your Google Drive or to your runtime, you can follow these steps.
