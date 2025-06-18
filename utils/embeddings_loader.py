@@ -13,7 +13,7 @@ def unload_embeddings(pipe, loaded, tokens):
         for ti in unload_ti:
             print(f"Unloading {ti}...")
             try:
-                pipe.unload_textual_inversion(tokens=ti, pipe=pipeline.text_encoder, tokenizer=pipe.tokenizer)
+                pipe.unload_textual_inversion(tokens=ti, pipe=pipe.text_encoder, tokenizer=pipe.tokenizer)
                 pipe.unload_textual_inversion(tokens=ti, text_encoder=pipe.text_encoder_2, tokenizer=pipe.tokenizer_2)
             except Exception as e:
                 print(f"Unable to unload {ti}. Reason: {e}")
