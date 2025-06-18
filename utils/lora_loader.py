@@ -2,7 +2,7 @@ from StableDiffusionXLColabUI.utils import downloader
 import re
 import os
 
-def unload_lora(loaded, lora_names):
+def unload_lora(pipe, loaded, lora_names):
     unload_lora = []
     for lora in loaded:
         if lora and lora not in lora_names:
@@ -18,10 +18,10 @@ def load_downloaded_lora(pipe, link, scales, names):
     name_list = []
     loaded_lora = pipe.get_active_adapters()
     if len(loaded_lora) < len(names):
-        for i in range(len(name) - len(loaded_lora)):
+        for i in range(len(names) - len(loaded_lora)):
             loaded_lora.append(None)
 
-    unload_lora(loaded_lora, names)
+    unload_lora(pipe, loaded_lora, names)
     for file_path, scale, name in zip(link, scales, names):
         try:
             print(f"Loading {name}...")
