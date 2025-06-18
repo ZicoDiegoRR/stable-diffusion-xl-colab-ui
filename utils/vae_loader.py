@@ -1,5 +1,6 @@
 from StableDiffusionXLColabUI.utils import downloader
 from diffusers import AutoencoderKL
+import shutil
 import torch
 import os
 
@@ -32,6 +33,32 @@ def post_download(vae_download_path):
     return vae_path
 
 def download_vae(model_path, type, hf_token, civit_token, base_path, config=None):
+    def download(model_path, type, hf_token, civit_token, base_path, config=None, retry=False):
+        if retry:
+            vae_weight_download = downloader.download_file(
+                model_path, 
+                "VAE", 
+                hf_token, 
+                civit_token,
+                base_path=base_path
+            )
+        else:
+            vae_weight_download = model_path
+        vae_weight_name, _ = os.path.splitext(os.path.basename(vae_weight_download)) 
+        vae_config_download = downloader.download_file(
+            config if config and (config.startswith("https://") or config.startswith("http://") or config.startswith("/content/")) else vae_weight_name, 
+            "VAE",
+            hf_token, 
+            civit_token,
+            base_path=base_path,
+            subfolder=vae_weight_name
+        )
+        vae_path = post_download([
+            vae_weight_download, 
+            vae_config_download
+        ])
+        return vae_path
+
     vae_weight_download = downloader.download_file(
         model_path, 
         "VAE", 
@@ -39,20 +66,16 @@ def download_vae(model_path, type, hf_token, civit_token, base_path, config=None
         civit_token,
         base_path=base_path
     )
-    vae_weight_name, _ = os.path.splitext(os.path.basename(vae_weight_download)) 
-    vae_config_download = downloader.download_file(
-        config if config and (config.startswith("https://") or config.startswith("http://") or config.startswith("/content/")) else vae_weight_name, 
-        "VAE",
-        hf_token, 
-        civit_token,
-        base_path=base_path,
-        subfolder=vae_weight_name
-    )
     
-    vae_path = post_download([
-        vae_weight_download, 
-        vae_config_download
-    ])
+    if os.path.isfile(vae_weight_download):
+        vae_path = download(vae_weight_download, type, hf_token, civit_token, base_path, config=config)
+    else:
+        list_file = [os.path.join(vae_weight_download, file) for file in os.listdir(vae_weight_download) if os.path.isfile(os.path.join(vae_weight_download, file))]
+        if len(list_file) < 2:
+            shutil.rmtree(vae_weight_download)
+            vae_path = download(model_path, type, hf_token, civit_token, base_path, config=config, retry=True)
+        else:
+            vae_path = list_file
     return vae_path
 
 def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token, base_path):
