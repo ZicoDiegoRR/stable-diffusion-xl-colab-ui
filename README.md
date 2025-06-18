@@ -73,9 +73,6 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 Work in progress
 
 ## Token saving (Optional)
-
-<details>
-
 This notebook doesn't save your Hugging Face's token and CivitAI's token due to security concern. But, if you wish to save your tokens in your Google Drive or your runtime, you can follow these steps.
 
 > [!CAUTION]\
@@ -111,8 +108,6 @@ Here are the steps to save your tokens to Google Drive storage or your runtime:
 4. Run the cell. You'll see a file named `token.json` in the "Saved Parameters/Token" folder, indicating that the tokens are saved.
 
 This step allows you to reuse the tokens without inputting them manually in the widgets. But, beware of any potential leak!
-
-</details>
 
 ## To-do List
 - Adding textual inversion ✅ 
