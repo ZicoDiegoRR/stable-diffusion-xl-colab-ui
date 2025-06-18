@@ -1,34 +1,40 @@
 from StableDiffusionXLColabUI.utils import downloader
 from safetensors.torch import load_file
 import re
-import os
+import os              
 
 def unload_embeddings(pipe, loaded, tokens):
     unload_ti = []
     for ti in loaded:
-        if ti and ti not in tokens:
+        if ti and ti not in tokens and ti != "<|endoftext|>" and ti != "<|startoftext|>":
             unload_ti.append(ti)
 
     if unload_ti:
+        print("Unloading textual inversion...")
+        print("The textual inversion weights:")
         for ti in unload_ti:
-            print(f"Unloading {ti}...")
-            try:
-                pipe.unload_textual_inversion(tokens=ti, text_encoder=pipe.text_encoder, tokenizer=pipe.tokenizer)
-                pipe.unload_textual_inversion(tokens=ti, text_encoder=pipe.text_encoder_2, tokenizer=pipe.tokenizer_2)
-            except Exception as e:
-                print(f"Unable to unload {ti}. Reason: {e}")
+            print(ti)
+        try:
+            pipe.unload_textual_inversion(tokens=ti, text_encoder=pipe.text_encoder, tokenizer=pipe.tokenizer)
+            pipe.unload_textual_inversion(tokens=ti, text_encoder=pipe.text_encoder_2, tokenizer=pipe.tokenizer_2)
+        except Exception as e:
+            print(f"Unable to unload {ti}. Reason: {e}")
 
 def load_textual_inversion_from_link(pipe, link, token, name):
     unload_embeddings(pipe, list(pipe.tokenizer.get_added_vocab().keys()), token)
     
     for embed, tag, name in zip(link, token, name):
         try:
-            ti_dict = load_file(embed)
-            print(f"Loading {name}...")
-            pipe.load_textual_inversion(ti_dict["clip_g"], token=tag, text_encoder=pipe.text_encoder_2, tokenizer=pipe.tokenizer_2)
-            pipe.load_textual_inversion(ti_dict["clip_l"], token=tag, text_encoder=pipe.text_encoder, tokenizer=pipe.tokenizer)
+            if token not in list(pipe.tokenizer.get_added_vocab().keys()):
+                ti_dict = load_file(embed)
+                print(f"Loading {name}...")
+                pipe.load_textual_inversion(ti_dict["clip_g"], token=tag, text_encoder=pipe.text_encoder_2, tokenizer=pipe.tokenizer_2)
+                pipe.load_textual_inversion(ti_dict["clip_l"], token=tag, text_encoder=pipe.text_encoder, tokenizer=pipe.tokenizer)
         except Exception as e:
             print(f"Skipped {name}. Reason: {e}")
+
+    # Remove token duplicates
+    unload_embeddings(pipe, list(pipe.tokenizer.get_added_vocab().keys()), token)
     
 def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token, base_path):
     # Download and handle duplication
@@ -59,11 +65,11 @@ def download_textual_inversion(pipe, link, token, widget, hf_token, civit_token,
 
                 widget_value = widget.value.replace(url, split_filename)
                 widget.value = widget_value
-            elif not token[i] or token[i].isspace():
-                print(f"The token for {url} is empty or contains whitespaces only. This isn't supported in textual inversion.")
-                print(f"Skipped {url}.")
             else: 
-                print(f"It seems like {url} is an invalid path or doesn't exist. Make sure to put a correct path to ensure the weight being loaded correctly.")
+                if not token[i] or token[i].isspace():
+                    print(f"The token for {url} is empty or contains whitespaces only. This isn't supported in textual inversion.")
+                if not textual_inversion_path:
+                    print(f"It seems like {url} is an invalid path or doesn't exist. Make sure to put a correct path to ensure the weight being loaded correctly.")
                 print(f"Skipped {url}.")
 
     load_textual_inversion_from_link(pipe, ti_path, tokens, ti_list)
@@ -76,4 +82,3 @@ def process(pipe, link, token, widget, hf_token, civit_token, base_path):
     os.makedirs("/content/Embeddings", exist_ok=True)
 
     download_textual_inversion(pipe, ti_links, ti_tokens, widget, hf_token, civit_token, base_path)
-
