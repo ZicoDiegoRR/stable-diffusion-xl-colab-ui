@@ -65,12 +65,53 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 21. | Preview buttons to display ControlNet's converted image                                                                      |
 | 22. | `components` integration for memory-sharing between pipelines to avoid OutOFMemory error due to independent tensors          |
 | 23. | Implementation of `ControlNetUnion` for better memory management and scalable approach                                       |
-| 24. | Corrupted-download deletion logic                                                                                             |
+| 24. | Corrupted-download deletion logic                                                                                            |
 
 </details>
 
 ## Preview
 Work in progress
+
+## Token saving (Optional)
+<details>
+  
+This notebook doesn't save your Hugging Face's token and CivitAI's token due to security concern. But, if you wish to save your tokens in your Google Drive or your runtime, you can follow these steps.
+
+**Caution!!!** 
+I strongly don't recommend you to save your tokens anywhere else, especially if you share your Google Drive storage with anyone. Any potential exploitation or misuse of this method won't fall under my responsibility.
+
+Here are the steps to save your tokens to Google Drive storage or your runtime:
+1. Create a new cell first. This step is required to run the code.
+2. Copy this code and paste it into your new cell.
+    ```python
+    from google.colab import drive
+    import json
+    import os
+
+    hf_token = "" #@param {type:"string"}
+    civit_token = "" #@param {type:"string"}
+    gdrive = True #@param {type:"boolean"}
+
+    token = {
+        "hf_token": hf_token,
+        "civit_token": civit_token
+    }
+
+    if gdrive:
+        drive.mount('/content/gdrive')
+
+    base_path = "/content/gdrive/MyDrive/Saved Parameters/Token" if gdrive else "/content/Saved Parameters/Token"
+    os.makedirs(base_path, exist_ok=True)
+
+    with open(os.path.join(base_path, "token.json"), "w") as f:
+        json.dump(token, f, indent=4)
+    ```
+3. Fill the textboxes with your tokens. You can save it to your Google Drive storage by enabling `gdrive`.
+4. Run the cell. You'll see a file named `token.json` in the "Saved Parameters/Token" folder, indicating that the tokens are saved.
+
+This step allows you to reuse the tokens without inputting them manually in the widgets. But, beware of any potential leak!
+
+</details>
 
 ## To-do List
 - Adding textual inversion ✅ 
