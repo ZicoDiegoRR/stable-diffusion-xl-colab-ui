@@ -70,7 +70,19 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 </details>
 
 ## Preview
-Work in progress
+
+<details> <summary> Preview: </summary>
+
+    <details> <summary> Tab:</summary>
+
+        <details> <summary> Text-to-image </summary>
+        
+        
+        </details>
+    
+    </details
+
+</details>
 
 ## Token Saving (Optional)
 This notebook doesn't save your Hugging Face's token and CivitAI's token due to security concern. But, if you wish to save your tokens to your Google Drive or to your runtime, you can follow these steps.
