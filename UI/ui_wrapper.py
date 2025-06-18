@@ -146,17 +146,6 @@ class UIWrapper:
             ]),
         ]
 
-        # Output
-        if url.count("/") == 1: # For Hugging Face's models
-            output_msg = f"{self.loaded_model} is a Hugging Face model's format."
-        else: # For any non-Hugging Face's models
-            output_msg = f"{self.loaded_model} has been downloaded."
-
-        if not self.has_load_model:
-            follow_up_msg = "Click `Generate` to use it."
-        else:
-            follow_up_msg = "Restart the runtime to apply changes of the model."
-
         # Download
         self.loaded_model, _ = os.path.splitext(os.path.basename(downloader.download_file(url, "Checkpoint", hf_token, civit_token, base_path, tqdm=False, widget=progress_bar)))
         self.refresh_model()
@@ -175,6 +164,18 @@ class UIWrapper:
             ]),
             self.restart_button,
         ]
+
+        # Output
+        if url.count("/") == 1: # For Hugging Face's models
+            output_msg = f"{self.loaded_model} is a Hugging Face model's format."
+        else: # For any non-Hugging Face's models
+            output_msg = f"{self.loaded_model} has been downloaded."
+
+        if not self.has_load_model:
+            follow_up_msg = "Click `Generate` to use it."
+        else:
+            follow_up_msg = "Restart the runtime to apply changes of the model."
+            
         with self.model_output:
             print(f"{output_msg} {follow_up_msg}")
     
