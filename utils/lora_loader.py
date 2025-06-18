@@ -10,7 +10,7 @@ def unload_lora(pipe, loaded, lora_names):
 
     if unload_lora:
         for lora in unload_lora:
-            print(f"Unloading {lora}")
+            print(f"Unloading {lora}...")
             pipe.delete_adapters(lora)
 
 def load_downloaded_lora(pipe, link, scales, names):
@@ -31,10 +31,13 @@ def load_downloaded_lora(pipe, link, scales, names):
 
         except Exception as e:
             print(f"Skipped {name}. Reason: {e}")
+            if name in pipe.get_active_adapters():
+                scale_list.append(scale)
+                name_list.append(name)
 
     if pipe.get_active_adapters():
-        pipe.set_adapters(name_list, scale_list)
         print("LoRA(s):")
+        pipe.set_adapters(name_list, scale_list)
         for name in pipe.get_active_adapters():
             print(name)
 
