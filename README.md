@@ -107,8 +107,9 @@ Here are the steps to save your tokens to Google Drive storage or to your runtim
     ```
 3. Fill the textboxes with your tokens. You can save it to your Google Drive storage by enabling `gdrive`.
 4. Run the cell. You'll see a file named `token.json` in the "Saved Parameters/Token" folder, indicating that the tokens are saved.
+5. To use the tokens, simply run the second cell as usual. If the GPU has loaded a model, restart the runtime first before rerunning the second cell to avoid OutOfMemoryError.
 
-This step allows you to reuse the tokens without inputting them manually in the widgets. But, beware of any potential leak!
+These steps allow you to reuse the tokens without inputting them manually in the widgets. But, beware of any potential leak!
 
 ## To-do List
 - Adding textual inversion ✅ 
