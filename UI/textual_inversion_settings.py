@@ -2,6 +2,14 @@ import ipywidgets as widgets
 import re
 import os
 
+def load_param(filename):
+    try:
+        with open(filename, 'r') as f:
+            params = json.load(f)
+        return params
+    except FileNotFoundError:
+        return {}
+
 class TextualInversionLoader:
     def collect_values(self): # Function to collect values in this class
         self.ti_urls_widget.value, self.ti_tokens_widget.value = self.read()
@@ -15,6 +23,15 @@ class TextualInversionLoader:
             self.ti_urls_widget,
             self.ti_tokens_widget
         ]
+
+    def refresh_model(self):
+        saved_models = load_param(f"{self.base_path}/Saved Parameters/URL/urls.json").get("Embeddings")
+        saved_hf_models = saved_models["hugging_face"] if saved_models and "hugging_face" in saved_models else []
+        if not saved_models:
+            model_options = []
+        else:
+            model_options = list(saved_models["keyname_to_url"].keys())
+        return model_options + saved_hf_models
         
     def sanitize(self, cfg, token): # Function to filter out empty strings and invalid path
         if cfg:
@@ -30,7 +47,7 @@ class TextualInversionLoader:
             return "", ""
         
     def ti_click(self, link, token, construct=False):  # Function to add widgets after clicking the plus button
-        ti_url_input = widgets.Text(value=link, placeholder="Input the link here", description="Direct URL")
+        ti_url_input = widgets.Combobox(value=link, options=self.refresh_model(), placeholder="Input the link here", description="Weight file", ensure_option=False)
         ti_tokens_input = widgets.Text(value=token, placeholder="Activation tag", description="Token")
         ti_remove_button = widgets.Button(description="X", button_style='danger', layout=widgets.Layout(width='30px', height='30px'))
 
@@ -76,7 +93,9 @@ class TextualInversionLoader:
                 self.ti_click(ti_links[i], ti_tokens[i], construct=True)
         self.ti_construct_bool = False
 
-    def __init__(self, cfg):
+    def __init__(self, cfg, base_path):
+        self.base_path = base_path
+        
         sanitized_url, sanitized_token = self.sanitize(cfg[0], cfg[1])
         self.ti_urls_widget = widgets.Text(value=sanitized_url)
         self.ti_tokens_widget = widgets.Text(value=sanitized_token)
