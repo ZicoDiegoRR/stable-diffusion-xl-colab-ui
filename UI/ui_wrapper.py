@@ -12,6 +12,7 @@ from StableDiffusionXLColabUI.utils import modified_inference_realesrgan, main, 
 from StableDiffusionXLColabUI.UI import all_widgets
 from IPython.display import display, clear_output
 import ipywidgets as widgets
+import threading
 import json
 import os
 
@@ -26,26 +27,27 @@ def load_param(filename):
 class UIWrapper:
     # Displaying the submit button and resetting the history
     def reload_submit_button(self):
-        self.submit_settings.layout.visibility = "visible"
-        text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list = self.history.history_display(
-            self.text2img,
-            self.img2img,
-            self.controlnet,
-            self.inpaint,
-            self.ip,
-            self.lora,
-            self.embeddings,
-            self.upscaler,
-            self.ui_tab,
-            self.base_path
-        )
-        self.history.history_accordion.children = [
-            text2img_list, 
-            img2img_list, 
-            controlnet_list, 
-            inpainting_list, 
-            upscale_list
-        ]
+        if not self.is_downloading:
+            self.submit_settings.layout.visibility = "visible"
+            text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list = self.history.history_display(
+                self.text2img,
+                self.img2img,
+                self.controlnet,
+                self.inpaint,
+                self.ip,
+                self.lora,
+                self.embeddings,
+                self.upscaler,
+                self.ui_tab,
+                self.base_path
+            )
+            self.history.history_accordion.children = [
+                text2img_list, 
+                img2img_list, 
+                controlnet_list, 
+                inpainting_list, 
+                upscale_list
+            ]
 
     def select_class(self, index):
         if index == 0:
@@ -224,6 +226,17 @@ class UIWrapper:
         else:
             self.submit_settings.layout.visibility = "visible"
             self.merge_options.layout.visibility = "visible"
+
+    def load_model_thread(self, url, hf_token, civit_token, base_path):
+        self.is_downloading = True
+        self.submit_settings.layout.visibility = "hidden"
+        
+        model_thread = threading.Thread(target=self.load_model, args=(url, hf_token, civit_token, base_path))
+        model_thread.start()
+        model_thread.join()
+
+        self.is_downloading = False
+        self.submit_settings.layout.visibility = "visible"
     
     def __init__(self, cfg, ideas_line, gpt2_pipe, base_path): # cfg as a dictionary
         # Creating the tab
@@ -299,6 +312,7 @@ class UIWrapper:
         # Wrapping the model widget
         self.loaded_model = ""
         self.has_load_model = False
+        self.is_downloading = False
         self.restart_button = widgets.Button(description="Restart")
         self.model_label = widgets.Label(value="Model:")
         self.model_widget = widgets.Combobox(
