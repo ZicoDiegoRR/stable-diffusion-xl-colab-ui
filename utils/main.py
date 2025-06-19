@@ -285,7 +285,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     conditioning, pooled = compel([Prompt, Negative_Prompt])
 
     # Loading LoRA if not empty
-    if LoRA_URLs and main.pipeline.get_active_adapters():
+    if LoRA_URLs or main.pipeline.get_active_adapters():
         lora_loader.process(
             main.pipeline, 
             lora[0], 
@@ -297,7 +297,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         )
 
     # Loading embeddings if not empty
-    if Textual_Inversion_URLs and main.embeddings_tokens:
+    if Textual_Inversion_URLs or main.embeddings_tokens:
         main.embeddings_tokens = embeddings_loader.process(
             main.pipeline, 
             embeddings[0], 
