@@ -30,6 +30,7 @@ class MainVar:
         self.pipeline = None
         self.vae_current = None
         self.controlnet = None
+        self.embeddings_tokens = None
         self.images = [None] * 3
         self.controlnets_scale = [None] * 3
         self.controlnet_modes = [None] * 3
@@ -297,10 +298,11 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Loading embeddings if not empty
     if Textual_Inversion_URLs:
-        embeddings_loader.process(
+        main.embeddings_tokens = embeddings_loader.process(
             main.pipeline, 
             embeddings[0], 
             embeddings[1], 
+            main.embeddings_tokens,
             widgets_change[3], 
             HF_Token, 
             Civit_Token,
