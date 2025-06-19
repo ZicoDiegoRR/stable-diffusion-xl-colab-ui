@@ -1,6 +1,14 @@
 import ipywidgets as widgets
 import re
 
+def load_param(filename):
+    try:
+        with open(filename, 'r') as f:
+            params = json.load(f)
+        return params
+    except FileNotFoundError:
+        return {}
+
 class LoRALoader:
     def collect_values(self): # Function to return the value
         self.lora_urls_widget.value, self.weight_scale_widget.value = self.read()
@@ -14,9 +22,18 @@ class LoRALoader:
             self.lora_urls_widget,
             self.weight_scale_widget
         ]
+
+    def refresh_model(self):
+        saved_models = load_param(f"{self.base_path}/Saved Parameters/URL/urls.json").get("LoRAs")
+        saved_hf_models = saved_models["hugging_face"] if saved_models and "hugging_face" in saved_models else []
+        if not saved_models:
+            model_options = []
+        else:
+            model_options = list(saved_models["keyname_to_url"].keys())
+        return model_options + saved_hf_models
         
     def lora_click(self, link, scale, construct=False): # Function to add widgets after clicking the plus button
-        lora_url_input = widgets.Text(value=link, placeholder="Input the link here", description="Direct URL")
+        lora_url_input = widgets.Combobox(value=link, options=self.refresh_model(), placeholder="Input the link here", description="Weight file", ensure_option=False)
         lora_scale_input = widgets.FloatSlider(value=scale, min=-5, max=5, step=0.1, description="Weight Scale")
         lora_remove_button = widgets.Button(description="X", button_style='danger', layout=widgets.Layout(width='30px', height='30px'))
 
@@ -61,7 +78,9 @@ class LoRALoader:
                 self.lora_click(lora, float(scale), construct=True)
         self.lora_construct_bool = False
 
-    def __init__(self, cfg):
+    def __init__(self, cfg, base_path):
+        self.base_path = base_path
+        
         self.lora_urls_widget = widgets.Text(value=cfg[0] if cfg else "")
         self.weight_scale_widget = widgets.Text(value=cfg[1] if cfg else "")
 
