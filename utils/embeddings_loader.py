@@ -20,7 +20,11 @@ def tokens_to_unload(nested_list, keys):
     return saved, unload_ti
 
 def unload_embeddings(pipe, saved, tokens):
-    saved_token, unload_ti = tokens_to_unload(saved_token, tokens)
+    if saved:
+        saved_token, unload_ti = tokens_to_unload(saved, tokens)
+    else:
+        saved_token = []
+        unload_ti = []
     
     if unload_ti:
         print("Unloading certain textual inversion weights...")
@@ -68,7 +72,7 @@ def load_textual_inversion_from_link(pipe, link, token, name, embeddings_tokens)
     for name in loaded_name:
         print(name)
 
-    return saved_token
+    return filtered_tokens
     
 def download_textual_inversion(pipe, link, token, embeddings_tokens, widget, hf_token, civit_token, base_path):
     # Download and handle duplication
