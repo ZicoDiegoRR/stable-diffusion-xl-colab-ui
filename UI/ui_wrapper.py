@@ -242,9 +242,9 @@ class UIWrapper:
         self.controlnet = ControlNetSettings(cfg["controlnet"], ideas_line, gpt2_pipe, base_path)
         self.inpaint = InpaintingSettings(cfg["inpaint"])
         self.ip = IPAdapterLoader(cfg["ip"])
-        self.lora = LoRALoader(cfg["lora"])
-        self.embeddings = TextualInversionLoader(cfg["embeddings"])
-        self.upscaler = modified_inference_realesrgan.ESRGANWidget(self.base_path)
+        self.lora = LoRALoader(cfg["lora"], base_path)
+        self.embeddings = TextualInversionLoader(cfg["embeddings"], base_path)
+        self.upscaler = modified_inference_realesrgan.ESRGANWidget(base_path)
         self.reset_generate = ResetGenerateSettings(
             self.text2img,
             self.img2img,
