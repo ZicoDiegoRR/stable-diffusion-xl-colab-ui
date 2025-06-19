@@ -105,9 +105,12 @@ class UIWrapper:
                      self.controlnet.return_get_image_class()
             )
             self.has_load_model = True
+
+            # Unused failsafe, but could be useful in rare moments
             if self.model_widget.value.startswith(("https://", "http://")):
                 self.model_widget.value, _ = os.path.splitext(os.path.basename(downloader.download_file(self.model_widget.value, "Checkpoint", self.hf_token.value, self.civit_token.value, self.base_path)))
-                
+
+            self.refresh_model()
             self.reload_submit_button()
             self.lora.construct(self.lora.lora_urls_widget.value)
             self.embeddings.construct(self.embeddings.ti_urls_widget.value)
