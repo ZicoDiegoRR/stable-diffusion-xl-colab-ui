@@ -12,7 +12,6 @@ from StableDiffusionXLColabUI.utils import modified_inference_realesrgan, main, 
 from StableDiffusionXLColabUI.UI import all_widgets
 from IPython.display import display, clear_output
 import ipywidgets as widgets
-import threading
 import json
 import os
 
@@ -139,13 +138,17 @@ class UIWrapper:
     def load_model(self, url, hf_token, civit_token, base_path):
         # Initialize
         self.model_output.clear_output()
+        progress_label = widgets.Label(value="Downloading...")
         progress_bar = widgets.IntProgress(value=0, min=0, max=100)
+        warning_label = widgets.Label(value="The UI might be unresponsive at the moment. Please wait...")
         self.model_settings.children = [
+            progress_label,
             progress_bar,
             self.model_label,
             widgets.HBox([
                 self.model_widget, self.model_load_widget
             ]),
+            warning_label,
         ]
 
         # Download
@@ -226,17 +229,6 @@ class UIWrapper:
         else:
             self.submit_settings.layout.visibility = "visible"
             self.merge_options.layout.visibility = "visible"
-
-    def load_model_thread(self, url, hf_token, civit_token, base_path):
-        self.is_downloading = True
-        self.submit_settings.layout.visibility = "hidden"
-        
-        model_thread = threading.Thread(target=self.load_model, args=(url, hf_token, civit_token, base_path))
-        model_thread.start()
-        model_thread.join()
-
-        self.is_downloading = False
-        self.submit_settings.layout.visibility = "visible"
     
     def __init__(self, cfg, ideas_line, gpt2_pipe, base_path): # cfg as a dictionary
         # Creating the tab
