@@ -64,13 +64,14 @@ def load_textual_inversion_from_link(pipe, link, token, name, embeddings_tokens)
                 
         except Exception as e:
             print(f"Skipped {name}. Reason: {e}")
-            if token in list(pipe.tokenizer.get_added_vocab().keys()):
+            if tag in list(pipe.tokenizer.get_added_vocab().keys()):
                 loaded_name.append(name)
 
     # Output
-    print("Loaded Textual Inversion or Embeddings:")
-    for name in loaded_name:
-        print(name)
+    if [keyword for keyword in pipe.tokenizer.get_added_vocab().keys() if keyword not in old_tokens and keyword != "<|endoftext|>" and keyword != "<|startoftext|>"]:
+        print("Loaded Textual Inversion or Embeddings:")
+        for name in loaded_name:
+            print(name)
 
     return filtered_tokens
     
@@ -104,9 +105,9 @@ def download_textual_inversion(pipe, link, token, embeddings_tokens, widget, hf_
                 widget_value = widget.value.replace(url, split_filename)
                 widget.value = widget_value
             else: 
-                if not token[i] or token[i].isspace():
+                if not token[i] or token[i].isspace() and url:
                     print(f"The token for {url} is empty or contains whitespaces only. This isn't supported in textual inversion.")
-                if not textual_inversion_path:
+                if not textual_inversion_path and url:
                     print(f"It seems like {url} is an invalid path or doesn't exist. Make sure to put a correct path to ensure the weight being loaded correctly.")
                 print(f"Skipped {url}.")
 
