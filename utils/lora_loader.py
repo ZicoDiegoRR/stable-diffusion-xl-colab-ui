@@ -70,8 +70,9 @@ def download_lora(pipe, link, scale, widget, hf_token, civit_token, base_path):
                 widget_value = widget.value.replace(url, split_lora_name)
                 widget.value = widget_value
             else:
-                print(f"It seems like {url} is an invalid path or doesn't exist. Make sure to put a correct path to ensure the weight being loaded correctly.")
-                print(f"Skipped {url}.")
+                if url:
+                    print(f"It seems like {url} is an invalid path or doesn't exist. Make sure to put a correct path to ensure the weight being loaded correctly.")
+                    print(f"Skipped {url}.")
 
     load_downloaded_lora(pipe, lora_paths, scales, lora_names)
 
