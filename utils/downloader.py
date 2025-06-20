@@ -1,6 +1,7 @@
 from safetensors.torch import load_file
 from tqdm import tqdm
 import requests
+import torch
 import json
 import os
 import re
@@ -66,10 +67,14 @@ def sanitize_filename(filename):
 # Check if the download is corrupt
 def is_corrupt(path):
     try:
-        if not path.endswith(".json"):
+        if path.endswith(".safetensors"):
             tensor_check = load_file(path)
             _ = list(tensor_check.items())
             return False
+        elif path.endswith(".bin", ".pt", ".ckpt"):
+            _ = torch.load(path, map_location="cpu", weights_only=True)
+            return False
+
         else:
             with open(path, "r") as f:
                 _ = f.read()
@@ -77,7 +82,9 @@ def is_corrupt(path):
             
     except Exception as e:
         return True
-        
+
+    return False 
+
 # Search for a match
 def search(type, name):
     for dir in os.listdir(f"/content/{type}"):
