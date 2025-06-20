@@ -2,26 +2,27 @@ from StableDiffusionXLColabUI.utils import downloader
 import re
 import os
 
+def get_adapters(pipe):
+    return pipe.get_active_adapters()
+
 def unload_lora(pipe, loaded, lora_names):
-    unload_lora = []
-    for lora in loaded:
-        if lora and lora not in lora_names:
-            unload_lora.append(lora)
+    unload_lora = [lora for lora in loaded if lora not in lora_names]
 
     if unload_lora:
         for lora in unload_lora:
-            print(f"Unloading {lora}...")
-            pipe.delete_adapters(lora)
+            try:
+                print(f"Unloading {lora}...")
+                pipe.delete_adapters(lora)
+            except Exception as e:
+                print(f"Unable to unload {lora}. Reason: {e}")
 
 def load_downloaded_lora(pipe, link, scales, names):
     scale_list = []
     name_list = []
-    loaded_lora = pipe.get_active_adapters()
-    if len(loaded_lora) < len(names):
-        for i in range(len(names) - len(loaded_lora)):
-            loaded_lora.append(None)
+    loaded_lora = get_adapters(pipe)
 
     unload_lora(pipe, loaded_lora, names)
+    
     for file_path, scale, name in zip(link, scales, names):
         try:
             print(f"Loading {name}...")
@@ -31,14 +32,14 @@ def load_downloaded_lora(pipe, link, scales, names):
 
         except Exception as e:
             print(f"Skipped {name}. Reason: {e}")
-            if name in pipe.get_active_adapters():
+            if name in get_adapters(pipe):
                 scale_list.append(scale)
                 name_list.append(name)
 
-    if pipe.get_active_adapters():
+    if name_list:
         print("LoRA(s):")
         pipe.set_adapters(name_list, scale_list)
-        for name in pipe.get_active_adapters():
+        for name in name_list:
             print(name)
 
 def download_lora(pipe, link, scale, widget, hf_token, civit_token, base_path):
