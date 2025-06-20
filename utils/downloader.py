@@ -74,8 +74,7 @@ def is_corrupt(path):
         elif path.endswith(".bin", ".pt", ".ckpt"):
             _ = torch.load(path, map_location="cpu", weights_only=True)
             return False
-
-        else:
+        elif path.endswith(".json"):
             with open(path, "r") as f:
                 _ = f.read()
             return False
