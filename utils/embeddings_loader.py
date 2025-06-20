@@ -9,22 +9,9 @@ def search_for_match(element_in_list, keys):
             return True
     return False
 
-def tokens_to_unload(nested_list, keys):
-    saved = nested_list
-    unload_ti = []
-    for element in nested_list:
-        if not search_for_match(element, keys):
-            unload_ti.append(element)
-            saved.remove(element)
-
-    return saved, unload_ti
-
 def unload_embeddings(pipe, saved, tokens):
-    if saved:
-        saved_token, unload_ti = tokens_to_unload(saved, tokens)
-    else:
-        saved_token = []
-        unload_ti = []
+    saved = [element for element in saved if search_for_match(element, tokens)]
+    unload_ti = [element for element in saved if not search_for_match(element, tokens)]
     
     if unload_ti:
         print("Unloading certain textual inversion weights...")
@@ -33,10 +20,10 @@ def unload_embeddings(pipe, saved, tokens):
             unload_tokens += ti
         print(f"Unloading tokens...\n{unload_tokens}")
         try:
-            pipe.unload_textual_inversion(tokens=ti, text_encoder=pipe.text_encoder, tokenizer=pipe.tokenizer)
-            pipe.unload_textual_inversion(tokens=ti, text_encoder=pipe.text_encoder_2, tokenizer=pipe.tokenizer_2)
+            pipe.unload_textual_inversion(tokens=unload_tokens, text_encoder=pipe.text_encoder, tokenizer=pipe.tokenizer)
+            pipe.unload_textual_inversion(tokens=unload_tokens, text_encoder=pipe.text_encoder_2, tokenizer=pipe.tokenizer_2)
         except Exception as e:
-            print(f"Unable to unload {ti}. Reason: {e}")
+            print(f"Unable to unload {"\n".join(unload_tokens)}. Reason: {e}")
 
     return saved_token
 
@@ -45,30 +32,30 @@ def load_textual_inversion_from_link(pipe, link, token, name, embeddings_tokens)
 
     # Loading the weight into the tokenizers and the text encoders
     loaded_name = []
-    for embed, tag, name in zip(link, token, name):
+    for path, activation_token, weight_name in zip(link, token, name):
         try:
-            if token not in list(pipe.tokenizer.get_added_vocab().keys()):
+            if activation_token not in list(pipe.tokenizer.get_added_vocab().keys()):
                  # Getting the previously-loaded tokens
                 old_tokens = list(pipe.tokenizer.get_added_vocab().keys())
 
                 # Loading
-                print(f"Loading {name}...")
-                ti_dict = load_file(embed)
-                pipe.load_textual_inversion(ti_dict["clip_g"], token=tag, text_encoder=pipe.text_encoder_2, tokenizer=pipe.tokenizer_2)
-                pipe.load_textual_inversion(ti_dict["clip_l"], token=tag, text_encoder=pipe.text_encoder, tokenizer=pipe.tokenizer)
+                print(f"Loading {weight_name}...")
+                ti_dict = load_file(path)
+                pipe.load_textual_inversion(ti_dict["clip_g"], token=activation_token, text_encoder=pipe.text_encoder_2, tokenizer=pipe.tokenizer_2)
+                pipe.load_textual_inversion(ti_dict["clip_l"], token=activation_token, text_encoder=pipe.text_encoder, tokenizer=pipe.tokenizer)
 
                 # Getting the newly-added tokens, even the duplicates
-                new_tokens = [keyword for keyword in pipe.tokenizer.get_added_vocab().keys() if keyword not in old_tokens and keyword != "<|endoftext|>" and keyword != "<|startoftext|>"]
+                new_tokens = list(set(pipe.tokenizer.get_added_vocab().keys()) - set(old_tokens) - {"<|startoftext|>", "<|endoftext|>"})
                 filtered_tokens.append(new_tokens)
-                loaded_name.append(name)
+                loaded_name.append(weight_name)
                 
         except Exception as e:
-            print(f"Skipped {name}. Reason: {e}")
+            print(f"Skipped {weight_name}. Reason: {e}")
             if tag in list(pipe.tokenizer.get_added_vocab().keys()):
-                loaded_name.append(name)
+                loaded_name.append(weight_name)
 
     # Output
-    if [keyword for keyword in pipe.tokenizer.get_added_vocab().keys() if keyword not in old_tokens and keyword != "<|endoftext|>" and keyword != "<|startoftext|>"]:
+    if list(set(pipe.tokenizer.get_added_vocab().keys()) - set(old_tokens) - {"<|startoftext|>", "<|endoftext|>"}):
         print("Loaded Textual Inversion or Embeddings:")
         for name in loaded_name:
             print(name)
