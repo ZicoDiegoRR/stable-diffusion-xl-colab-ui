@@ -3,6 +3,9 @@ from safetensors.torch import load_file
 import re
 import os           
 
+def get_vocab(pipe):
+    return pipe.tokenizer.get_added_vocab().keys()
+
 def search_for_match(element_in_list, keys):
     for element in element_in_list:
         if element in keys:
@@ -10,7 +13,7 @@ def search_for_match(element_in_list, keys):
     return False
 
 def unload_embeddings(pipe, saved, tokens):
-    saved = [element for element in saved if search_for_match(element, tokens)]
+    saved_filtered = [element for element in saved if search_for_match(element, tokens)]
     unload_ti = [element for element in saved if not search_for_match(element, tokens)]
     
     if unload_ti:
@@ -23,20 +26,21 @@ def unload_embeddings(pipe, saved, tokens):
             pipe.unload_textual_inversion(tokens=unload_tokens, text_encoder=pipe.text_encoder, tokenizer=pipe.tokenizer)
             pipe.unload_textual_inversion(tokens=unload_tokens, text_encoder=pipe.text_encoder_2, tokenizer=pipe.tokenizer_2)
         except Exception as e:
-            print(f"Unable to unload {"\n".join(unload_tokens)}. Reason: {e}")
+            failed_tokens_to_unload = list(set(unload_tokens) - set(get_vocab(pipe)) - {"<|startoftext|>", "<|endoftext|>"})
+            print(f"Unable to unload: \n{failed_tokens_to_unload} \nReason: {e}")
 
-    return saved_token
+    return saved_filtered
 
 def load_textual_inversion_from_link(pipe, link, token, name, embeddings_tokens):
     filtered_tokens = unload_embeddings(pipe, embeddings_tokens, token)
-
+    
     # Loading the weight into the tokenizers and the text encoders
     loaded_name = []
     for path, activation_token, weight_name in zip(link, token, name):
         try:
-            if activation_token not in list(pipe.tokenizer.get_added_vocab().keys()):
+            if activation_token not in list(get_vocab(pipe)):
                  # Getting the previously-loaded tokens
-                old_tokens = list(pipe.tokenizer.get_added_vocab().keys())
+                old_tokens = list(get_vocab(pipe))
 
                 # Loading
                 print(f"Loading {weight_name}...")
@@ -45,17 +49,17 @@ def load_textual_inversion_from_link(pipe, link, token, name, embeddings_tokens)
                 pipe.load_textual_inversion(ti_dict["clip_l"], token=activation_token, text_encoder=pipe.text_encoder, tokenizer=pipe.tokenizer)
 
                 # Getting the newly-added tokens, even the duplicates
-                new_tokens = list(set(pipe.tokenizer.get_added_vocab().keys()) - set(old_tokens) - {"<|startoftext|>", "<|endoftext|>"})
+                new_tokens = list(set(get_vocab(pipe)) - set(old_tokens) - {"<|startoftext|>", "<|endoftext|>"})
                 filtered_tokens.append(new_tokens)
                 loaded_name.append(weight_name)
                 
         except Exception as e:
             print(f"Skipped {weight_name}. Reason: {e}")
-            if tag in list(pipe.tokenizer.get_added_vocab().keys()):
+            if activation_token in list(get_vocab(pipe)):
                 loaded_name.append(weight_name)
 
     # Output
-    if list(set(pipe.tokenizer.get_added_vocab().keys()) - set(old_tokens) - {"<|startoftext|>", "<|endoftext|>"}):
+    if list(set(get_vocab(pipe)) - {"<|startoftext|>", "<|endoftext|>"}):
         print("Loaded Textual Inversion or Embeddings:")
         for name in loaded_name:
             print(name)
