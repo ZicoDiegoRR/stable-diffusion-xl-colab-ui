@@ -69,13 +69,16 @@ def download_vae(model_path, type, hf_token, civit_token, base_path, config=None
     
     if os.path.isfile(vae_weight_download):
         vae_path = download(vae_weight_download, type, hf_token, civit_token, base_path, config=config)
-    else:
+    elif os.path.isdir(vae_weight_download):
         list_file = [os.path.join(vae_weight_download, file) for file in os.listdir(vae_weight_download) if os.path.isfile(os.path.join(vae_weight_download, file))]
         if len(list_file) < 2:
             shutil.rmtree(vae_weight_download)
             vae_path = download(model_path, type, hf_token, civit_token, base_path, config=config, retry=True)
         else:
             vae_path = list_file
+    else:
+        return ["", ""]
+
     return vae_path
 
 def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token, base_path):
