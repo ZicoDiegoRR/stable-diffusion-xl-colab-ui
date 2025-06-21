@@ -6,7 +6,7 @@ import os
 
 def vae_url_checker(model_path):
     # Checking
-    return model_path.startswith("https://") or model_path.startswith("http://")
+    return model_path.startswith(("https://", "http://"))
 
 def autoencoderkl_load(vae_path):
     # Loading the VAE based on whether it's a pretrained model from Hugging Face or not
@@ -46,7 +46,7 @@ def download_vae(model_path, type, hf_token, civit_token, base_path, config=None
             vae_weight_download = model_path
         vae_weight_name, _ = os.path.splitext(os.path.basename(vae_weight_download)) 
         vae_config_download = downloader.download_file(
-            config if config and (config.startswith("https://") or config.startswith("http://") or config.startswith("/content/")) else vae_weight_name, 
+            config if config and config.startswith(("https://", "http://","/content/")) else vae_weight_name, 
             "VAE",
             hf_token, 
             civit_token,
@@ -75,7 +75,12 @@ def download_vae(model_path, type, hf_token, civit_token, base_path, config=None
             shutil.rmtree(vae_weight_download)
             vae_path = download(model_path, type, hf_token, civit_token, base_path, config=config, retry=True)
         else:
-            vae_path = list_file
+            vae_path = ["", ""]
+            for file in list_file:
+                if file.endswith(".json"):
+                    vae_path[1] = file
+                else:
+                    vae_path[0] = file
     else:
         return ["", ""]
 
@@ -87,7 +92,7 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
     # Checking if the provided vae has been loaded
     if model_path != current_vae:
         # Determining the path, whether the VAE has been downloaded or not
-        if vae_url_checker(model_path):
+        if vae_url_checker(model_path) and config_path:
             vae_path = download_vae(
                 model_path, 
                 type, 
@@ -98,9 +103,16 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
             )
             for i, file in enumerate(vae_path):
                 vae_filename = os.path.basename(file)
-                widget_value, _ = os.path.splitext(vae_filename)
+                widget_value, _ = os.path.splitext(os.path.basename(file))
                 widget[i].value = widget_value
             for_vae_current = os.path.splitext(os.path.basename(vae_path[0])) 
+
+        # Skipping the VAE if the model is still in an URL form, but the config is empty
+        elif vae_url_checker(model_path) and not config_path:
+            print("You inputted a link to the VAE model, but not the config file. It's mandatory to pass both links.")
+            print("Skipped VAE.")
+            
+            return None, current_vae
 
         # For Hugging Face pretrained VAE models
         elif model_path.count("/") == 1:
@@ -147,13 +159,6 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
         
         else:
             return None, None
-    
-    # Skipping the VAE if the model is still in an URL form, but the config is empty
-    elif vae_url_checker(model_path) and not config_path:
-        print("You inputted a link to the VAE model, but not the config file. It's mandatory to pass both links.")
-        print("Skipped VAE.")
-        vae = None
-        loaded_vae = current_vae
 
     return vae, loaded_vae
         
