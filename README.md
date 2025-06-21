@@ -157,7 +157,7 @@ This notebook doesn't save your Hugging Face's token and CivitAI's token due to 
 > **I strongly don't recommend you to save your tokens anywhere else, especially if you share your Google Drive storage with anyone. Any potential exploitation or misuse of this method won't fall under my responsibility.**
 
 Here are the steps to save your tokens to Google Drive storage or to your runtime:
-1. Create a new cell first. This step is required to run the code.
+1. Open a notebook in Google Colab and create a new cell first. This step is required to run the code.
 2. Copy this code and paste it into your new cell.
 
     ```python
