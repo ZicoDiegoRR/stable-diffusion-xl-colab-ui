@@ -24,7 +24,7 @@ def load_downloaded_lora(pipe, link, scales, names):
     
     for file_path, scale, name in zip(link, scales, names):
         try:
-            if name in get_adapters(pipe):
+            if name not in get_adapters(pipe):
                 print(f"Loading {name}...")
                 pipe.load_lora_weights(file_path, adapter_name=name)
                 scale_list.append(scale)
@@ -52,38 +52,39 @@ def download_lora(pipe, link, scale, widget, hf_token, civit_token, base_path):
     scales = []
     unique_lora_urls = []
 
-    for i, url in enumerate(link):
-        lora_file_path = ""
-        if url not in unique_lora_urls:
-            if url.startswith("https://") or url.startswith("http://"):
-                lora_file_path = downloader.download_file(url, "LoRAs", hf_token, civit_token, base_path)
-            else:
-                if url.startswith("/content/LoRAs/"):
-                    lora_check = os.path.basename(url)
+    if link:
+        for i, url in enumerate(link):
+            lora_file_path = ""
+            if url not in unique_lora_urls:
+                if url.startswith("https://") or url.startswith("http://"):
+                    lora_file_path = downloader.download_file(url, "LoRAs", hf_token, civit_token, base_path)
                 else:
-                    lora_check = url
-                lora_file_path = downloader.download_file(lora_check, "LoRAs", hf_token, civit_token, base_path)
-                        
-            if lora_file_path:
-                unique_lora_urls.append(url)
-                lora_paths.append(lora_file_path)
+                    if url.startswith("/content/LoRAs/"):
+                       lora_check = os.path.basename(url)
+                    else:
+                        lora_check = url
+                    lora_file_path = downloader.download_file(lora_check, "LoRAs", hf_token, civit_token, base_path)
 
-                split_lora_name, _ = os.path.splitext(os.path.basename(lora_file_path))
-                lora_names.append(split_lora_name)
-                scales.append(scale[i])
+                if lora_file_path:
+                    unique_lora_urls.append(url)
+                    lora_paths.append(lora_file_path)
 
-                widget_value = widget.value.replace(url, split_lora_name)
-                widget.value = widget_value
-            else:
-                if url:
-                    print(f"It seems like {url} is an invalid path or doesn't exist. Make sure to put a correct path to ensure the weight being loaded correctly.")
-                    print(f"Skipped {url}.")
+                    split_lora_name, _ = os.path.splitext(os.path.basename(lora_file_path))
+                    lora_names.append(split_lora_name)
+                    scales.append(scale[i])
+
+                    widget_value = widget.value.replace(url, split_lora_name)
+                    widget.value = widget_value
+                else:
+                    if url:
+                        print(f"It seems like {url} is an invalid path or doesn't exist. Make sure to put a correct path to ensure the weight being loaded correctly.")
+                        print(f"Skipped {url}.")
 
     load_downloaded_lora(pipe, lora_paths, scales, lora_names)
 
 def process(pipe, link, scale, widget, hf_token, civit_token, base_path):
     os.makedirs("/content/LoRAs", exist_ok=True)
-    lora_links = re.split(r"\s*,\s*", link)
-    lora_scales = [float(num) for num in re.split(r"\s*,\s*", scale)]
-    
+    lora_links = re.split(r"\s*,\s*", link) if link else []
+    lora_scales = [float(num) for num in re.split(r"\s*,\s*", scale)] if scale else []
+
     download_lora(pipe, lora_links, lora_scales, widget, hf_token, civit_token, base_path)
