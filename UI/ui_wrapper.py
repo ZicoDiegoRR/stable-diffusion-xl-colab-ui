@@ -351,11 +351,12 @@ class UIWrapper:
         self.additional_widgets = widgets.VBox([self.seed_and_token_section, self.reset_and_send_section])
 
         # Creating the UI
+        border = widgets.HTML(value="<hr>")
         self.ui_tab.children = [
-            widgets.VBox([self.model_settings, self.text2img.wrap_settings(), self.additional_widgets]),
-            widgets.VBox([self.model_settings, self.img2img.wrap_settings(), self.additional_widgets]),
+            widgets.VBox([self.model_settings, border, self.text2img.wrap_settings(), self.additional_widgets]),
+            widgets.VBox([self.model_settings, border, self.img2img.wrap_settings(), self.additional_widgets]),
             widgets.VBox([self.model_settings, self.controlnet.wrap_settings(), self.additional_widgets]),
-            widgets.VBox([self.model_settings, self.inpaint.wrap_settings(), self.additional_widgets]),
+            widgets.VBox([self.model_settings, border, self.inpaint.wrap_settings(), self.additional_widgets]),
             widgets.VBox([self.lora.wrap_settings(), self.token_section]),
             widgets.VBox([self.embeddings.wrap_settings(), self.token_section]),
             self.ip.wrap_settings(),
