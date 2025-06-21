@@ -63,7 +63,7 @@ class ESRGANWidget:
             model_name=self.model_name.value,
             denoise_strength=self.denoising.value,
             outscale=self.upscale_factor.value,
-            output=self.base_path,
+            output=f"{self.base_path}/Upscaled",
             tile=self.tile_size.value,
             tile_pad=self.tile_padding.value,
             pre_pad=self.pre_padding.value,
@@ -211,6 +211,9 @@ def run_upscaling(
             arch='clean',
             channel_multiplier=2,
             bg_upsampler=upsampler)
+    else:
+        face_enhancer = None
+        
     os.makedirs(args.output, exist_ok=True)
 
     if os.path.isfile(args.input):
@@ -259,5 +262,7 @@ def run_upscaling(
             print(f"Image is saved at {save_path}.")
 
             del output
+            del face_enhancer
+            del upsampler
             torch.cuda.empty_cache()
             gc.collect()
