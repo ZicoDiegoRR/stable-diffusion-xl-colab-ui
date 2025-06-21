@@ -1,14 +1,16 @@
 # A modified version of inference_realesrgan.py from https://github.com/xinntao/Real-ESRGAN/blob/master/inference_realesrgan.py for project purpose
 # The libraries will be downloaded after running the first cell 
-   
-import cv2
-import glob
-import os
+
 import ipywidgets as widgets
-from basicsr.archs.rrdbnet_arch import RRDBNet
-from diffusers.utils import load_image, make_image_grid
 from basicsr.utils.download_util import load_file_from_url
+from diffusers.utils import load_image, make_image_grid
 from IPython.display import display, clear_output
+from basicsr.archs.rrdbnet_arch import RRDBNet
+import torch
+import glob
+import cv2
+import os
+import gc
 
 os.chdir("/content/RealESRGAN")
 from realesrgan import RealESRGANer
@@ -255,3 +257,7 @@ def run_upscaling(
             print(f"Original resolution: {input_width}x{input_height} px")
             print(f"Upscaled resolution: {output_width}x{output_height} px")
             print(f"Image is saved at {save_path}.")
+
+            del output
+            torch.cuda.empty_cache()
+            gc.collect()
