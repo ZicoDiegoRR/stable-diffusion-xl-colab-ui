@@ -40,14 +40,34 @@ class IPAdapterLoader:
         new_value.remove(path)
         self.ip_image_link_widget.value = ", ".join(new_value)
 
+    # Function to collect images' paths and URL's from the widgets
+    def link_collector(self):
+        links_from_widget = [
+            word for word in re.split(r"\s*,\s*", self.ip_image_link_widget.value) if word and self.check_if_link(word)
+        ] if self.ip_image_link_widget.value else []
+        combined_images = links_from_widget + sorted(self.path_listdir())
+
+        sanitized_img = []
+        for img in combined_images:
+            try:
+                _ = load_image(img)
+                sanitized_img.append(img)
+            except Exception as e:
+                if not img.startswith("/content/ip_adapter/"):
+                    self.sanitize_links(img)
+                else:
+                    os.remove(img)
+
+        return sanitized_img
+
     # Function to remove images from widget and directory
-    def ip_remove_button_on_click(self, path, type, length): 
-        if type == "Upload":
+    def ip_remove_button_on_click(self, path, length): 
+        if path.startswith("/content/ip_adapter"):
             os.remove(path)
-        elif type == "Link":
+        else:
             self.sanitize_links(path)
-            
-        self.ip_grid_button = self.ip_grid_button_maker(sorted(self.path_listdir()))
+
+        self.ip_grid_button = self.ip_grid_button_maker(self.link_collector())
         if length == 1:
             self.ip_adapter_dropdown_popup({"new": "refresh_zero"})
         else:
@@ -64,13 +84,8 @@ class IPAdapterLoader:
                     k = (i*5 + j + 1)
                     list_grid[i, j] = widgets.Button(description=f"Remove image {k}", button_style='danger', layout=widgets.Layout(height='auto', width='auto')) if k <= len(image_list) else widgets.Button(description="", layout=widgets.Layout(height='auto', width='auto'))
                     path = image_list[k - 1] if k <= len(image_list) else ""
-        
-                    if path.startswith(("https://", "http://", "/content/gdrive/MyDrive")):
-                        image_type = "Link"
-                    else:
-                        image_type = "Upload"
-                        
-                    list_grid[i, j].on_click(lambda b, path=path: self.ip_remove_button_on_click(path, image_type, k)) if k <= len(image_list) else None
+
+                    list_grid[i, j].on_click(lambda b, path=path: self.ip_remove_button_on_click(path, k)) if k <= len(image_list) else None
                     loaded_image_for_grid.append(load_image(path)) if k <= len(image_list) else loaded_image_for_grid.append(load_image("https://huggingface.co/IDK-ab0ut/BFIDIW9W29NFJSKAOAOXDOKERJ29W/resolve/main/placeholder.png"))
                 
             ip_image_grid_maker = make_image_grid([element.resize((1024, 1024)) for element in loaded_image_for_grid], rows=math.ceil(len(image_list)/5), cols=5)
@@ -120,21 +135,7 @@ class IPAdapterLoader:
 
     # Function to handle the preview
     def preview_grid(self):
-        links_from_widget = [
-            word for word in re.split(r"\s*,\s*", self.ip_image_link_widget.value) if word and self.check_if_link(word)
-        ] if self.ip_image_link_widget else []
-        combined_images = links_from_widget + sorted(self.path_listdir())
-
-        sanitized_img = []
-        for img in combined_images:
-            try:
-                _ = load_image(img)
-                sanitized_img.append(img)
-            except Exception as e:
-                if not img.startswith("/content/ip_adapter/"):
-                    self.sanitize_links(img)
-                else:
-                    os.remove(img)
+        sanitized_img = self.link_collector()
 
         self.ip_grid_button = self.ip_grid_button_maker(sanitized_img)
         self.ip_adapter_dropdown_popup({"new": self.ip_adapter_dropdown.value})
@@ -143,16 +144,16 @@ class IPAdapterLoader:
     def __init__(self, cfg):
         os.makedirs("/content/ip_adapter", exist_ok=True)
         filtered_ip_image_during_initial_load = [word for word in re.split(r"\s*,\s*", cfg[0]) if word and self.check_if_link(word)] if cfg else ""
-        
-        self.ip_grid_image_html = widgets.HTML(value="Uploaded image(s):")
-        self.ip_grid_image = widgets.Image()
-        self.ip_grid_button_html = widgets.HTML(value="Remove image(s):")
-        self.ip_grid_button = None
 
         self.ip_image_upload = widgets.FileUpload(accept="image/*", multiple=True)
         self.ip_image_link_widget = widgets.Text(value=", ".join(filtered_ip_image_during_initial_load), description="IP Image Link", placeholder="Image links separated by commas")
         self.ip_adapter_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[1] if cfg else 0.8, description="Adapter Strength")
         self.ip_adapter_preview_button = widgets.Button(description="Preview")
+
+        self.ip_grid_image_html = widgets.HTML(value="Uploaded image(s):")
+        self.ip_grid_image = widgets.Image()
+        self.ip_grid_button_html = widgets.HTML(value="Remove image(s):")
+        self.ip_grid_button = self.ip_grid_button_maker(self.link_collector()) if self.path_listdir() else widgets.GridspecLayout(1, 5)
 
         self.ip_adapter_dropdown = widgets.Dropdown(
             options=[
