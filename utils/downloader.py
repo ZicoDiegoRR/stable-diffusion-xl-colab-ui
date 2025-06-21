@@ -71,7 +71,7 @@ def is_corrupt(path):
             tensor_check = load_file(path)
             _ = list(tensor_check.items())
             return False
-        elif path.endswith(".bin", ".pt", ".ckpt"):
+        elif path.endswith((".bin", ".pt", ".ckpt")):
             _ = torch.load(path, map_location="cpu", weights_only=True)
             return False
         elif path.endswith(".json"):
@@ -80,6 +80,7 @@ def is_corrupt(path):
             return False
             
     except Exception as e:
+        print(e)
         return True
 
     return False 
