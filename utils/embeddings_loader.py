@@ -13,8 +13,8 @@ def search_for_match(element_in_list, keys):
     return False
 
 def unload_embeddings(pipe, saved, tokens):
-    saved_filtered = [element for element in saved if search_for_match(element, tokens)]
-    unload_ti = [element for element in saved if not search_for_match(element, tokens)]
+    saved_filtered = [element for element in saved if search_for_match(element, tokens)] if saved else []
+    unload_ti = [element for element in saved if not search_for_match(element, tokens)] if saved else []
     
     if unload_ti:
         print("Unloading certain textual inversion weights...")
@@ -52,6 +52,9 @@ def load_textual_inversion_from_link(pipe, link, token, name, embeddings_tokens)
                 new_tokens = list(set(get_vocab(pipe)) - set(old_tokens) - {"<|startoftext|>", "<|endoftext|>"})
                 filtered_tokens.append(new_tokens)
                 loaded_name.append(weight_name)
+            else:
+                if activation_token in list(get_vocab(pipe)):
+                    loaded_name.append(weight_name)
                 
         except Exception as e:
             print(f"Skipped {weight_name}. Reason: {e}")
