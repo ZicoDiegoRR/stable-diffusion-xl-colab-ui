@@ -45,7 +45,7 @@ class IPAdapterLoader:
         if type == "Upload":
             os.remove(path)
         elif type == "Link":
-             self.sanitize_links(path)
+            self.sanitize_links(path)
             
         self.ip_grid_button = self.ip_grid_button_maker(sorted(self.path_listdir()))
         if length == 1:
@@ -54,26 +54,26 @@ class IPAdapterLoader:
             self.ip_adapter_dropdown_popup({"new": self.ip_adapter_dropdown.value})
 
     # Function to make a grid of images and buttons
-    def ip_grid_button_maker(self, list): 
-        list_grid = widgets.GridspecLayout(math.ceil(len(list)/5), 5) if list else widgets.HTML(value="The IP-Adapter folder is empty. Start uploading to use your own images.")
+    def ip_grid_button_maker(self, image_list): 
+        list_grid = widgets.GridspecLayout(math.ceil(len(image_list)/5), 5) if image_list else widgets.HTML(value="The IP-Adapter folder is empty. Start uploading to use your own images.")
         buffer = BytesIO()
         loaded_image_for_grid = []
-        if list:
-            for i in range(math.ceil(len(list)/5)):
+        if image_list:
+            for i in range(math.ceil(len(image_list)/5)):
                 for j in range(5):
                     k = (i*5 + j + 1)
-                    list_grid[i, j] = widgets.Button(description=f"Remove image {k}", button_style='danger', layout=widgets.Layout(height='auto', width='auto')) if k <= len(list) else widgets.Button(description="", layout=widgets.Layout(height='auto', width='auto'))
-                    path = list[k - 1] if k <= len(list) else ""
-                    
+                    list_grid[i, j] = widgets.Button(description=f"Remove image {k}", button_style='danger', layout=widgets.Layout(height='auto', width='auto')) if k <= len(image_list) else widgets.Button(description="", layout=widgets.Layout(height='auto', width='auto'))
+                    path = image_list[k - 1] if k <= len(image_list) else ""
+        
                     if path.startswith(("https://", "http://", "/content/gdrive/MyDrive")):
                         image_type = "Link"
                     else:
                         image_type = "Upload"
                         
-                    list_grid[i, j].on_click(lambda b, path=path: self.ip_remove_button_on_click(path, image_type, k)) if k <= len(list) else None
-                    loaded_image_for_grid.append(load_image(path)) if k <= len(list) else loaded_image_for_grid.append(load_image("https://huggingface.co/IDK-ab0ut/BFIDIW9W29NFJSKAOAOXDOKERJ29W/resolve/main/placeholder.png"))
+                    list_grid[i, j].on_click(lambda b, path=path: self.ip_remove_button_on_click(path, image_type, k)) if k <= len(image_list) else None
+                    loaded_image_for_grid.append(load_image(path)) if k <= len(image_list) else loaded_image_for_grid.append(load_image("https://huggingface.co/IDK-ab0ut/BFIDIW9W29NFJSKAOAOXDOKERJ29W/resolve/main/placeholder.png"))
                 
-            ip_image_grid_maker = make_image_grid([element.resize((1024, 1024)) for element in loaded_image_for_grid], rows=math.ceil(len(list)/5), cols=5)
+            ip_image_grid_maker = make_image_grid([element.resize((1024, 1024)) for element in loaded_image_for_grid], rows=math.ceil(len(image_list)/5), cols=5)
             ip_image_grid_maker.save(buffer, format = "PNG")
             self.ip_grid_image.value = buffer.getvalue()
         else:
@@ -89,7 +89,7 @@ class IPAdapterLoader:
                 self.ip_image_upload, 
                 self.ip_adapter_strength_slider,
                 self.ip_adapter_preview_button,
-            ] if not self.path_listdir() else [
+            ] if not self.path_listdir() and not self.ip_image_link_widget.value else [
                 self.ip_adapter_dropdown, 
                 self.ip_image_link_widget, 
                 self.ip_image_upload, 
@@ -135,7 +135,7 @@ class IPAdapterLoader:
                     self.sanitize_links(img)
                 else:
                     os.remove(img)
-        
+
         self.ip_grid_button = self.ip_grid_button_maker(sanitized_img)
         self.ip_adapter_dropdown_popup({"new": self.ip_adapter_dropdown.value})
 
@@ -147,7 +147,7 @@ class IPAdapterLoader:
         self.ip_grid_image_html = widgets.HTML(value="Uploaded image(s):")
         self.ip_grid_image = widgets.Image()
         self.ip_grid_button_html = widgets.HTML(value="Remove image(s):")
-        self.ip_grid_button = self.ip_grid_button_maker(sorted(self.path_listdir)) if self.path_listdir() else widgets.GridspecLayout(1, 5)
+        self.ip_grid_button = None
 
         self.ip_image_upload = widgets.FileUpload(accept="image/*", multiple=True)
         self.ip_image_link_widget = widgets.Text(value=", ".join(filtered_ip_image_during_initial_load), description="IP Image Link", placeholder="Image links separated by commas")
@@ -170,4 +170,4 @@ class IPAdapterLoader:
         self.ip_adapter_dropdown_popup({"new": self.ip_adapter_dropdown.value})
         self.ip_image_upload.observe(self.ip_adapter_upload_handler, names="value")
         self.ip_adapter_dropdown.observe(self.ip_adapter_dropdown_popup, names="value")
-        self.ip_adapter_preview_button.on_click(self.preview_grid())
+        self.ip_adapter_preview_button.on_click(lambda b: self.preview_grid())
