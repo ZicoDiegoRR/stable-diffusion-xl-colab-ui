@@ -194,7 +194,7 @@ These steps allow you to reuse the tokens without inputting them manually in the
 - Adding textual inversion ✅ 
 - Implementing Inpainting using IPyCanvas
 - Creating the UI preview (missing one piece)
-- Modularizing the code (testing)
+- Modularizing the code ✅
 - Overhauling the save system ✅
 - Adding Hugging Face's token integration ✅ 
 - Implementing Img2Img pipeline ✅ 
