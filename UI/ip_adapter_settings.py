@@ -6,13 +6,15 @@ import os
 import re
 
 class IPAdapterLoader:
-    def collect_values(self): # Function to collect the values in this class
+    # Function to collect the values in this class
+    def collect_values(self):
         return [
             self.ip_image_link_widget.value  + ",".join(self.path_listdir()),
             self.ip_adapter_strength_slider.value,
             self.ip_adapter_dropdown.value
         ]
 
+    # Function to return every widget for IP-Adapter
     def return_widgets(self):
         return [
             self.ip_image_link_widget,
@@ -20,24 +22,39 @@ class IPAdapterLoader:
             self.ip_adapter_dropdown
         ]
 
+    # Function to wrap every widget into a VBox
     def wrap_settings(self): # Function to collect every widget into a vbox
         return self.ip_settings
 
-    def check_if_link(self, value): # Function to check whether the given path is a link or a file
+    # Function to check whether the given path is a link or a file
+    def check_if_link(self, value): 
         return value.startswith(("https://", "http://", "/content/gdrive/MyDrive")) or os.path.exists(value)
-    
-    def path_listdir(self): # Function to list files in /content/ip_adapter directory
+
+    # Function to list files in /content/ip_adapter directory
+    def path_listdir(self): 
         return [os.path.join("/content/ip_adapter/", element) for element in os.listdir("/content/ip_adapter/") if os.path.isfile(os.path.join("/content/ip_adapter/", element))]
+
+    # Function to remove invalid URLs from the link widget
+    def sanitize_links(self, path):
+        new_value = re.split(r"\s*,\s*", self.ip_image_link_widget.value)
+        new_value.remove(path)
+        self.ip_image_link_widget.value = ", ".join(new_value)
+
+    # Function to remove images from widget and directory
+    def ip_remove_button_on_click(self, path, type, length): 
+        if type == "Upload":
+            os.remove(path)
+        elif type == "Link":
+             self.sanitize_links(path)
             
-    def ip_remove_button_on_click(self, path): # Function to remove images from widget and directory
-        os.remove(path)
         self.ip_grid_button = self.ip_grid_button_maker(sorted(self.path_listdir()))
-        if not self.path_listdir():
+        if length == 1:
             self.ip_adapter_dropdown_popup({"new": "refresh_zero"})
         else:
             self.ip_adapter_dropdown_popup({"new": self.ip_adapter_dropdown.value})
 
-    def ip_grid_button_maker(self, list): # Function to make a grid of images and buttons
+    # Function to make a grid of images and buttons
+    def ip_grid_button_maker(self, list): 
         list_grid = widgets.GridspecLayout(math.ceil(len(list)/5), 5) if list else widgets.HTML(value="The IP-Adapter folder is empty. Start uploading to use your own images.")
         buffer = BytesIO()
         loaded_image_for_grid = []
@@ -47,8 +64,15 @@ class IPAdapterLoader:
                     k = (i*5 + j + 1)
                     list_grid[i, j] = widgets.Button(description=f"Remove image {k}", button_style='danger', layout=widgets.Layout(height='auto', width='auto')) if k <= len(list) else widgets.Button(description="", layout=widgets.Layout(height='auto', width='auto'))
                     path = list[k - 1] if k <= len(list) else ""
-                    list_grid[i, j].on_click(lambda b, path=path: self.ip_remove_button_on_click(path)) if k <= len(list) else None
+                    
+                    if path.startswith(("https://", "http://", "/content/gdrive/MyDrive")):
+                        image_type = "Link"
+                    else:
+                        image_type = "Upload"
+                        
+                    list_grid[i, j].on_click(lambda b, path=path: self.ip_remove_button_on_click(path, image_type, k)) if k <= len(list) else None
                     loaded_image_for_grid.append(load_image(path)) if k <= len(list) else loaded_image_for_grid.append(load_image("https://huggingface.co/IDK-ab0ut/BFIDIW9W29NFJSKAOAOXDOKERJ29W/resolve/main/placeholder.png"))
+                
             ip_image_grid_maker = make_image_grid([element.resize((1024, 1024)) for element in loaded_image_for_grid], rows=math.ceil(len(list)/5), cols=5)
             ip_image_grid_maker.save(buffer, format = "PNG")
             self.ip_grid_image.value = buffer.getvalue()
@@ -56,22 +80,25 @@ class IPAdapterLoader:
             self.ip_adapter_dropdown_popup({"new": "refresh_zero"})
         return list_grid
 
-    def ip_adapter_dropdown_popup(self, change): # Function to show or hide the widgets
+    # Function to show or hide the widgets
+    def ip_adapter_dropdown_popup(self, change):
         if change["new"] != "None" and change["new"] != "refresh_zero":
             self.ip_settings.children = [
                 self.ip_adapter_dropdown, 
                 self.ip_image_link_widget, 
                 self.ip_image_upload, 
-                self.ip_adapter_strength_slider
+                self.ip_adapter_strength_slider,
+                self.ip_adapter_preview_button,
             ] if not self.path_listdir() else [
                 self.ip_adapter_dropdown, 
                 self.ip_image_link_widget, 
                 self.ip_image_upload, 
                 self.ip_adapter_strength_slider, 
+                self.ip_adapter_preview_button,
                 self.ip_grid_image_html, 
                 self.ip_grid_image, 
                 self.ip_grid_button_html, 
-                self.ip_grid_button
+                self.ip_grid_button,
             ]
             
         elif change["new"] == "refresh_zero":
@@ -79,18 +106,40 @@ class IPAdapterLoader:
                 self.ip_adapter_dropdown, 
                 self.ip_image_link_widget, 
                 self.ip_image_upload, 
-                self.ip_adapter_strength_slider
+                self.ip_adapter_strength_slider,
+                self.ip_adapter_preview_button,
             ]
         else:
             self.ip_settings.children = [self.ip_adapter_dropdown]
 
-    def ip_adapter_upload_handler(self, change): # Function to trigger the UI logic when images are uploaded
+    # Function to save uploaded images locally
+    def ip_adapter_upload_handler(self, change): 
         for filename, file_info in self.ip_image_upload.value.items():
             with open(f"/content/ip_adapter/{filename}", "wb") as up:
                 up.write(file_info["content"])
-        self.ip_grid_button = self.ip_grid_button_maker(sorted(self.path_listdir()))
+
+    # Function to handle the preview
+    def preview_grid(self):
+        links_from_widget = [
+            word for word in re.split(r"\s*,\s*", self.ip_image_link_widget.value) if word and self.check_if_link(word)
+        ] if self.ip_image_link_widget else []
+        combined_images = links_from_widget + sorted(self.path_listdir())
+
+        sanitized_img = []
+        for img in combined_images:
+            try:
+                _ = load_image(img)
+                sanitized_img.append(img)
+            except Exception as e:
+                if not img.startswith("/content/ip_adapter/"):
+                    self.sanitize_links(img)
+                else:
+                    os.remove(img)
+        
+        self.ip_grid_button = self.ip_grid_button_maker(sanitized_img)
         self.ip_adapter_dropdown_popup({"new": self.ip_adapter_dropdown.value})
 
+    # Initialize everything
     def __init__(self, cfg):
         os.makedirs("/content/ip_adapter", exist_ok=True)
         filtered_ip_image_during_initial_load = [word for word in re.split(r"\s*,\s*", cfg[0]) if word and self.check_if_link(word)] if cfg else ""
@@ -103,6 +152,7 @@ class IPAdapterLoader:
         self.ip_image_upload = widgets.FileUpload(accept="image/*", multiple=True)
         self.ip_image_link_widget = widgets.Text(value=", ".join(filtered_ip_image_during_initial_load), description="IP Image Link", placeholder="Image links separated by commas")
         self.ip_adapter_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.1, value=cfg[1] if cfg else 0.8, description="Adapter Strength")
+        self.ip_adapter_preview_button = widgets.Button(description="Preview")
 
         self.ip_adapter_dropdown = widgets.Dropdown(
             options=[
@@ -120,3 +170,4 @@ class IPAdapterLoader:
         self.ip_adapter_dropdown_popup({"new": self.ip_adapter_dropdown.value})
         self.ip_image_upload.observe(self.ip_adapter_upload_handler, names="value")
         self.ip_adapter_dropdown.observe(self.ip_adapter_dropdown_popup, names="value")
+        self.ip_adapter_preview_button.on_click(self.preview_grid())
