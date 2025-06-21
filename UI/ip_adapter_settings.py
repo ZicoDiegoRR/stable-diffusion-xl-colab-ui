@@ -8,8 +8,8 @@ import re
 class IPAdapterLoader:
     def collect_values(self): # Function to collect the values in this class
         return [
-            self.ip_image_link_widget.value,
-            self.ip_adapter_strength_slider.value + ",".join(self.path_listdir()),
+            self.ip_image_link_widget.value  + ",".join(self.path_listdir()),
+            self.ip_adapter_strength_slider.value,
             self.ip_adapter_dropdown.value
         ]
 
