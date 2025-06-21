@@ -192,7 +192,7 @@ These steps allow you to reuse the tokens without inputting them manually in the
 
 ## To-do List
 - Adding textual inversion ✅ 
-- Implementing Inpainting using IPyCanvas
+- Implementing Inpainting using IPyCanvas (in progress)
 - Creating the UI preview (missing one piece)
 - Modularizing the code ✅
 - Overhauling the save system ✅
