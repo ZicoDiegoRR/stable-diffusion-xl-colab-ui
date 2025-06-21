@@ -19,16 +19,20 @@ def unload_lora(pipe, loaded, lora_names):
 def load_downloaded_lora(pipe, link, scales, names):
     scale_list = []
     name_list = []
-    loaded_lora = get_adapters(pipe)
 
-    unload_lora(pipe, loaded_lora, names)
+    unload_lora(pipe, get_adapters(pipe), names)
     
     for file_path, scale, name in zip(link, scales, names):
         try:
-            print(f"Loading {name}...")
-            pipe.load_lora_weights(file_path, adapter_name=name)
-            scale_list.append(scale)
-            name_list.append(name)
+            if name in get_adapters(pipe):
+                print(f"Loading {name}...")
+                pipe.load_lora_weights(file_path, adapter_name=name)
+                scale_list.append(scale)
+                name_list.append(name)
+            else:
+                if name in get_adapters(pipe):
+                    scale_list.append(scale)
+                    name_list.append(name)
 
         except Exception as e:
             print(f"Skipped {name}. Reason: {e}")
