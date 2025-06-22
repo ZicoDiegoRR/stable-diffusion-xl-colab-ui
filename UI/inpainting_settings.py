@@ -60,22 +60,14 @@ class InpaintingSettings:
             self.inpainting_strength_slider.value,
         ]
     def check_if_link(self, value, img_type):
-        if img_type == "image":
-            options=[
-                "pre-generated text2image image",
-                "pre-generated controlnet image",
-                "previous inpainting image"
-            ]
-            return value.startswith(("/content/gdrive/MyDrive", "https://", "http://")) or os.path.exists(value) or value in options
-        elif img_type == "mask":
-            return value.startswith(("/content/gdrive/MyDrive", "https://", "http://")) or os.path.exists(value)
+        return value.startswith(("/content/gdrive/MyDrive", "https://", "http://")) or os.path.exists(value)
 
     def reference_image_upload_handler(self, change):
         os.makedirs("/content/inpaint/", exist_ok=True)
         for filename, file_info in self.inpainting_image_upload.value.items():
             with open(f"/content/inpaint/{filename}", "wb") as up:
                 up.write(file_info["content"])
-            self.reference_image_link_widget.value = f"/content/inpaint/{filename}"
+            self.inpainting_image_dropdown.value = f"/content/inpaint/{filename}"
     
     # Function to show or hide scheduler booleans
     def scheduler_dropdown_handler(self, change):
@@ -144,7 +136,7 @@ class InpaintingSettings:
         self.vae_config = widgets.Text(value=cfg[14] if cfg else "", placeholder="VAE config link")
         self.vae_section = widgets.HBox([self.vae_link_widget, self.vae_config])
         
-        self.inpainting_image_dropdown = widgets.Text(value=cfg[15] if cfg and self.check_if_link(cfg[15], "image") else "pre-generated text2image image", description="Inpainting Image",)
+        self.inpainting_image_dropdown = widgets.Text(value=cfg[15] if cfg and self.check_if_link(cfg[15], "image") else "", description="Inpainting Image",)
         self.mask_image_widget = widgets.Text(value=cfg[16] if cfg and self.check_if_link(cfg[16], "mask") else "", description="Mask Image", placeholder="Image link")
         self.inpainting_toggle = widgets.Checkbox(value=True, description="Enable Inpainting")
         self.inpainting_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.01, value=cfg[18] if cfg else 0.9, description="Inpainting Strength")
@@ -158,3 +150,5 @@ class InpaintingSettings:
             self.mask_option,
             self.inpainting_strength_slider,
         ])
+
+        self.inpainting_image_upload.observe(self.reference_image_upload_handler, names="value")
