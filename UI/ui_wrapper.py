@@ -197,11 +197,13 @@ class UIWrapper:
                 self.ui_tab.selected_index = 1
             elif destination == "controlnet":
                 self.ui_tab.selected_index = 2
+            elif destination == "inpaint":
+                self.ui_tab.selected_index = 3
         self.merge_options.children = [self.merge_button]
 
     # First phase of merging a pipeline's general parameters to the selected pipeline
-    def merge_first_phase(self, index, text2img, img2img, controlnet): # Giving options
-        merge_buttons = [self.send_text2img, self.send_img2img, self.send_controlnet]
+    def merge_first_phase(self, index, text2img, img2img, controlnet, inpaint): # Giving options
+        merge_buttons = [self.send_text2img, self.send_img2img, self.send_controlnet, self.send_inpaint]
         merge_buttons.pop(index)
 
         self.merge_buttons_options.children = []
@@ -216,9 +218,10 @@ class UIWrapper:
         self.send_controlnet._click_handlers.callbacks.clear()
         self.merge_back._click_handlers.callbacks.clear()
         
-        self.send_text2img.on_click(lambda b: self.merge_final_phase(type_for_init, "text2img", index, self.text2img, self.img2img, self.controlnet))
-        self.send_img2img.on_click(lambda b: self.merge_final_phase(type_for_init, "img2img", index, self.text2img, self.img2img, self.controlnet))
-        self.send_controlnet.on_click(lambda b: self.merge_final_phase(type_for_init, "controlnet", index, self.text2img, self.img2img, self.controlnet))
+        self.send_text2img.on_click(lambda b: self.merge_final_phase(type_for_init, "text2img", index, self.text2img, self.img2img, self.controlnet, self.inpaint))
+        self.send_img2img.on_click(lambda b: self.merge_final_phase(type_for_init, "img2img", index, self.text2img, self.img2img, self.controlnet, self.inpaint))
+        self.send_controlnet.on_click(lambda b: self.merge_final_phase(type_for_init, "controlnet", index, self.text2img, self.img2img, self.controlnet, self.inpaint))
+        self.send_inpaint.on_click(lambda b: self.merge_final_phase(type_for_init, "inpaint", index, self.text2img, self.img2img, self.controlnet, self.inpaint))
         self.merge_back.on_click(lambda b: self.merge_final_phase(type_for_init, "back", index, None, None, None))
 
     def checking_the_selected_tab_index(self, change): # Hiding the generate and send button or showing them
@@ -243,7 +246,7 @@ class UIWrapper:
         self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line, gpt2_pipe)
         self.img2img = Img2ImgSettings(cfg["img2img"], ideas_line, gpt2_pipe)
         self.controlnet = ControlNetSettings(cfg["controlnet"], ideas_line, gpt2_pipe, base_path)
-        self.inpaint = InpaintingSettings(cfg["inpaint"])
+        self.inpaint = InpaintingSettings(cfg["inpaint"], ideas_line, gpt2_pipe)
         self.ip = IPAdapterLoader(cfg["ip"])
         self.lora = LoRALoader(cfg["lora"], base_path)
         self.embeddings = TextualInversionLoader(cfg["embeddings"], base_path)
@@ -337,6 +340,7 @@ class UIWrapper:
         self.send_text2img = widgets.Button(description="Text-to-Image")
         self.send_img2img = widgets.Button(description="Image-to-Image")
         self.send_controlnet = widgets.Button(description="ControlNet")
+        self.send_inpaint = widgets.Button(description="Inpainting")
         self.merge_back = widgets.Button(description="Back", layout=widgets.Layout(width="100%"))
 
         self.merge_buttons_options = widgets.HBox()
@@ -388,7 +392,9 @@ class UIWrapper:
         self.ui_tab.observe(self.checking_the_selected_tab_index, names="selected_index")
         self.checking_the_selected_tab_index({"name": "selected_index", "new": self.ui_tab.selected_index, "old": None, "type": "change", "owner": self.ui_tab})
 
-        self.merge_button.on_click(lambda b: self.merge_first_phase(self.ui_tab.selected_index, self.text2img, self.img2img, self.controlnet))
+        self.merge_button.on_click(lambda b: self.merge_first_phase(
+            self.ui_tab.selected_index, self.text2img, self.img2img, self.controlnet, self.inpaint
+        ))
 
         clear_output()
         display(self.ui)
