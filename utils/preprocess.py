@@ -1,6 +1,7 @@
 from StableDiffusionXLColabUI.utils import save_file_converter
 from transformers import pipeline as pipe, set_seed
 from transformers.utils import logging
+from google.colab import output
 from google.colab import drive
 import requests
 import shutil
@@ -38,36 +39,47 @@ def save_param(path, data):
 # Return the default values for the parameters
 def default_params():
   return {
-        "text2img": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)",
+        "text2img": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
                      False, False, False, False, "", "",
                     ],
-        "img2img": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)",
+        "img2img": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
                     False, False, False, False, "", "", "", 0.3,
                    ],
-        "controlnet": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)",
-                      False, False, False, False, "", "", "", 100, 240, False,
+        "controlnet": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
+                      False, False, False, False, "", "", "", 100, 240, False, 
                       0.7, "", False, 0.7, "", False, 0.7,
                       ],
-        "inpaint": ["pre-generated text2image image", "", False, 0.9],
+        "inpaint": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
+                     False, False, False, False, "", "", "", "", False, 0.9
+                   ],
         "ip": ["", 0.8, "None"],
         "lora": ["", ""],
         "embeddings": ["", ""],
-  }
+    }
 
 # Checking and validating the save file
 def list_or_dict(cfg, path):
-  if isinstance(cfg, list):
-    new_cfg = save_file_converter.old_to_new(cfg)
-    save_param(path, new_cfg)
-    return new_cfg
-  elif isinstance(cfg, dict):
-    return cfg
-  else:
-    new_cfg = default_params()
-    save_param(path, new_cfg)
+    if isinstance(cfg, list):
+        new_cfg = save_file_converter.old_to_new(cfg)
+        save_param(path, new_cfg)
+        
+    elif isinstance(cfg, dict):
+        if len(cfg["inpaint"]) < 19:
+            new_cfg = save_file_converter.new_inpaint(cfg)
+            save_param(path, new_cfg)
+        else:
+            new_cfg = cfg
+            
+    else:
+        new_cfg = default_params()
+        save_param(path, new_cfg)
+        
     return new_cfg
 
 def run():
+    # Enabling output for IPyCanvas
+    output.enable_custom_widget_manager()
+    
     # Minimizing the Transformers' output
     logging.set_verbosity_error()
     
