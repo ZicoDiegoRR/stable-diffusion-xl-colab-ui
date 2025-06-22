@@ -145,9 +145,21 @@ def old_to_new(cfg):
         "text2img": text2img_or_general_list,
         "img2img": text2img_or_general_list + img2img_list,
         "controlnet": text2img_or_general_list + controlnet_list,
-        "inpaint": inpaint_list,
+        "inpaint": text2img_or_general_list + inpaint_list,
         "ip": ip_list,
         "lora": lora_list,
         "embeddings": ti_list,
     }
+    return new_cfg
+
+# Convert old Inpainting parameters to the new one
+def new_inpaint(cfg):
+    new_cfg = cfg
+    
+    general_settings = cfg["text2img"]
+    inpaint_settings = cfg["inpaint"]
+    new_settings = general_settings + inpaint_settings
+    
+    new_cfg["inpaint"] = new_settings
+
     return new_cfg
