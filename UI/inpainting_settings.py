@@ -32,9 +32,9 @@ class InpaintingSettings:
             self.prompts_section,
             self.image_resolution_section,
             self.generation_parameter_section,
+            self.inpainting_section,
             self.scheduler_settings,
             self.vae_section,
-            self.inpainting_section,
         ])
 
     def collect_values(self):
