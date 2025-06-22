@@ -13,7 +13,10 @@ def param_default():
                       False, False, False, False, "", "", "", 100, 240, False, 
                       0.7, "", False, 0.7, "", False, 0.7,
                       ],
-        "inpaint": ["pre-generated text2image image", "", False, 0.9],
+        "inpaint": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
+                     False, False, False, False, "", "","pre-generated text2image image", 
+                    "", False, 0.9
+                   ],
         "ip": ["", 0.8, "None"],
         "lora": ["", ""],
         "embeddings": ["", ""],
