@@ -7,3 +7,4 @@ tqdm
 huggingface_hub
 compel==2.0.3
 controlnet-aux-openpose-fix
+ipycanvas
