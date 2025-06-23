@@ -38,8 +38,8 @@ class MaskCanvas:
         self.canvas = MultiCanvas(3, width=512, height=512)
 
         self.undo_button = widgets.Button(description="↻")
-        self.brush_size = widgets.IntSlider(min=1, max=25, value=3, description="🖌️")
-        self.delete_brush = widgets.Checkbox(description="✂️")
+        self.brush_size = widgets.IntSlider(min=1, max=25, value=3, description="Brush size")
+        self.delete_brush = widgets.Checkbox(description="🧼")
         self.clear_canvas = widgets.Button(description="❌")
         self.submit_button = widgets.Button(description="✅")
 
