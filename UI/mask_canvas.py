@@ -108,8 +108,8 @@ class MaskCanvas:
         alpha = arr_data[..., 3:]/255.0
         rgb = (arr_data[..., :3] * alpha).astype(np.uint8)
 
-        converted_image = Image.fromarray(rgb).resize((self.width, self.height))
-        converted_image.save(f"/content/mask/temp.png")
+        converted_image = Image.fromarray(rgb)
+        converted_image.resize((self.width, self.height)).save(f"/content/mask/temp.png")
         self.foreground.sync_image_data = False
 
         self.preview.value = self.buffer(converted_image)
