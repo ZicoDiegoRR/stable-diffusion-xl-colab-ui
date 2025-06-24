@@ -159,7 +159,7 @@ class InpaintingSettings:
         self.inpainting_section = widgets.VBox([
             widgets.HBox([self.inpainting_image_dropdown, 
                           self.inpainting_image_upload]),
-            self.mask_option,
+            self.mask_options,
             self.inpainting_strength_slider,
         ])
 
