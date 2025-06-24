@@ -67,7 +67,7 @@ class MaskCanvas:
 
     # Collect every widget into a single VBox
     def wrap_settings(self):
-        return self.mask_ui
+        return self.canvas_settings
 
     # Return the back button
     def get_back_button(self):
@@ -213,5 +213,3 @@ class MaskCanvas:
                 ]),
             ]),
         ], justify_content="center")
-
-        self.mask_ui = widgets.HBox([self.canvas_settings])
