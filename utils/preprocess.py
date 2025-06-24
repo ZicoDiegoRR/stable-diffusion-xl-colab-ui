@@ -1,7 +1,6 @@
 from StableDiffusionXLColabUI.utils import save_file_converter
 from transformers import pipeline as pipe, set_seed
 from transformers.utils import logging
-from google.colab import output
 from google.colab import drive
 import requests
 import shutil
@@ -77,9 +76,6 @@ def list_or_dict(cfg, path):
     return new_cfg
 
 def run():
-    # Enabling output for IPyCanvas
-    output.enable_custom_widget_manager()
-    
     # Minimizing the Transformers' output
     logging.set_verbosity_error()
     
