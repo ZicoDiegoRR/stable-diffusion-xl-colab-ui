@@ -77,6 +77,16 @@ class MaskCanvas:
     def get_submit_button(self):
         return self.submit_button
 
+    # Disable buttons
+    def disable_button(self):
+        for button in [self.submit_button, self.back_button, self.reload]:
+            button.disabled = True
+
+    # Enable buttons
+    def enable_button(self):
+        for button in [self.submit_button, self.back_button, self.reload]:
+            button.disabled = False
+
     # Convert PIL images into bytes
     def buffer(self, image):
         buffer = BytesIO()
@@ -88,21 +98,24 @@ class MaskCanvas:
         return image_io
 
     def save_mask(self):
+        self.disable_button()
         self.foreground.sync_image_data = True
-        time.sleep(3) # Giving the canvas time to update
+        time.sleep(5) # Giving the canvas time to update
 
-        os.makedirs("/content/inpaint", exist_ok=True)
+        os.makedirs("/content/mask", exist_ok=True)
         arr_data = self.foreground.get_image_data()
 
         alpha = arr_data[..., 3:]/255.0
         rgb = (arr_data[..., :3] * alpha).astype(np.uint8)
 
         converted_image = Image.fromarray(rgb).resize((self.width, self.height))
-        converted_image.save(f"/content/inpaint/temp.png")
+        converted_image.save(f"/content/mask/temp.png")
         self.foreground.sync_image_data = False
 
         self.preview.value = self.buffer(converted_image)
         self.mask_ui.children = [self.canvas_settings, self.preview_section]
+
+        self.enable_button()
 
     # Stylize the canvas
     def canvas_setup(self, image):
@@ -168,7 +181,7 @@ class MaskCanvas:
         self.collected_brushes = []
         self.canvas = MultiCanvas(4, width=256, height=256)
 
-        self.preview_label = widgets.Label(value="Is this correct? Try to click the save button again if it's incorrect.\n")
+        self.preview_label = widgets.Label(value="Is this correct? Try to click the save button again if it's incorrect.")
         self.preview = widgets.Image()
         self.preview_section = widgets.VBox([self.preview_label, widgets.Label(value=" "), self.preview])
 
