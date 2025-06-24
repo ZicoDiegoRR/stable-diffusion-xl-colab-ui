@@ -399,7 +399,7 @@ class UIWrapper:
             widgets.VBox([self.model_settings, border, self.text2img.wrap_settings(), self.additional_widgets]),
             widgets.VBox([self.model_settings, border, self.img2img.wrap_settings(), self.additional_widgets]),
             widgets.VBox([self.model_settings, self.controlnet.wrap_settings(), self.additional_widgets]),
-            ,
+            self.inpaint_option,
             widgets.VBox([self.lora.wrap_settings(), self.token_section]),
             widgets.VBox([self.embeddings.wrap_settings(), self.token_section]),
             self.ip.wrap_settings(),
