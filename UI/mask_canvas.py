@@ -1,5 +1,6 @@
 from IPython.display import display, clear_output
 from ipycanvas import MultiCanvas
+from google.colab import output
 import ipywidgets as widgets
 from io import BytesIO
 from PIL import Image
@@ -158,6 +159,8 @@ class MaskCanvas:
         self.brush_preview.on_mouse_down(self.foreground_on_down)
         self.brush_preview.on_mouse_move(self.foreground_on_move)
         self.brush_preview.on_mouse_up(self.foreground_on_release)
+
+        output.enable_custom_widget_manager()
 
     # Clearing the canvas
     def clear(self):
