@@ -155,7 +155,7 @@ class InpaintingSettings:
         self.mask_image_widget = widgets.Text(value=cfg[16] if cfg and self.check_if_link(cfg[16], "mask") else "", description="Mask Image", placeholder="Image link")
         self.mask_upload = widgets.FileUpload(accept="image/*", multiple=False)
         self.mask_create_button = widgets.Button(description="Create Mask")
-        self.mask_options = widgets.HBox([self.mask_image_widget, self.inpainting_mask_upload, self.mask_create_button])
+        self.mask_options = widgets.HBox([self.mask_image_widget, self.mask_upload, self.mask_create_button])
         self.inpainting_section = widgets.VBox([
             widgets.HBox([self.inpainting_image_dropdown, 
                           self.inpainting_image_upload]),
