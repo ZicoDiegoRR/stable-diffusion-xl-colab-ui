@@ -82,6 +82,9 @@ class InpaintingSettings:
             self.scheduler_settings.children = [self.scheduler_dropdown, self.karras_bool, self.vpred_bool, self.sgmuniform_bool, self.res_betas_zero_snr, widgets.HTML(value="Rescaling the betas to have zero terminal SNR helps to achieve vibrant color, but not necessary.")]
         else:
             self.scheduler_settings.children = [self.scheduler_dropdown]
+
+    def get_mask_create_button(self):
+        return self.mask_create_button
             
     # Initialize widgets creation
     def __init__(self, cfg, ideas_line, gpt2_pipe):
