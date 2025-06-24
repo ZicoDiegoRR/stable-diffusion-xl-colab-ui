@@ -68,6 +68,13 @@ class InpaintingSettings:
             with open(f"/content/inpaint/{filename}", "wb") as up:
                 up.write(file_info["content"])
             self.inpainting_image_dropdown.value = f"/content/inpaint/{filename}"
+
+    def mask_image_upload_handler(self, change):
+        os.makedirs("/content/mask", exist_ok=True)
+        for filename, file_info in self.inpainting_image_upload.value.items():
+            with open("/content/mask/temp.png", "wb") as up:
+                up.write(file_info["content"])
+            self.mask_image_widget.value = "/content/mask/temp.png"
     
     # Function to show or hide scheduler booleans
     def scheduler_dropdown_handler(self, change):
@@ -135,15 +142,17 @@ class InpaintingSettings:
         self.vae_link_widget = widgets.Text(value=cfg[13] if cfg else "", description="VAE", placeholder="VAE model link")
         self.vae_config = widgets.Text(value=cfg[14] if cfg else "", placeholder="VAE config link")
         self.vae_section = widgets.HBox([self.vae_link_widget, self.vae_config])
-        
+
+        self.inpainting_image_upload = widgets.FileUpload(accept="image/*", multiple=False)
         self.inpainting_image_dropdown = widgets.Text(value=cfg[15] if cfg and self.check_if_link(cfg[15], "image") else "", description="Inpainting Image",)
-        self.mask_image_widget = widgets.Text(value=cfg[16] if cfg and self.check_if_link(cfg[16], "mask") else "", description="Mask Image", placeholder="Image link")
+        
         self.inpainting_toggle = widgets.Checkbox(value=True, description="Enable Inpainting")
         self.inpainting_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.01, value=cfg[18] if cfg else 0.9, description="Inpainting Strength")
 
-        self.inpainting_image_upload = widgets.FileUpload(accept="image/*", multiple=False)
+        self.mask_image_widget = widgets.Text(value=cfg[16] if cfg and self.check_if_link(cfg[16], "mask") else "", description="Mask Image", placeholder="Image link")
+        self.mask_upload = widgets.FileUpload(accept="image/*", multiple=False)
         self.mask_create_button = widgets.Button(description="Create Mask")
-        self.mask_options = widgets.HBox([self.mask_image_widge, self.mask_create_button])
+        self.mask_options = widgets.HBox([self.mask_image_widget, self.inpainting_mask_upload, self.mask_create_button])
         self.inpainting_section = widgets.VBox([
             widgets.HBox([self.inpainting_image_dropdown, 
                           self.inpainting_image_upload]),
@@ -152,3 +161,4 @@ class InpaintingSettings:
         ])
 
         self.inpainting_image_upload.observe(self.reference_image_upload_handler, names="value")
+        self.mask_upload.observe(self.mask_image_upload_handler, names="value")
