@@ -69,10 +69,6 @@ class MaskCanvas:
     def wrap_settings(self):
         return self.mask_ui
 
-    # Return the back button
-    def get_back_button(self):
-        return self.back_button
-
     # Return the submit button
     def get_submit_button(self):
         return self.submit_button
@@ -195,7 +191,6 @@ class MaskCanvas:
         self.clear_canvas.on_click(lambda b: self.clear())
         
         self.submit_button = widgets.Button(description="✅")
-        self.back_button = widgets.Button(description="🔙")
         self.submit_button.on_click(lambda b: self.save_mask())
 
         self.reload = widgets.Button(description="Reload Canvas")
@@ -210,7 +205,7 @@ class MaskCanvas:
                 ]),
                 self.canvas,
                 widgets.HBox([
-                    self.submit_button, self.back_button, self.reload
+                    self.submit_button, self.reload
                 ]),
                 widgets.HTML(value="<hr>"),
             ]),
