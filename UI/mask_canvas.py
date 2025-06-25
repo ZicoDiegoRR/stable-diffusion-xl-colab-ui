@@ -203,6 +203,7 @@ class MaskCanvas:
 
         self.canvas_settings = widgets.HBox([
             widgets.VBox([
+                widgets.HTML(value="<hr>"),
                 self.brush_label,
                 widgets.HBox([
                     self.brush_size, self.undo_button, self.clear_canvas,
@@ -211,6 +212,7 @@ class MaskCanvas:
                 widgets.HBox([
                     self.submit_button, self.back_button, self.reload
                 ]),
+                widgets.HTML(value="<hr>"),
             ]),
         ], justify_content="center")
 
