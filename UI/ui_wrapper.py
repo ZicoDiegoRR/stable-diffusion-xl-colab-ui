@@ -8,7 +8,6 @@ from StableDiffusionXLColabUI.UI.text2img_settings import Text2ImgSettings
 from StableDiffusionXLColabUI.UI.img2img_settings import Img2ImgSettings
 from StableDiffusionXLColabUI.UI.preset_system import PresetSystem
 from StableDiffusionXLColabUI.UI.lora_settings import LoRALoader
-from StableDiffusionXLColabUI.UI.mask_canvas import MaskCanvas
 from StableDiffusionXLColabUI.UI.history import HistorySystem
 from StableDiffusionXLColabUI.UI import all_widgets
 from IPython.display import display, clear_output
