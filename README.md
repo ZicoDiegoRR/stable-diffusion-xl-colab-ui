@@ -91,7 +91,14 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 
 <details> <summary> Inpainting </summary>
 <br>
-Will be added soon.
+Settings:
+
+![inpaint](docs/inpaint.jpg)
+
+<br>
+Canvas:
+
+![canvas](docs/canvas.jpg)
 
 </details>
 
@@ -192,7 +199,7 @@ These steps allow you to reuse the tokens without inputting them manually in the
 ## To-do List
 - Adding textual inversion ✅ 
 - Implementing Inpainting using IPyCanvas ✅
-- Creating the UI preview (missing one piece)
+- Creating the UI preview ✅
 - Modularizing the code ✅
 - Overhauling the save system ✅
 - Adding Hugging Face's token integration ✅ 
