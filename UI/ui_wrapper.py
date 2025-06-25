@@ -55,18 +55,15 @@ class UIWrapper:
     # Hide the generate and send buttons or show them
     def checking_the_selected_tab_index(self, change): 
         self.tab_selected_index = change["new"]
-        if not self.draw:
-            bool_value = False
-        else:
-            bool_value = True
+        bool_value = self.draw.value
             
-        if self.tab_selected_index < 3 or self.tab_selected_index == 7:
+        if self.tab_selected_index <= 3 or self.tab_selected_index == 7:
             self.merge_button.disabled = False
             self.reset_generate.submit_button_widget.disabled = bool_value
             if self.tab_selected_index == 7:
                 self.merge_button.submit_button_widget.disabled = True
-        else
-            self.merge_button.submit_button_widget.disabled = True
+        else:
+            self.merge_button.disabled = True
             self.reset_generate.submit_button_widget.disabled = True
 
     # Reload the combobox options
