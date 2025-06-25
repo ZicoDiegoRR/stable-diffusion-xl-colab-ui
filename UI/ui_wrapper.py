@@ -57,16 +57,15 @@ class UIWrapper:
     # Hide the generate and send buttons or show them
     def checking_the_selected_tab_index(self, change): 
         self.tab_selected_index = change["new"]
-        if not self.draw:
-            if self.tab_selected_index > 3 and self.tab_selected_index!= 7:
-                self.submit_settings.layout.visibility = "hidden"
-                self.merge_options.layout.visibility = "hidden"
-            elif self.tab_selected_index == 7:
-                self.submit_settings.layout.visibility = "visible"
-                self.merge_options.layout.visibility = "hidden"
-            else:
-                self.submit_settings.layout.visibility = "visible"
-                self.merge_options.layout.visibility = "visible"
+        if self.tab_selected_index > 3 and self.tab_selected_index!= 7:
+            self.submit_settings.layout.visibility = "hidden"
+            self.merge_options.layout.visibility = "hidden"
+        elif self.tab_selected_index == 7:
+            self.submit_settings.layout.visibility = "visible"
+            self.merge_options.layout.visibility = "hidden"
+        else:
+            self.submit_settings.layout.visibility = "visible"
+            self.merge_options.layout.visibility = "visible"
 
     # Reload the combobox options
     def refresh_model(self):
@@ -80,7 +79,7 @@ class UIWrapper:
         
     # Displaying the submit button and resetting the history
     def reload_submit_button(self):
-        if not self.is_downloading and not self.draw:
+        if not self.is_downloading:
             self.submit_settings.layout.visibility = "visible"
             text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list = self.history.history_display(
                 self.text2img,
@@ -156,26 +155,12 @@ class UIWrapper:
 
     # Create the IPyCanvas
     def create_mask(self):
-        try:
-            image = load_image(self.inpaint.inpainting_image_dropdown.value)
-            self.canvas.create(image)
-            self.draw = True
-            self.inpaint.mask_create_button.disabled = True
-            self.submit_settings.layout.visibility = "hidden"
-            display(self.canvas.wrap_settings())
-        except Exception as e:
+        if os.path.exists("/content/mask/temp.png"):
+            self.inpaint.mask_image_widget = "/content/mask/temp.png"
+        else:
             self.inpaint_output.clear_output()
             with self.inpaint_output:
                 print(f"Unable to load the mask image module. Reason: {e}")
-
-    # Return the Inpainting settings back
-    def back_to_inpaint(self):
-        if os.path.exists("/content/mask/temp.png"):
-            self.inpaint.mask_image_widget = "/content/mask/temp.png"
-            
-        self.canvas.wrap_settings().display = "none"
-        self.inpaint.mask_create_button.disabled = False
-        self.draw = False
 
     # Download models from model widget
     def load_model(self, url, hf_token, civit_token, base_path):
@@ -271,6 +256,7 @@ class UIWrapper:
         self.value_list = []
         self.base_path = base_path
         self.draw = False
+        self.loaded_canvas = False
         
         # Instantiate other classes
         self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line, gpt2_pipe)
@@ -387,7 +373,6 @@ class UIWrapper:
 
         # Wrapping the Inpainting
         self.inpaint_output = widgets.Output()
-        self.canvas.back_button.on_click(lambda b: self.back_to_inpaint())
         self.inpaint.mask_create_button.on_click(lambda b: self.create_mask())
 
         # Creating the UI
