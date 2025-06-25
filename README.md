@@ -17,9 +17,7 @@ This is a simple Google Colab notebook made by an 18-years-old junior programmer
 - **CivitAI Token Support:** Pass your CivitAI token for additional functionality, but remember **never share it with anyone.**
 - **Hugging Face Token Support:** Pass your Hugging Face token for accessing private files, but remember **never share it with anyone.**
 - **Simplicity:** Consists of two cells only.
-
-> [!IMPORTANT]\
-> With the current update, the Inpainting feature is under development and it may fail. Please use the older version in the "Legacy" branch if you wish to use Inpainting.
+- **IPyCanvas:** Create your own mask image for Inpainting immediately. (unstable and may introduce issues unexpectedly)
 
 ## Usage
 This notebook is designed for artistic purposes and to spark inspiration. **Please use it responsibly.** Creating deepfakes and uploading them online are strictly prohibited.
@@ -198,7 +196,8 @@ These steps allow you to reuse the tokens without inputting them manually in the
 - Modularizing the code ✅
 - Overhauling the save system ✅
 - Adding Hugging Face's token integration ✅ 
-- Implementing Img2Img pipeline ✅ 
+- Implementing Img2Img pipeline ✅
+
 ## License
 This project is open-source and free to use under the MIT License.
 
