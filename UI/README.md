@@ -27,7 +27,5 @@ This folder contains all the UI components and logic used in this **Stable Diffu
 ## Notes
 
 - All modules are integrated under `ui_wrapper.py`, which serves as the root UI handler.
-- Presets and history features enhance usability across sessions.
-- All widgets are designed with Colab/IPyWidgets compatibility in mind.
-- `inpainting_settings.py` is currently marked as *broken* and will be updated in a future release.
+- All widgets are designed with Colab/IPyWidgets/IPyCanvas compatibility in mind.
 - This README was made by ChatGPT.
