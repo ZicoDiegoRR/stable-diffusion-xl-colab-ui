@@ -75,12 +75,12 @@ class MaskCanvas:
 
     # Disable buttons
     def disable_button(self):
-        for button in [self.submit_button, self.back_button, self.reload]:
+        for button in [self.submit_button, self.reload]:
             button.disabled = True
 
     # Enable buttons
     def enable_button(self):
-        for button in [self.submit_button, self.back_button, self.reload]:
+        for button in [self.submit_button, self.reload]:
             button.disabled = False
 
     # Convert PIL images into bytes
