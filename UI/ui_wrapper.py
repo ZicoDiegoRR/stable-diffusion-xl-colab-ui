@@ -155,12 +155,6 @@ class UIWrapper:
                 self.upscaler.execute_realesrgan(self.ui)
                 self.reload_submit_button()
 
-    # Create the IPyCanvas
-    def create_mask(self):
-        self.draw = True
-        self.reset_generate.submit_button_widget.disabled = True
-        self.inpaint.mask_create_button.disabled = True
-
     # Download models from model widget
     def load_model(self, url, hf_token, civit_token, base_path):
         # Initialize
@@ -370,7 +364,6 @@ class UIWrapper:
 
         # Wrapping the Inpainting
         self.inpaint_output = widgets.Output()
-        self.inpaint.mask_create_button.on_click(lambda b: self.create_mask())
 
         # Creating the UI
         border = widgets.HTML(value="<hr>")
