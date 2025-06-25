@@ -35,6 +35,18 @@ class MainVar:
         self.controlnets_scale = [None] * 3
         self.controlnet_modes = [None] * 3
 
+# Checking and returning an image
+def inpaint_check(img):
+    if img:
+        try:
+            image = load_image(img).resize((1024,1024))
+            return image
+        except Exception as e:
+            print(f"Unable to load {value}. Reason: {e}")
+    else:
+        print("Value must be a valid string for Inpainting, not empty string.")
+    return None
+    
 # Saving the set parameters
 def save_param(path, data):
     with open(path, 'w') as file:
@@ -170,20 +182,15 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             print("You checked Inpainting while you're leaving mask image empty. Mask image is required for Inpainting.")
             print("Skipped Inpainting.")
         else:
-            if Inpainting_Image == "pre-generated text2image image":
-                inpaint_img = load_last(last_generation_loading, 'text2img')
-            elif Inpainting_Image == "pre-generated controlnet image":
-                inpaint_img = load_last(last_generation_loading, 'controlnet')
-            elif Inpainting_Image == "previous inpainting image":
-                inpaint_img = load_last(last_generation_loading, 'inpaint')
-            else:
-                inpaint_img = Inpainting_Image
-            if inpaint_img is not None and os.path.exists(inpaint_img):
-                pipeline_type = "inpaint"
-                inpaint_image = load_image(inpaint_img).resize((1024, 1024))
-                mask_image = load_image(Mask_Image).resize((1024, 1024))
-                active_inpaint = True
+            inpaint_image = inpaint_check(Inpainting_Image)
+            mask_image = inpaint_check(Mask_Image)
+            if inpaint_image and mask_image:
                 display(make_image_grid([inpaint_image, mask_image], rows=1, cols=2))
+                pipeline_type = "inpaint"
+                active_inpaint = True
+            else:
+                print("Skipped Inpainting.")
+                
 
     if Reference_Image and selected_tab_for_pipeline == 1:
         ref_image = load_image(Reference_Image)
