@@ -345,8 +345,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Saving the image and resetting the output
     generated_image_savefile= image_saver.save_image(image, Prompt, prefix, base_path)
-    clear_output()
-    display(ui)
+    ui.clear_output()
 
     # Saving the set parameters (second phase)
     save_param(f"{base_path}/Saved Parameters/main_parameters.json", dictionary)
