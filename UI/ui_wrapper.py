@@ -255,8 +255,6 @@ class UIWrapper:
         self.generation_output = widgets.Output()
         self.value_list = []
         self.base_path = base_path
-        self.draw = False
-        self.loaded_canvas = False
         
         # Instantiate other classes
         self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line, gpt2_pipe)
