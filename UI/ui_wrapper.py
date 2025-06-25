@@ -159,6 +159,8 @@ class UIWrapper:
         try:
             image = load_image(self.inpaint.inpainting_image_dropdown.value)
             self.canvas.create(image)
+            self.draw = True
+            self.inpaint.mask_create_button.disabled = True
             self.submit_settings.layout.visibility = "hidden"
             display(self.canvas.wrap_settings())
         except Exception as e:
@@ -168,7 +170,12 @@ class UIWrapper:
 
     # Return the Inpainting settings back
     def back_to_inpaint(self):
+        if os.path.exists("/content/mask/temp.png"):
+            self.inpaint.mask_image_widget = "/content/mask/temp.png"
+            
         self.canvas.wrap_settings().display = "none"
+        self.inpaint.mask_create_button.disabled = False
+        self.draw = False
 
     # Download models from model widget
     def load_model(self, url, hf_token, civit_token, base_path):
@@ -379,6 +386,7 @@ class UIWrapper:
         self.additional_widgets = widgets.VBox([self.seed_and_token_section, self.reset_and_send_section])
 
         # Wrapping the Inpainting
+        self.inpaint_output = widgets.Output()
         self.canvas.back_button.on_click(lambda b: self.back_to_inpaint())
         self.inpaint.mask_create_button.on_click(lambda b: self.create_mask())
 
