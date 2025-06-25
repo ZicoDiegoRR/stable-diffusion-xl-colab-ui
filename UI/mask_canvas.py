@@ -134,7 +134,6 @@ class MaskCanvas:
         
     # Create a new instance
     def create(self, img):
-        self.canvas = MultiCanvas(4, width=256, height=256)
         self.image = img
         self.width, self.height = img.size
         self.draw = False
@@ -180,6 +179,7 @@ class MaskCanvas:
     def __init__(self):
         self.collected_points = []
         self.collected_brushes = []
+        self.canvas = MultiCanvas(4, width=256, height=256)
 
         self.preview_label = widgets.Label(value="Is this correct? Try to click the save button again if it's incorrect.")
         self.preview = widgets.Image()
