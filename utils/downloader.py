@@ -1,5 +1,5 @@
 from safetensors.torch import load_file
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 import requests
 import torch
 import json
