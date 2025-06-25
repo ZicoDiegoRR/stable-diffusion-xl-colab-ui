@@ -1,3 +1,5 @@
+from PIL import Image
+
 def generate(
     pipeline,
     pipeline_type,
@@ -43,8 +45,8 @@ def generate(
 
     elif pipeline_type == "inpaint": # For Inpainting
         image_prefix = "[Inpainting]"
-        generation_arguments["image"] = inpaint_image
-        generation_arguments["mask_image"] = mask_image
+        generation_arguments["image"] = Image.open(inpaint_image)
+        generation_arguments["mask_image"] = Image.open(mask_image)
         generation_arguments["strength"] = Inpainting_Strength
 
     elif pipeline_type == "controlnet": # For ControlNet
