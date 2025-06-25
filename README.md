@@ -66,7 +66,8 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 22. | `components` integration for memory-sharing between pipelines to avoid OutOFMemory error due to independent tensors          |
 | 23. | Implementation of `ControlNetUnion` for better memory management and scalable approach                                       |
 | 24. | Corrupted-download deletion logic                                                                                            |
-| 25. | Preview buttons to display uploaded IP-Adapter's images and URLs, as well as buttons to remove them                        |
+| 25. | Preview buttons to display uploaded IP-Adapter's images and URLs, as well as buttons to remove them                          |
+| 26. | `ipycanvas` canvas to create mask images for Inpainting (unstable)                                                           |
 
 </details>
 
@@ -192,7 +193,7 @@ These steps allow you to reuse the tokens without inputting them manually in the
 
 ## To-do List
 - Adding textual inversion ✅ 
-- Implementing Inpainting using IPyCanvas (in progress)
+- Implementing Inpainting using IPyCanvas ✅
 - Creating the UI preview (missing one piece)
 - Modularizing the code ✅
 - Overhauling the save system ✅
