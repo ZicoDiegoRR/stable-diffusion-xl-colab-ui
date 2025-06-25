@@ -109,49 +109,50 @@ class UIWrapper:
             
         values_dictionary_for_generation = all_widgets.import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         widgets_dictionary_for_generation = all_widgets.import_widgets(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
-        if index == 3:
-            print("Inpainting is currently unavailable in this version. Please refer to the 'Legacy' version of this notebook. Sorry for the inconvenience.")
-        elif index < 3:
-            key = self.select_key(index)
-            selected_class = self.select_class(index)
-            self.value_list = values_dictionary_for_generation[key]
-            if not self.has_load_model:
-                self.value_list[2] = self.model_widget.value
-                
-            self.submit_settings.layout.visibility = "hidden"
-            self.model_output.clear_output()
-            main.run(self.value_list, 
-                     values_dictionary_for_generation["lora"], 
-                     values_dictionary_for_generation["embeddings"], 
-                     values_dictionary_for_generation["ip"],
-                     self.hf_token.value, 
-                     self.civit_token.value, 
-                     self.ui, 
-                     [self.seed, self.freeze.value],
-                     values_dictionary_for_generation,
-                     [
-                        [selected_class.vae_link_widget, selected_class.vae_config],
-                        selected_class.model_widget,
-                        self.lora.lora_urls_widget,
-                        self.embeddings.ti_urls_widget,
-                     ],
-                     self.base_path,
-                     self.controlnet.return_get_image_class()
-            )
-            self.has_load_model = True
-
-            # Unused failsafe, but could be useful in rare moments
-            if self.model_widget.value.startswith(("https://", "http://")):
-                self.model_widget.value, _ = os.path.splitext(os.path.basename(downloader.download_file(self.model_widget.value, "Checkpoint", self.hf_token.value, self.civit_token.value, self.base_path)))
-
-            self.refresh_model()
-            self.reload_submit_button()
-            self.lora.construct(self.lora.lora_urls_widget.value)
-            self.embeddings.construct(self.embeddings.ti_urls_widget.value)
-        elif index == 7:
-            self.submit_settings.layout.visibility = "hidden"
-            self.upscaler.execute_realesrgan(self.ui)
-            self.reload_submit_button()
+        with self.generation_output:
+            if index == 3:
+                print("Inpainting is currently unavailable in this version. Please refer to the 'Legacy' version of this notebook. Sorry for the inconvenience.")
+            elif index < 3:
+                key = self.select_key(index)
+                selected_class = self.select_class(index)
+                self.value_list = values_dictionary_for_generation[key]
+                if not self.has_load_model:
+                    self.value_list[2] = self.model_widget.value
+                    
+                self.submit_settings.layout.visibility = "hidden"
+                self.model_output.clear_output()
+                main.run(self.value_list, 
+                         values_dictionary_for_generation["lora"], 
+                         values_dictionary_for_generation["embeddings"], 
+                         values_dictionary_for_generation["ip"],
+                         self.hf_token.value, 
+                         self.civit_token.value, 
+                         self.generation_output, 
+                         [self.seed, self.freeze.value],
+                         values_dictionary_for_generation,
+                         [
+                            [selected_class.vae_link_widget, selected_class.vae_config],
+                            selected_class.model_widget,
+                            self.lora.lora_urls_widget,
+                            self.embeddings.ti_urls_widget,
+                         ],
+                         self.base_path,
+                         self.controlnet.return_get_image_class()
+                )
+                self.has_load_model = True
+    
+                # Unused failsafe, but could be useful in rare moments
+                if self.model_widget.value.startswith(("https://", "http://")):
+                    self.model_widget.value, _ = os.path.splitext(os.path.basename(downloader.download_file(self.model_widget.value, "Checkpoint", self.hf_token.value, self.civit_token.value, self.base_path)))
+    
+                self.refresh_model()
+                self.reload_submit_button()
+                self.lora.construct(self.lora.lora_urls_widget.value)
+                self.embeddings.construct(self.embeddings.ti_urls_widget.value)
+            elif index == 7:
+                self.submit_settings.layout.visibility = "hidden"
+                self.upscaler.execute_realesrgan(self.ui)
+                self.reload_submit_button()
 
     # Create the IPyCanvas
     def create_mask(self):
@@ -259,6 +260,7 @@ class UIWrapper:
     def __init__(self, cfg, ideas_line, gpt2_pipe, base_path): # cfg as a dictionary
         # Creating the tab
         self.ui_tab = widgets.Tab()
+        self.generation_output = widgets.Output()
         self.value_list = []
         self.base_path = base_path
         self.draw = False
@@ -412,7 +414,7 @@ class UIWrapper:
             self.embeddings,
         ))
 
-        self.ui = widgets.VBox([self.ui_tab, self.ui_bottom])
+        self.ui = widgets.VBox([self.ui_tab, self.ui_bottom, self.generation_output])
 
         self.ui_tab.observe(self.checking_the_selected_tab_index, names="selected_index")
         self.checking_the_selected_tab_index({"name": "selected_index", "new": self.ui_tab.selected_index, "old": None, "type": "change", "owner": self.ui_tab})
