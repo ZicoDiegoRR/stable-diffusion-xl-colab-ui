@@ -57,15 +57,16 @@ class UIWrapper:
     # Hide the generate and send buttons or show them
     def checking_the_selected_tab_index(self, change): 
         self.tab_selected_index = change["new"]
-        if self.tab_selected_index > 3 and self.tab_selected_index!= 7:
-            self.submit_settings.layout.visibility = "hidden"
-            self.merge_options.layout.visibility = "hidden"
-        elif self.tab_selected_index == 7:
-            self.submit_settings.layout.visibility = "visible"
-            self.merge_options.layout.visibility = "hidden"
-        else:
-            self.submit_settings.layout.visibility = "visible"
-            self.merge_options.layout.visibility = "visible"
+        if not self.draw:
+            if self.tab_selected_index > 3 and self.tab_selected_index!= 7:
+                self.submit_settings.layout.visibility = "hidden"
+                self.merge_options.layout.visibility = "hidden"
+            elif self.tab_selected_index == 7:
+                self.submit_settings.layout.visibility = "visible"
+                self.merge_options.layout.visibility = "hidden"
+            else:
+                self.submit_settings.layout.visibility = "visible"
+                self.merge_options.layout.visibility = "visible"
 
     # Reload the combobox options
     def refresh_model(self):
@@ -79,7 +80,7 @@ class UIWrapper:
         
     # Displaying the submit button and resetting the history
     def reload_submit_button(self):
-        if not self.is_downloading:
+        if not self.is_downloading and not self.draw:
             self.submit_settings.layout.visibility = "visible"
             text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list = self.history.history_display(
                 self.text2img,
@@ -152,32 +153,21 @@ class UIWrapper:
             self.upscaler.execute_realesrgan(self.ui)
             self.reload_submit_button()
 
-    # Choose the Inpainting settings
-    def inpaint_select(self, mask=False):
-        if not mask:
-            self.inpaint_options.children = [
-                self.inpaint_output,
-                self.model_settings, 
-                widgets.HTML(value="<hr>"), 
-                self.inpaint.wrap_settings(), 
-                self.additional_widgets
-            ]
-        else:
-            self.inpaint_options.children = [self.canvas.wrap_settings()]
-
     # Create the IPyCanvas
     def create_mask(self):
         try:
             image = load_image(self.inpaint.inpainting_image_dropdown.value)
             self.canvas.create(image)
-            self.inpaint_select(mask=True)
+            self.submit_settings.layout.visibility = "hidden"
+            display(self.canvas.wrap_settings())
         except Exception as e:
+            self.inpaint_output.clear_output()
             with self.inpaint_output:
                 print(f"Unable to load the mask image module. Reason: {e}")
 
     # Return the Inpainting settings back
     def back_to_inpaint(self):
-        self.inpaint_select()
+        self.canvas.wrap_settings().display = "none"
 
     # Download models from model widget
     def load_model(self, url, hf_token, civit_token, base_path):
@@ -271,6 +261,7 @@ class UIWrapper:
         self.ui_tab = widgets.Tab()
         self.value_list = []
         self.base_path = base_path
+        self.draw = False
         
         # Instantiate other classes
         self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line, gpt2_pipe)
@@ -386,10 +377,6 @@ class UIWrapper:
         self.additional_widgets = widgets.VBox([self.seed_and_token_section, self.reset_and_send_section])
 
         # Wrapping the Inpainting
-        self.inpaint_output = widgets.Output()
-        self.inpaint_options = widgets.VBox()
-        self.inpaint_select()
-        
         self.canvas.back_button.on_click(lambda b: self.back_to_inpaint())
         self.inpaint.mask_create_button.on_click(lambda b: self.create_mask())
 
@@ -399,7 +386,7 @@ class UIWrapper:
             widgets.VBox([self.model_settings, border, self.text2img.wrap_settings(), self.additional_widgets]),
             widgets.VBox([self.model_settings, border, self.img2img.wrap_settings(), self.additional_widgets]),
             widgets.VBox([self.model_settings, self.controlnet.wrap_settings(), self.additional_widgets]),
-            self.inpaint_options,
+            widgets.VBox([self.inpaint_output, self.model_settings, border, self.inpaint.wrap_settings(), self.additional_widgets]),
             widgets.VBox([self.lora.wrap_settings(), self.token_section]),
             widgets.VBox([self.embeddings.wrap_settings(), self.token_section]),
             self.ip.wrap_settings(),
@@ -410,7 +397,6 @@ class UIWrapper:
         for i, title in enumerate(ui_titles):
             self.ui_tab.set_title(i, title)
 
-        
         self.submit_settings = self.reset_generate.wrap_settings("submit")
         self.preset_settings = self.preset_system.wrap_settings()
         self.ui_bottom = widgets.HBox([self.submit_settings, self.preset_settings])
