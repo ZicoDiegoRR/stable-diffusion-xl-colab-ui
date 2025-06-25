@@ -10,7 +10,6 @@ from StableDiffusionXLColabUI.UI.preset_system import PresetSystem
 from StableDiffusionXLColabUI.UI.lora_settings import LoRALoader
 from StableDiffusionXLColabUI.UI.history import HistorySystem
 from StableDiffusionXLColabUI.UI import all_widgets
-from IPython.display import display, clear_output
 from diffusers.utils import load_image
 import ipywidgets as widgets
 import json
@@ -411,6 +410,4 @@ class UIWrapper:
         self.merge_button.on_click(lambda b: self.merge_first_phase(
             self.ui_tab.selected_index, self.text2img, self.img2img, self.controlnet, self.inpaint
         ))
-
-        clear_output()
-        display(self.ui)
+        
