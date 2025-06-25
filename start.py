@@ -1,3 +1,4 @@
+from google.colab import output
 import subprocess
 import os
 
@@ -23,3 +24,6 @@ def start():
 
     # Initialize the UI
     colab_ui = UIWrapper(cfg, ideas_line, gpt2_pipe, base_path)
+
+    
+    output.enable_custom_widget_manager()
