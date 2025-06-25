@@ -179,7 +179,12 @@ class MaskCanvas:
 
         self.preview_label = widgets.Label(value="Is this correct? Try to click the save button again if it's incorrect.")
         self.preview = widgets.Image()
-        self.preview_section = widgets.VBox([self.preview_label, widgets.Label(value=" "), self.preview])
+        self.preview_section = widgets.VBox([
+            self.preview_label, 
+            widgets.Label(value=" "), 
+            self.preview, 
+            widgets.Label(value="The canvas update might be slow at the moment. Sorry for the inconvenience."),
+        ])
 
         self.brush_label = widgets.Label(value="Brush size:")
         self.brush_size = widgets.IntSlider(min=1, max=25, value=3)
