@@ -402,7 +402,7 @@ class UIWrapper:
             self.embeddings,
         ))
 
-        self.ui = widgets.VBox([self.ui_tab, self.ui_bottom, self.generation_output])
+        self.ui = widgets.VBox([self.ui_tab, self.ui_bottom])
 
         self.ui_tab.observe(self.checking_the_selected_tab_index, names="selected_index")
         self.checking_the_selected_tab_index({"name": "selected_index", "new": self.ui_tab.selected_index, "old": None, "type": "change", "owner": self.ui_tab})
