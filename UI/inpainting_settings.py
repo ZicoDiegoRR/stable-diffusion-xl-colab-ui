@@ -150,7 +150,7 @@ class InpaintingSettings:
         self.inpainting_image_dropdown = widgets.Text(value=cfg[15] if cfg and self.check_if_link(cfg[15], "image") else "", description="Inpainting Image",)
         
         self.inpainting_toggle = widgets.Checkbox(value=True, description="Enable Inpainting")
-        self.inpainting_strength_slider = widgets.FloatSlider(min=0.1, max=1, step=0.01, value=cfg[18] if cfg else 0.9, description="Inpainting Strength")
+        self.inpainting_strength_slider = widgets.FloatSlider(min=0, max=1.0, step=0.01, value=cfg[18] if cfg else 0.9, description="Inpainting Strength")
 
         self.mask_image_widget = widgets.Text(value=cfg[16] if cfg and self.check_if_link(cfg[16], "mask") else "", description="Mask Image", placeholder="Image link")
         self.mask_upload = widgets.FileUpload(accept="image/*", multiple=False)
