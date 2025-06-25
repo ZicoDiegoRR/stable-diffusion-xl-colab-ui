@@ -55,15 +55,19 @@ class UIWrapper:
     # Hide the generate and send buttons or show them
     def checking_the_selected_tab_index(self, change): 
         self.tab_selected_index = change["new"]
-        if self.tab_selected_index > 3 and self.tab_selected_index!= 7:
-            self.submit_settings.layout.visibility = "hidden"
-            self.merge_options.layout.visibility = "hidden"
-        elif self.tab_selected_index == 7:
-            self.submit_settings.layout.visibility = "visible"
-            self.merge_options.layout.visibility = "hidden"
+        if not self.draw:
+            bool_value = False
         else:
-            self.submit_settings.layout.visibility = "visible"
-            self.merge_options.layout.visibility = "visible"
+            bool_value = True
+            
+        if self.tab_selected_index < 3 or self.tab_selected_index == 7:
+            self.merge_button.disabled = False
+            self.reset_generate.submit_button_widget.disabled = bool_value
+            if self.tab_selected_index == 7:
+                self.merge_button.submit_button_widget.disabled = True
+        else
+            self.merge_button.submit_button_widget.disabled = True
+            self.reset_generate.submit_button_widget.disabled = True
 
     # Reload the combobox options
     def refresh_model(self):
@@ -153,12 +157,9 @@ class UIWrapper:
 
     # Create the IPyCanvas
     def create_mask(self):
-        if os.path.exists("/content/mask/temp.png"):
-            self.inpaint.mask_image_widget = "/content/mask/temp.png"
-        else:
-            self.inpaint_output.clear_output()
-            with self.inpaint_output:
-                print(f"Unable to load the mask image module. Reason: {e}")
+        self.draw = True
+        self.reset_generate.submit_button_widget.disabled = True
+        self.inpaint.mask_create_button.disabled = True
 
     # Download models from model widget
     def load_model(self, url, hf_token, civit_token, base_path):
@@ -253,6 +254,7 @@ class UIWrapper:
         self.generation_output = widgets.Output()
         self.value_list = []
         self.base_path = base_path
+        self.draw = False
         
         # Instantiate other classes
         self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line, gpt2_pipe)
