@@ -1,15 +1,15 @@
-from StableDiffusionXLColabUI.UI.text2img_settings import Text2ImgSettings
-from StableDiffusionXLColabUI.UI.img2img_settings import Img2ImgSettings
+from StableDiffusionXLColabUI.utils import modified_inference_realesrgan, main, downloader
+from StableDiffusionXLColabUI.UI.textual_inversion_settings import TextualInversionLoader
+from StableDiffusionXLColabUI.UI.reset_and_generate import ResetGenerateSettings
 from StableDiffusionXLColabUI.UI.controlnet_settings import ControlNetSettings
 from StableDiffusionXLColabUI.UI.inpainting_settings import InpaintingSettings
 from StableDiffusionXLColabUI.UI.ip_adapter_settings import IPAdapterLoader
+from StableDiffusionXLColabUI.UI.text2img_settings import Text2ImgSettings
+from StableDiffusionXLColabUI.UI.img2img_settings import Img2ImgSettings
+from StableDiffusionXLColabUI.UI.preset_system import PresetSystem
 from StableDiffusionXLColabUI.UI.lora_settings import LoRALoader
 from StableDiffusionXLColabUI.UI.mask_canvas import MaskCanvas
-from StableDiffusionXLColabUI.UI.textual_inversion_settings import TextualInversionLoader
-from StableDiffusionXLColabUI.UI.reset_and_generate import ResetGenerateSettings
-from StableDiffusionXLColabUI.UI.preset_system import PresetSystem
 from StableDiffusionXLColabUI.UI.history import HistorySystem
-from StableDiffusionXLColabUI.utils import modified_inference_realesrgan, main, downloader
 from StableDiffusionXLColabUI.UI import all_widgets
 from IPython.display import display, clear_output
 from diffusers.utils import load_image
@@ -261,7 +261,6 @@ class UIWrapper:
         self.img2img = Img2ImgSettings(cfg["img2img"], ideas_line, gpt2_pipe)
         self.controlnet = ControlNetSettings(cfg["controlnet"], ideas_line, gpt2_pipe, base_path)
         self.inpaint = InpaintingSettings(cfg["inpaint"], ideas_line, gpt2_pipe)
-        self.canvas = MaskCanvas()
         self.ip = IPAdapterLoader(cfg["ip"])
         self.lora = LoRALoader(cfg["lora"], base_path)
         self.embeddings = TextualInversionLoader(cfg["embeddings"], base_path)
