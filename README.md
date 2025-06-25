@@ -205,6 +205,8 @@ These steps allow you to reuse the tokens without inputting them manually in the
 - Adding Hugging Face's token integration ✅ 
 - Implementing Img2Img pipeline ✅
 
+Feel free to open an issue if you found one. Each time you submit an issue will improve this notebook's capability and further enhance your experience.
+
 ## License
 This project is open-source and free to use under the MIT License.
 
