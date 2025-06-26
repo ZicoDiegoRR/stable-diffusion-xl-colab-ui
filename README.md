@@ -66,6 +66,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 24. | Corrupted-download deletion logic                                                                                            |
 | 25. | Preview buttons to display uploaded IP-Adapter's images and URLs, as well as buttons to remove them                          |
 | 26. | `ipycanvas` canvas to create mask images for Inpainting (unstable)                                                           |
+| 27. | Pagination feature in history system                                                                                         |
 
 </details>
 
