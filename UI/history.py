@@ -169,22 +169,27 @@ class HistorySystem:
     ):
         index = page_index + change
         if history_type == "text2img":
+            self.text2img_page_index = index
             self.text2img_grid = self.grid(
                 list_path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, index, history_type
             )
         elif history_type == "controlnet":
+            self.controlnet_page_index = index
             self.controlnet_grid = self.grid(
                 list_path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, index, history_type
             )
         elif history_type == "inpaint":
+            self.inpainting_page_index = index
             self.inpainting_grid = self.grid(
                 list_path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, index, history_type
             )
         elif history_type == "img2img":
+            self.img2img_page_index = index
             self.img2img_grid = self.grid(
                 list_path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, index, history_type
             )
         elif history_type == "upscale":
+            self.upscale_page_index = index
             self.upscale_grid = self.grid(
                 list_path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, index, history_type
             )
