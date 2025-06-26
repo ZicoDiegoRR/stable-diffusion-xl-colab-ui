@@ -11,7 +11,6 @@ def vae_url_checker(model_path):
 def autoencoderkl_load(vae_path):
     # Loading the VAE based on whether it's a pretrained model from Hugging Face or not
     try:
-        print(f"Loading VAE...")
         if vae_path[1]:
             return AutoencoderKL.from_single_file(vae_path[0], config=vae_path[1], torch_dtype=torch.float16, local_files_only=True).to("cuda")
         else:
@@ -92,6 +91,8 @@ def load_vae(current_vae, model_path, config_path, widget, hf_token, civit_token
     
     # Checking if the provided vae has been loaded
     if model_path != current_vae:
+        print(f"Loading VAE...")
+        
         # Determining the path, whether the VAE has been downloaded or not
         if vae_url_checker(model_path) and config_path:
             vae_path = download_vae(
