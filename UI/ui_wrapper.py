@@ -80,7 +80,7 @@ class UIWrapper:
     def reload_submit_button(self):
         if not self.is_downloading:
             self.submit_settings.layout.visibility = "visible"
-            text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list = self.history.history_display(
+            self.history.history_update(
                 self.text2img,
                 self.img2img,
                 self.controlnet,
@@ -92,13 +92,6 @@ class UIWrapper:
                 self.ui_tab,
                 self.base_path
             )
-            self.history.history_accordion.children = [
-                text2img_list, 
-                img2img_list, 
-                controlnet_list, 
-                inpainting_list, 
-                upscale_list
-            ]
 
     # Running the image generation
     def generate_value(self, index, text2img, img2img, controlnet, inpaint, ip, lora, embeddings):
