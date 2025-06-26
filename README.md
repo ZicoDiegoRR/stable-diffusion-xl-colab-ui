@@ -199,7 +199,8 @@ These steps allow you to reuse the tokens without inputting them manually in the
 
 ## To-do List
 
-<details> <br>
+<details>
+  
 - Adding textual inversion ✅ <br>
 - Implementing Inpainting using IPyCanvas ✅ <br>
 - Creating the UI preview ✅ <br>
