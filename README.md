@@ -25,7 +25,7 @@ This notebook is designed for artistic purposes and to spark inspiration. **Plea
 ## Installation
 Simply open the notebook on Google Colab to start using it. No installation is needed. 
 
-**Link:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/V3.ipynb)
+**Link:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable-diffusion-xl-colab-ui/blob/main/V3.ipynb)
 
 > [!NOTE]\
 > Check out the [Legacy branch](https://github.com/ZicoDiegoRR/stable_diffusion_xl_colab_ui/tree/legacy) to use the old versions of this notebook.
