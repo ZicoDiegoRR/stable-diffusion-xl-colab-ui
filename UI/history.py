@@ -197,8 +197,8 @@ class HistorySystem:
                 max_buttons = 50 
             else: 
                 max_buttons = len(list_path) % 50
-            row = math.ceil(max_buttons/50)
-            grid = widgets.GridspecLayout(row, 10)
+            row = math.ceil(max_buttons/10)
+            grid = widgets.GridspecLayout(n_rows=row, n_columns=10)
             for i in range(row):
                 for j in range(10):
                     k = (index*50 + i*10 + j + 1)
@@ -212,11 +212,19 @@ class HistorySystem:
                         path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
                     )) if k <= len(list_path) else None
                     
-            page_mark = widgets.Label(value=f"Page {index + 1} out of {pages_amount}")
+            page_mark = widgets.Label(value=f"Page {index + 1} of {pages_amount}")
             total_image = widgets.Label(value=f"Total images: {len(list_path)}", layout=widgets.Layout(margin='0 0 0 auto'))
 
-            previous_button = widgets.Button(description="←", layout=widgets.Layout(width="50%"))
-            next_button = widgets.Button(description="→", layout=widgets.Layout(width="50%"))
+            previous_button = widgets.Button(
+                description="←", 
+                layout=widgets.Layout(width="50%"), 
+                disabled=bool(index == 0)
+            )
+            next_button = widgets.Button(
+                description="→", 
+                layout=widgets.Layout(width="50%"), 
+                disabled=bool((index + 1) == pages_amount)
+            )
 
             previous_button.on_click(lambda b: self.arrow_handler(
                 list_path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, index, history_type, -1
@@ -230,6 +238,7 @@ class HistorySystem:
                     page_mark, total_image,
                 ]),
                 grid,
+                widgets.Label(" "),
                 widgets.HBox([
                     previous_button, next_button,
                 ]),
