@@ -206,6 +206,9 @@ These steps allow you to reuse the tokens without inputting them manually in the
 - Adding Hugging Face's token integration ✅ 
 - Implementing Img2Img pipeline ✅
 - Pagination for history ✅
+- Use other presets as the main preset
+- Enable custom upscale factor for Real-ESRGAN
+- Multiple batches per generation
 
 Feel free to open an issue if you found one. Each time you submit an issue will improve this notebook's capability and further enhance your experience.
 
