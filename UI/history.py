@@ -23,9 +23,9 @@ class HistorySystem:
     def assign_children(self):
         self.history_accordion.children = [
             self.text2img_grid, 
+            self.img2img_grid,
             self.controlnet_grid, 
-            self.inpainting_grid, 
-            self.img2img_grid, 
+            self.inpainting_grid,  
             self.upscale_grid,
         ]
 
@@ -333,6 +333,7 @@ class HistorySystem:
         self.inpainting_page_index = 0
         self.img2img_page_index = 0
         self.upscale_page_index = 0
+        
         self.history_update(text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path)
         
         self.assign_children()
