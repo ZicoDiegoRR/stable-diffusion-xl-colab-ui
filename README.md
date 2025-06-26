@@ -199,34 +199,21 @@ These steps allow you to reuse the tokens without inputting them manually in the
 
 ## To-do List
 
-<details>
-  
+<details> <br>
 - Adding textual inversion ✅ <br>
-- Implementing Inpainting using IPyCanvas ✅
-
-- Creating the UI preview ✅
-
-- Modularizing the code ✅
-
-- Overhauling the save system ✅
-
-- Adding Hugging Face's token integration ✅
-
-- Implementing Img2Img pipeline ✅
-  
-- Pagination for history ✅
-
-- Use other presets as the main preset
-  
-- Enable custom upscale factor for Real-ESRGAN
-  
-- Multiple batches per generation
-  
-- Default model selections
-  
-- Hires.Fix (Real-ESRGAN and LANCZOS upscalers)
-  
-- Remove images from history
+- Implementing Inpainting using IPyCanvas ✅ <br>
+- Creating the UI preview ✅ <br>
+- Modularizing the code ✅ <br>
+- Overhauling the save system ✅ <br>
+- Adding Hugging Face's token integration ✅ <br>
+- Implementing Img2Img pipeline ✅ <br>
+- Pagination for history ✅ <br>
+- Use other presets as the main preset <br>
+- Enable custom upscale factor for Real-ESRGAN <br>
+- Multiple batches per generation <br>
+- Default model selections <br>
+- Hires.Fix (Real-ESRGAN and LANCZOS upscalers) <br>
+- Remove images from history <br>
 </details>
 
 Feel free to open an issue if you found one. Each time you submit an issue will improve this notebook's capability and further enhance your experience.
