@@ -101,9 +101,7 @@ class UIWrapper:
         values_dictionary_for_generation = all_widgets.import_values(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         widgets_dictionary_for_generation = all_widgets.import_widgets(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
         with self.generation_output:
-            if index == 3:
-                print("Inpainting is currently unavailable in this version. Please refer to the 'Legacy' version of this notebook. Sorry for the inconvenience.")
-            elif index < 3:
+            if index <= 3:
                 key = self.select_key(index)
                 selected_class = self.select_class(index)
                 self.value_list = values_dictionary_for_generation[key]
