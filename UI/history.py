@@ -19,6 +19,7 @@ class HistorySystem:
         else:
             return []
 
+    # Assign the widgets to the accordion
     def assign_children(self):
         self.history_accordion.children = [
             self.text2img_grid, 
@@ -162,6 +163,7 @@ class HistorySystem:
             path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
         ))
 
+    # Function to show the pages
     def arrow_handler(self, list_path, text2img, img2img, controlnet, inpaint, ip,
                        lora, embeddings, upscaler, tab, page_index, history_type, change
     ):
@@ -287,6 +289,7 @@ class HistorySystem:
 
         return text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list
 
+    # Function to update the history
     def history_update(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path):
         self.text2img_listdir, self.controlnet_listdir, self.inpainting_listdir, self.img2img_listdir, self.upscale_listdir = self.history_display(
             text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path, grid=False
@@ -296,6 +299,7 @@ class HistorySystem:
         )
         self.assign_children()
 
+    # Initialize
     def __init__(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path):
         self.history_quick_reference_button = widgets.Button(description="Use as a reference")
         self.history_quick_reference_img2img = widgets.Button(description="Image-to-image")
