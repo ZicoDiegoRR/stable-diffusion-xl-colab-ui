@@ -61,7 +61,7 @@ class UIWrapper:
             self.merge_button.disabled = False
             self.reset_generate.submit_button_widget.disabled = bool_value
             if self.tab_selected_index == 7:
-                self.merge_button.submit_button_widget.disabled = True
+                self.merge_button.disabled = True
         else:
             self.merge_button.disabled = True
             self.reset_generate.submit_button_widget.disabled = True
