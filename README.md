@@ -198,6 +198,8 @@ Here are the steps to save your tokens to Google Drive storage or to your runtim
 These steps allow you to reuse the tokens without inputting them manually in the widgets. But, beware of any potential leak!
 
 ## To-do List
+
+<details>
 - Adding textual inversion ✅ 
 - Implementing Inpainting using IPyCanvas ✅
 - Creating the UI preview ✅
@@ -209,6 +211,10 @@ These steps allow you to reuse the tokens without inputting them manually in the
 - Use other presets as the main preset
 - Enable custom upscale factor for Real-ESRGAN
 - Multiple batches per generation
+- Default model selections
+- Hires.Fix (Real-ESRGAN and LANCZOS upscalers)
+- Remove images from history
+</details>
 
 Feel free to open an issue if you found one. Each time you submit an issue will improve this notebook's capability and further enhance your experience.
 
