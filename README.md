@@ -200,6 +200,7 @@ These steps allow you to reuse the tokens without inputting them manually in the
 ## To-do List
 
 <details>
+  
 - Adding textual inversion ✅ 
   
 - Implementing Inpainting using IPyCanvas ✅
