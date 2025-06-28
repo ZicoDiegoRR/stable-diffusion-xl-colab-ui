@@ -73,7 +73,7 @@ def save_last(filename, data, type):
         print(f"Error occurred: {e}")
 
 # Initializing image generation
-def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary, widgets_change, base_path, get_image_class):
+def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary, widgets_change, base_path, get_image_class, main_param):
     # Initialization
     pipeline_type = ""
     if len(values_in_list) == 15:
@@ -209,7 +209,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
             print("No reference image was inputted. Defaulting to Text-to-Image...")
 
     # Saving the set parameters (first phase)
-    save_param(f"{base_path}/Saved Parameters/main_parameters.json", dictionary)
+    save_param(f"{base_path}/Saved Parameters/{main_param}.json", dictionary)
 
     # Deleting old save if exists
     if os.path.exists(os.path.join(f"{base_path}", "parameters.json")):
@@ -355,7 +355,7 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     ui.clear_output()
 
     # Saving the set parameters (second phase)
-    save_param(f"{base_path}/Saved Parameters/main_parameters.json", dictionary)
+    save_param(f"{base_path}/Saved Parameters/{main_param}.json", dictionary)
 
     # Saving the last generated image's path
     last_generation_json = os.path.join(f"{base_path}/Saved Parameters", "last_generation.json")
