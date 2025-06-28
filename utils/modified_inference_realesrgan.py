@@ -3,8 +3,9 @@
 
 import ipywidgets as widgets
 from basicsr.utils.download_util import load_file_from_url
+from StableDiffusionXLColabUI.utils import downloader
 from diffusers.utils import load_image, make_image_grid
-from IPython.display import display, clear_output
+from IPython.display import display
 from basicsr.archs.rrdbnet_arch import RRDBNet
 import torch
 import glob
@@ -176,13 +177,8 @@ def run_upscaling(
     if args.model_path is not None:
         model_path = args.model_path
     else:
-        model_path = os.path.join('/content/RealESRGAN/weights', args.model_name + '.pth')
-        if not os.path.isfile(model_path):
-            ROOT_DIR = "/content/RealESRGAN"
-            for url in file_url:
-                # model_path will be updated
-                model_path = load_file_from_url(
-                    url=url, model_dir=os.path.join(ROOT_DIR, 'weights'), progress=True, file_name=None)
+        for url in file_url:
+            model_path = downloader.download(url, "/content/RealESRGAN/weights", esrgan=True)
 
     # use dni to control the denoise strength
     dni_weight = None
@@ -221,6 +217,7 @@ def run_upscaling(
     else:
         paths = sorted(glob.glob(os.path.join(args.input, '*')))
 
+    tab.clear_output()
     for idx, path in enumerate(paths):
         imgname, extension = os.path.splitext(os.path.basename(path))
 
@@ -249,20 +246,23 @@ def run_upscaling(
                 img_filename = f"{img_filename_with_prompt[:245]}.{extension}"
             else:
                 img_filename = f"{img_filename_with_prompt}.{extension}"
+
+            target_width = img.shape[1] * args.outscale
+            target_height = img.shape[0] * args.outscale
                
             save_path = os.path.join(args.output, img_filename)
-            cv2.imwrite(save_path, output)
-            input_width, input_height = load_image(input).size
-            output_width, output_height = load_image(save_path).size
-            clear_output()
-            display(tab)
-            display(make_image_grid([load_image(input), load_image(save_path).resize((input_width, input_height))], rows=1, cols=2))
+            cv2.imwrite(save_path, cv2.resize(output, (target_width, target_height)))
+
+            display(
+                make_image_grid([
+                    load_image(input), 
+                    load_image(save_path).resize((img.shape[1], img.shape[0]))
+                ], rows=1, cols=2))
             print(f"Original resolution: {input_width}x{input_height} px")
             print(f"Upscaled resolution: {output_width}x{output_height} px")
-            print(f"Image is saved at {save_path}.")
+            print(f"Image is saved at {save_path}.\n")
 
-            del output
-            del face_enhancer
-            del upsampler
-            torch.cuda.empty_cache()
-            gc.collect()
+    del face_enhancer
+    del upsampler
+    torch.cuda.empty_cache()
+    gc.collect()
