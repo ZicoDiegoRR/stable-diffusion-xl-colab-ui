@@ -119,7 +119,7 @@ def is_exist(folder, name, type):
         return False
     return True
 
-def download(url, type, hf_token, civit_token, key=None, tqdm_bool=True, widget=None, esrgan=False):
+def download(url, type, hf_token="", civit_token="", key=None, tqdm_bool=True, widget=None, esrgan=False):
     # Folder creation if not exist
     download_folder = f"/content/{type}" if not esrgan else type
     os.makedirs(download_folder, exist_ok=True)
