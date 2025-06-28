@@ -1,8 +1,9 @@
+from IPython.display import display
 import time
 import os
 import re
 
-def save_image(image, prompt_for_name, prefix, base_path="/content/gdrive/MyDrive" if os.path.exists("/content/gdrive/MyDrive") else "/content"):
+def save_image(image, prompt_for_name, prefix, scheduler, seed, base_path):
     current_time = time.localtime()
     formatted_time = time.strftime("[%H-%M-%S %B %d, %Y]", current_time)
     if prefix == "[Text-to-Image]":
@@ -19,8 +20,17 @@ def save_image(image, prompt_for_name, prefix, base_path="/content/gdrive/MyDriv
     split_prompt = re.split(r"\s*,\s*", sub_prompt)
     prompt_name = " ".join(split_prompt)
     generated_image_raw_filename = f"{prefix} {formatted_time} {prompt_name}"
-    generated_image_filename = generated_image_raw_filename[:251] if len(generated_image_raw_filename) > 255 else generated_image_raw_filename
-    generated_image_savefile = f"{image_save_path}/{generated_image_filename}.png"
-    image.save(generated_image_savefile)
-
-    return generated_image_savefile
+    for i, img in enumerate(image.images):
+        if len(generated_image_raw_filename) > 255:
+            truncate_length = 251 - len(f"_{i}")
+            generated_image_filename = generated_image_raw_filename[:truncate_length]  
+        else:
+            generated_image_filename = generated_image_raw_filename
+            
+        generated_image_savefile = f"{image_save_path}/{generated_image_filename}_{i}.png"
+        img.save(generated_image_savefile)
+        
+        display(image)
+        print(f"Scheduler: {''.join(scheduler)}")
+        print(f"Seed: {seed}")
+        print(f"Image is saved at {generated_image_savefile}.\n")
