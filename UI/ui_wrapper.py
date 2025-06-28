@@ -126,7 +126,8 @@ class UIWrapper:
                             self.embeddings.ti_urls_widget,
                          ],
                          self.base_path,
-                         self.controlnet.return_get_image_class()
+                         self.controlnet.return_get_image_class(),
+                         self.main_parameter,
                 )
                 self.has_load_model = True
     
@@ -142,6 +143,29 @@ class UIWrapper:
                 self.submit_settings.layout.visibility = "hidden"
                 self.upscaler.execute_realesrgan(self.ui)
                 self.reload_submit_button()
+
+    def load_always(self, change):
+        if change["new"]:
+            self.main_parameter = change["new"]
+            self.preset_system.load_preset_on_click.observe(
+                change["new"],
+                self.text2img,
+                self.img2img,
+                self.controlnet,
+                self.inpaint,
+                self.ip,
+                self.lora,
+                self.embeddings,
+            )
+
+    def load_custom_main(self, change):
+        if change["new"]:
+            self.main_parameter = self.preset_system.load_preset_selection_dropdown.value
+            self.load_always({"new": self.main_parameter})
+            self.preset_system.load_preset_selection_dropdown.observe(self.load_always, names="value")
+        else:
+            self.main_parameter = "main_parameters"
+            self.preset_system.load_preset_selection_dropdown.unobserve(self.load_always, names="value")
 
     # Download models from model widget
     def load_model(self, url, hf_token, civit_token, base_path):
@@ -237,6 +261,7 @@ class UIWrapper:
         self.value_list = []
         self.base_path = base_path
         self.draw = False
+        self.main_parameter = "main_parameters"
         
         # Instantiate other classes
         self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line, gpt2_pipe)
@@ -393,4 +418,5 @@ class UIWrapper:
         self.merge_button.on_click(lambda b: self.merge_first_phase(
             self.ui_tab.selected_index, self.text2img, self.img2img, self.controlnet, self.inpaint
         ))
+        self.preset_system.use_as_main.observe(self.load_custom_main, names="value")
         
