@@ -53,7 +53,8 @@ class ControlNetSettings:
             self.depth_strength_slider,
             self.openpose_link_widget,
             self.openpose_toggle,
-            self.openpose_strength_slider
+            self.openpose_strength_slider,
+            self.batch_size,
         ]
         
     # Collect all values from the widgets and turn them into a single list
@@ -85,6 +86,7 @@ class ControlNetSettings:
             self.openpose_link_widget.value,
             self.openpose_toggle.value,
             self.openpose_strength_slider.value,
+            self.batch_size.value,
         ]
         
      # Function to show or hide scheduler booleans
@@ -426,10 +428,11 @@ class ControlNetSettings:
         self.height_slider = widgets.IntSlider(min=512, max=1536, step=64, value=cfg[4] if cfg else 1024, description="Height")
         self.image_resolution_section = widgets.HBox([self.width_slider, self.height_slider])
 
+        self.batch_size = widgets.IntText(value=cfg[26] if cfg else 1, description="Batch size")
         self.steps_slider = widgets.IntText(value=cfg[5] if cfg else 12, description="Steps")
         self.scale_slider = widgets.FloatSlider(min=1, max=12, step=0.1, value=cfg[6] if cfg else 6, description="Scale")
         self.clip_skip_slider = widgets.IntSlider(min=0, max=12, step=1, value=cfg[7] if cfg else 2, description="Clip Skip")
-        self.generation_parameter_section = widgets.VBox([self.steps_slider, widgets.HBox([self.scale_slider, self.clip_skip_slider])])
+        self.generation_parameter_section = widgets.VBox([widgets.HBox([self.steps_slider, self.batch_size]), widgets.HBox([self.scale_slider, self.clip_skip_slider])])
 
         self.scheduler_dropdown = widgets.Dropdown(
             options=[
