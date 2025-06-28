@@ -20,7 +20,8 @@ def generate(
     controlnets_scale=None,
     images=None,
     ref_image=None,
-    Denoising_Strength=None
+    Denoising_Strength=None,
+    Images_per_Prompt=1,
 ):
     # Main arguments
     generation_arguments = {
@@ -33,7 +34,8 @@ def generate(
         "height": Height,
         "guidance_scale": Scale,
         "clip_skip": Clip_Skip,
-        "generator": generator
+        "generator": generator,
+        "num_images_per_prompt": Images_per_Prompt
     }
 
     # Argument validation based on the pipeline and adapter
@@ -60,7 +62,7 @@ def generate(
         generation_arguments["image"] = ref_image
         generation_arguments["strength"] = Denoising_Strength
 
-    image = pipeline(**generation_arguments).images[0]
+    image = pipeline(**generation_arguments)
     if IP_Adapter != "None": # If IP-Adapter is turned on
         pipeline.unload_ip_adapter()
 
