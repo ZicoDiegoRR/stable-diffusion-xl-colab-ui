@@ -112,7 +112,9 @@ class PresetSystem:
 
     # Getting all presets
     def list_all_saved_preset(self):
-        list_of_saved_parameters = [word.replace(".json" , "") for word in os.listdir(f"{self.base_path}/Saved Parameters/") if os.path.isfile(os.path.join(f"{self.base_path}/Saved Parameters/", word)) and word.endswith(".json")]
+        list_of_saved_parameters = [
+            word.replace(".json" , "") for word in os.listdir(f"{self.base_path}/Saved Parameters/") if os.path.isfile(os.path.join(f"{self.base_path}/Saved Parameters/", word)) and word.endswith(".json")
+        ]
         return list_of_saved_parameters
 
     # Load a preset into your parameters
@@ -163,7 +165,10 @@ class PresetSystem:
             self.rename_preset_widget.value = ""
         elif new in self.list_all_saved_preset() and new and new != old:
             self.rename_back_button._click_handlers.callbacks.clear()
-            self.show_message(self.rename_output, f"{new}.json already exists. Renaming the current parameters with the same name will overwrite the original saved parameters. Do you wish to continue?", "warn")
+            self.show_message(
+                self.rename_output, 
+                f"{new}.json already exists. Renaming the current parameters with the same name will overwrite the original saved parameters. Do you wish to continue?", "warn"
+            )
             self.rename_preset_button._click_handlers.callbacks.clear()
             
             self.rename_preset_display.children = [
@@ -232,11 +237,26 @@ class PresetSystem:
         self.save_warning_back_button = widgets.Button(description="Back")
         self.save_preset_button = widgets.Button(description="Save current parameters")
         self.save_preset_name_widget = widgets.Text(description="Name", placeholder="Preset name", value="")
-        self.save_preset_display = widgets.VBox([self.save_output, self.save_preset_name_widget, self.save_preset_button, widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")])
+        self.save_preset_display = widgets.VBox([
+            self.save_output, 
+            self.save_preset_name_widget, 
+            self.save_preset_button, 
+            widgets.HTML(value="Clicking the save button will save the current parameters you're using as a new preset for later use.")
+        ])
 
         self.load_preset_button = widgets.Button(description="Load this preset")
         self.load_preset_selection_dropdown = widgets.Dropdown(description="Select your saved preset")
-        self.load_preset_display = widgets.VBox([self.load_output, self.load_preset_selection_dropdown, self.load_preset_button, widgets.HTML(value="Clicking the load button will override the current parameters.")])
+        self.use_as_main = widgets.Checkbox(description="Use this preset as the main parameters", value=False)
+        self.use_as_main_label = widgets.Label(
+            value="Enabling the checkbox above will use the currently-loaded custom preset as the main parameter preset."
+        )
+        self.load_preset_display = widgets.VBox([
+            self.load_output, 
+            self.load_preset_selection_dropdown, 
+            widgets.HBox([self.load_preset_button, self.use_as_main]),
+            widgets.HTML(value="Clicking the load button will override the current parameters."),
+            self.use_as_main_label
+        ])
 
         self.rename_preset_button = widgets.Button(description="Rename this preset")
         self.rename_back_button = widgets.Button(description="Back")
@@ -244,24 +264,40 @@ class PresetSystem:
         self.rename_preset_selection_dropdown = widgets.Dropdown()
         self.rename_preset_widget_label = widgets.Label(value="Input your new name:")
         self.rename_preset_widget = widgets.Text(placeholder="New name")
-        self.rename_preset_display = widgets.VBox([self.rename_output, widgets.HBox([widgets.VBox([self.rename_preset_selection_dropdown_label, self.rename_preset_selection_dropdown]), widgets.VBox([self.rename_preset_widget_label, self.rename_preset_widget])]), self.rename_preset_button, widgets.HTML(value="Clicking the button will rename your selected saved preset.")])
+        self.rename_preset_display = widgets.VBox([
+            self.rename_output, 
+            widgets.HBox([
+                widgets.VBox([
+                    self.rename_preset_selection_dropdown_label, 
+                    self.rename_preset_selection_dropdown]), 
+                widgets.VBox([
+                    self.rename_preset_widget_label, 
+                    self.rename_preset_widget])
+            ]), 
+            self.rename_preset_button, 
+            widgets.HTML(value="Clicking the button will rename your selected saved preset.")
+        ])
 
         self.delete_preset_button = widgets.Button(description="Delete this preset", button_style="danger")
         self.delete_back_button = widgets.Button(description="Back")
         self.delete_preset_selection_dropdown_label = widgets.Label(value="Select your saved preset:")
         self.delete_preset_selection_dropdown = widgets.Dropdown()
-        self.delete_preset_display = widgets.VBox([self.delete_output, self.delete_preset_selection_dropdown_label, self.delete_preset_selection_dropdown, self.delete_preset_button, widgets.HTML(value="Clicking the button will delete your selected saved preset from Google Drive.")])
+        self.delete_preset_display = widgets.VBox([
+            self.delete_output, 
+            self.delete_preset_selection_dropdown_label, 
+            self.delete_preset_selection_dropdown, 
+            self.delete_preset_button, 
+            widgets.HTML(value="Clicking the button will delete your selected saved preset from Google Drive.")
+        ])
 
         self.reset_options()
         
         self.preset_tab = widgets.Tab()
         self.preset_tab.layout = widgets.Layout(width="99%")
         self.preset_tab.children = [self.save_preset_display, self.load_preset_display, self.rename_preset_display, self.delete_preset_display]
-        self.preset_tab.set_title(0, "Save Preset")
-        self.preset_tab.set_title(1, "Load Preset")
-        self.preset_tab.set_title(2, "Rename Preset")
-        self.preset_tab.set_title(3, "Delete Preset")
-
+        for i, title in enumerate(["Save Preset", "Load Preset", "Rename Preset", "Delete Preset"]):
+            self.preset_tab.set_title(i, title)
+        
         self.save_preset_button.on_click(lambda b: self.save_preset_on_click(self.save_preset_name_widget.value, text2img, img2img, controlnet, inpaint, ip, lora, embeddings))
         self.load_preset_button.on_click(lambda b: self.load_preset_on_click(self.load_preset_selection_dropdown.value, text2img, img2img, controlnet, inpaint, ip, lora, embeddings))
         self.rename_preset_button.on_click(lambda b: self.rename_preset_on_click(self.rename_preset_selection_dropdown.value, self.rename_preset_widget.value))
