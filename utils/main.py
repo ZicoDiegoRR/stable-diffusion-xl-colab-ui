@@ -76,16 +76,16 @@ def save_last(filename, data, type):
 def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary, widgets_change, base_path, get_image_class, main_param):
     # Initialization
     pipeline_type = ""
-    if len(values_in_list) == 15:
+    if len(values_in_list) == 16:
         pipeline_type = "text2img"
         selected_tab_for_pipeline = 0
-    elif len(values_in_list) == 17:
+    elif len(values_in_list) == 18:
         pipeline_type = "img2img"
         selected_tab_for_pipeline = 1
-    elif len(values_in_list) == 26:
+    elif len(values_in_list) == 27:
         pipeline_type = "controlnet"
         selected_tab_for_pipeline = 2
-    elif len(values_in_list) == 19:
+    elif len(values_in_list) == 20:
         pipeline_type = "inpaint"
         selected_tab_for_pipeline = 3
 
