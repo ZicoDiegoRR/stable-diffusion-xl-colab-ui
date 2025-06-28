@@ -120,7 +120,7 @@ class InpaintingSettings:
         self.height_slider = widgets.IntSlider(min=512, max=1536, step=64, value=cfg[4] if cfg else 1024, description="Height")
         self.image_resolution_section = widgets.HBox([self.width_slider, self.height_slider])
 
-        self.batch_size = widgets.IntText(value=cfg[20] if cfg else 1, description="Batch size")
+        self.batch_size = widgets.IntText(value=cfg[19] if cfg else 1, description="Batch size")
         self.steps_slider = widgets.IntText(value=cfg[5] if cfg else 12, description="Steps")
         self.scale_slider = widgets.FloatSlider(min=1, max=12, step=0.1, value=cfg[6] if cfg else 6, description="Scale")
         self.clip_skip_slider = widgets.IntSlider(min=0, max=12, step=1, value=cfg[7] if cfg else 2, description="Clip Skip")
