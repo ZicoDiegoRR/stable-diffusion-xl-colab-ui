@@ -39,17 +39,17 @@ def save_param(path, data):
 def default_params():
   return {
         "text2img": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
-                     False, False, False, False, "", "",
+                     False, False, False, False, "", "", 1
                     ],
         "img2img": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
-                    False, False, False, False, "", "", "", 0.3,
+                    False, False, False, False, "", "", "", 0.3, 1
                    ],
         "controlnet": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
                       False, False, False, False, "", "", "", 100, 240, False, 
-                      0.7, "", False, 0.7, "", False, 0.7,
+                      0.7, "", False, 0.7, "", False, 0.7, 1
                       ],
         "inpaint": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
-                     False, False, False, False, "", "", "", "", False, 0.9
+                     False, False, False, False, "", "", "", "", False, 0.9, 1
                    ],
         "ip": ["", 0.8, "None"],
         "lora": ["", ""],
@@ -58,16 +58,19 @@ def default_params():
 
 # Checking and validating the save file
 def list_or_dict(cfg, path):
+    new_cfg = cfg
     if isinstance(cfg, list):
         new_cfg = save_file_converter.old_to_new(cfg)
-        save_param(path, new_cfg)
-        
+            
     elif isinstance(cfg, dict):
         if len(cfg["inpaint"]) < 19:
             new_cfg = save_file_converter.new_inpaint(cfg)
-            save_param(path, new_cfg)
-        else:
-            new_cfg = cfg
+                
+        if len(cfg["text2img"]) < 16:
+            new_cfg = save_file_converter.add_batch_size(cfg)
+
+    save_param(path, new_cfg)   
+    return new_cfg
             
     else:
         new_cfg = default_params()
