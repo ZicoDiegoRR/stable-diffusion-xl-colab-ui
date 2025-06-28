@@ -163,3 +163,11 @@ def new_inpaint(cfg):
     new_cfg["inpaint"] = new_settings
 
     return new_cfg
+
+def add_batch_size(cfg):
+    new cfg = cfg
+    
+    for key in list(new_cfg.keys()):
+        new_cfg[key].append(1)
+
+    return new_cfg
