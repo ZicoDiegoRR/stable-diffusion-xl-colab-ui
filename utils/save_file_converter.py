@@ -165,7 +165,7 @@ def new_inpaint(cfg):
     return new_cfg
 
 def add_batch_size(cfg):
-    new cfg = cfg
+    new_cfg = cfg
     
     for key in list(new_cfg.keys()):
         new_cfg[key].append(1)
