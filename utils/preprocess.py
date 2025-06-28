@@ -71,12 +71,6 @@ def list_or_dict(cfg, path):
 
     save_param(path, new_cfg)   
     return new_cfg
-            
-    else:
-        new_cfg = default_params()
-        save_param(path, new_cfg)
-        
-    return new_cfg
 
 def run():
     # Minimizing the Transformers' output
