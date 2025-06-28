@@ -354,8 +354,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     )
 
     # Saving the image and resetting the output
-    generated_image_savefile= image_saver.save_image(image, Prompt, prefix, base_path)
     ui.clear_output()
+    image_saver.save_image(image, Prompt, prefix, Scheduler_used, generator_seed, base_path)
 
     # Saving the set parameters (second phase)
     save_param(f"{base_path}/Saved Parameters/{main_param}.json", dictionary)
@@ -364,11 +364,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     last_generation_json = os.path.join(f"{base_path}/Saved Parameters", "last_generation.json")
     save_last(last_generation_json, generated_image_savefile, prefix)
 
-    # Displaying the image
-    display(image)
-    print(f"Scheduler: {''.join(Scheduler_used)}")
-    print(f"Seed: {generator_seed}")
-    print(f"Image is saved at {generated_image_savefile}.")
     torch.cuda.empty_cache()
     gc.collect()
     #____________________________________________________________________________________________________________________________________________________________________________
