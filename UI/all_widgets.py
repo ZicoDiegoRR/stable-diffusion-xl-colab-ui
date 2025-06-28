@@ -39,3 +39,6 @@ def merge(init, destination, text2img, img2img, controlnet, inpaint):
     destination_widgets = widgets_dictionary_for_merging[destination]
     for i in range(15):
         destination_widgets[i].value = init_values[i]
+
+    # For batch size
+    destination_widgets[-1].value = init_values[-1]
