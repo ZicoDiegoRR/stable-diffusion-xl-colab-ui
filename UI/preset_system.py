@@ -43,10 +43,12 @@ class PresetSystem:
             self.save_param(path, new_cfg)
             return new_cfg
         elif isinstance(cfg, dict):
+            new_cfg = cfg
             if len(cfg["inpaint"]) < 19:
                 new_cfg = save_file_converter.new_inpaint(cfg)
-            else:
-                new_cfg = cfg
+                
+            if len(cfg["text2img"]) < 16:
+                new_cfg = save_file_converter.add_batch_size(cfg)
                 
         return new_cfg
             
