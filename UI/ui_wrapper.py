@@ -141,13 +141,13 @@ class UIWrapper:
                 self.embeddings.construct(self.embeddings.ti_urls_widget.value)
             elif index == 7:
                 self.submit_settings.layout.visibility = "hidden"
-                self.upscaler.execute_realesrgan(self.ui)
+                self.upscaler.execute_realesrgan(self.generation_output)
                 self.reload_submit_button()
 
     def load_always(self, change):
         if change["new"]:
             self.main_parameter = change["new"]
-            self.preset_system.load_preset_on_click.observe(
+            self.preset_system.load_preset_on_click(
                 change["new"],
                 self.text2img,
                 self.img2img,
