@@ -209,8 +209,8 @@ These steps allow you to reuse the tokens without inputting them manually in the
 - Adding Hugging Face's token integration ✅ <br>
 - Implementing Img2Img pipeline ✅ <br>
 - Pagination for history ✅ <br>
-- Use other presets as the main preset <br>
-- Enable custom upscale factor for Real-ESRGAN <br>
+- Use other presets as the main preset ✅ <br>
+- Enable custom upscale factor for Real-ESRGAN ✅ <br>
 - Multiple batches per generation <br>
 - Default model selections <br>
 - Hires.Fix (Real-ESRGAN and LANCZOS upscalers) <br>
