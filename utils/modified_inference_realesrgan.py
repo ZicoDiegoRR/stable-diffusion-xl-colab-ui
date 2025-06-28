@@ -258,8 +258,8 @@ def run_upscaling(
                     load_image(input), 
                     load_image(save_path).resize((img.shape[1], img.shape[0]))
                 ], rows=1, cols=2))
-            print(f"Original resolution: {input_width}x{input_height} px")
-            print(f"Upscaled resolution: {output_width}x{output_height} px")
+            print(f"Original resolution: {img.shape[1]}x{img.shape[0]} px")
+            print(f"Upscaled resolution: {target_width}x{target_height} px")
             print(f"Image is saved at {save_path}.\n")
 
     del face_enhancer
