@@ -131,6 +131,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
     Textual_Inversion_URLs = embeddings[0]
     Textual_Inversion_Tokens = embeddings[1]
 
+    Images_per_Prompt = values_in_list[-1]
+
     Canny_Link = values_in_list[15] if pipeline_type == "controlnet" else None
     minimum_canny_threshold = values_in_list[16] if pipeline_type == "controlnet" else None
     maximum_canny_threshold = values_in_list[17] if pipeline_type == "controlnet" else None
@@ -347,7 +349,8 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
         main.controlnets_scale,
         main.images,
         ref_image,
-        Denoising_Strength
+        Denoising_Strength,
+        Images_per_Prompt
     )
 
     # Saving the image and resetting the output
