@@ -24,7 +24,7 @@ def generate(
     Images_per_Prompt=1,
 ):
     # Main arguments
-    generation_arguments = {
+    generation_args_basic = {
         "prompt_embeds": conditioning[0:1],
         "pooled_prompt_embeds": pooled[0:1],
         "negative_prompt_embeds": conditioning[1:2],
@@ -37,6 +37,7 @@ def generate(
         "generator": generator,
         "num_images_per_prompt": Images_per_Prompt
     }
+    generation_arguments = generation_args_basic
 
     # Argument validation based on the pipeline and adapter
     if IP_Adapter != "None": # If IP-Adapter is turned on
@@ -66,4 +67,4 @@ def generate(
     if IP_Adapter != "None": # If IP-Adapter is turned on
         pipeline.unload_ip_adapter()
 
-    return image_prefix, image
+    return image_prefix, image, generation_args_basic
