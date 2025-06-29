@@ -9,9 +9,23 @@ class Text2ImgSettings:
             self.prompts_section,
             self.image_resolution_section,
             self.generation_parameter_section,
+            self.hires_section,
             self.scheduler_settings,
             self.vae_section,
         ])
+
+    # Collect values for the Hires.Fix
+    def return_hires_settings(self):
+        return [
+            [
+                self.hires_toggle.value,
+            ],
+            [
+                self.upscaling_method.value,
+                self.factor.value,
+                self.denoising_strength.value,
+            ],
+        ]
 
     # Generate prompt
     def generate_prompt_on_click(self, ideas_line, gpt2_pipe):
@@ -66,6 +80,19 @@ class Text2ImgSettings:
             self.scheduler_settings.children = [self.scheduler_dropdown, self.karras_bool, self.vpred_bool, self.sgmuniform_bool, self.res_betas_zero_snr, widgets.HTML(value="Rescaling the betas to have zero terminal SNR helps to achieve vibrant color, but not necessary.")]
         else:
             self.scheduler_settings.children = [self.scheduler_dropdown]
+
+    def hires_toggle_handler(self, change):
+        if change["new"]:
+            self.hires_section.children = [
+                widgets.HBox([
+                    self.hires_toggle, self.upscaling_method,
+                ]),
+                widgets.HBox([
+                    self.factor, self.upscaling_method,
+                ]),
+            ]
+        else:
+            self.hires_section.children = [self.hires_toggle]
             
     # Initialize widgets creation
     def __init__(self, cfg, ideas_line, gpt2_pipe):
@@ -127,3 +154,11 @@ class Text2ImgSettings:
         self.vae_link_widget = widgets.Text(value=cfg[13] if cfg else "", description="VAE", placeholder="VAE model link")
         self.vae_config = widgets.Text(value=cfg[14] if cfg else "", placeholder="VAE config link")
         self.vae_section = widgets.HBox([self.vae_link_widget, self.vae_config])
+
+        self.hires_toggle = widgets.Checkbox(description="Use Hires.Fix", value=False)
+        self.upscaling_method = widgets.Dropdown(options=["Real-ESRGAN", "LANCZOS"], description="Upscaler")
+        self.factor = widgets.IntSlider(min=1, max=4, description="Factor", value=4)
+        self.denoising_strength = widgets.FloatSlider(description="Denoising Strength", min=0, max=1.0, step=0.01)
+
+        self.hires_section = widgets.VBox([self.hires_toggle])
+        self.hires_toggle.observe(self.hires_toggle_handler, names="value")
