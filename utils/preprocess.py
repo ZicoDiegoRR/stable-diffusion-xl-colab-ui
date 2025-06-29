@@ -151,6 +151,6 @@ def run():
         )
 
     # Update the model selection
-    model = downloader.download_file(update=True)
+    model = downloader.download_file(base_path=base_path, update=True)
 
     return cfg, ideas_line, gpt2_pipe, base_path
