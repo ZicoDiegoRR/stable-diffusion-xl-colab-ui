@@ -355,7 +355,18 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Saving the image and resetting the output
     ui.clear_output()
-    image_saver.save_image(used_pipeline, image, Prompt, prefix, Scheduler_used, generator_seed, base_path, hires, hires_values, gen_args,)
+    image_saver.save_image(
+        used_pipeline, 
+        image,
+        Prompt, 
+        prefix, 
+        Scheduler_used, 
+        generator_seed,
+        base_path, 
+        hires, 
+        hires_values, 
+        gen_args,
+    )
 
     # Saving the set parameters (second phase)
     save_param(f"{base_path}/Saved Parameters/{main_param}.json", dictionary)
