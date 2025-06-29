@@ -85,11 +85,11 @@ def default_model_for_checkpoint():
             "https://civitai.com/api/download/models/1920896?type=Model&format=SafeTensor&size=full&fp=fp16": "ponyRealism_V23ULTRA",
             "https://civitai.com/api/download/models/1697082?type=Model&format=SafeTensor&size=pruned&fp=fp16": "hassakuXLIllustrious_v22"
         },
-        "hugging_face": [stabilityai/stable-diffusion-xl-base-1.0]
+        "hugging_face": ["stabilityai/stable-diffusion-xl-base-1.0"]
     }
 
 def inject_default(saved_urls, default):
-    for key, value in default.item():
+    for key, value in default.items():
         saved_urls[key] = value
         
 # Filter out any unsafe characters
@@ -240,7 +240,13 @@ def download(url, type, hf_token="", civit_token="", key=None, tqdm_bool=True, w
 # Validate if the url has been downloaded before (even in previous instance)
 def download_file(url="", type="", hf_token="", civit_token="", base_path="", subfolder=None, tqdm=True, widget=None, update=False):
     # Load the dictionary from urls.json
+    os.makedirs(f"{base_path}/Saved Parameters/URL", exist_ok=True)
     saved_urls = load_param(f"{base_path}/Saved Parameters/URL/urls.json")
+
+    # Unused in the new version
+    if "hugging_face" not in list(saved_urls["Checkpoint"].keys()):
+        for key in list(saved_urls.keys()):
+            saved_urls[key]["hugging_face"] = []
 
     # Default models
     default_model = default_model_for_checkpoint()
@@ -254,7 +260,6 @@ def download_file(url="", type="", hf_token="", civit_token="", base_path="", su
     if not update:
         # Get the values
         dict_type = saved_urls[type]
-        os.makedirs(f"{base_path}/Saved Parameters/URL", exist_ok=True)
         os.makedirs(f"/content/{type}", exist_ok=True)
         
         # Select the key when loading VAE
