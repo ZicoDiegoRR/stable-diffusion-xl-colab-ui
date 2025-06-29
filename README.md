@@ -68,6 +68,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 26. | `ipycanvas` canvas to create mask images for Inpainting (unstable)                                                           |
 | 27. | Pagination feature in history system                                                                                         |
 | 28. | Multiple images per generation (requires more VRAM, so it's not free-tier friendly)                                          |
+| 29. | Default model selections (12 models in total)                                                                                |
 
 </details>
 
@@ -213,7 +214,7 @@ These steps allow you to reuse the tokens without inputting them manually in the
 - Use other presets as the main preset ✅ <br>
 - Enable custom upscale factor for Real-ESRGAN ✅ <br>
 - Multiple batches per generation ✅ (requires more VRAM) <br>
-- Default model selections <br>
+- Default model selections ✅ <br>
 - Hires.Fix (Real-ESRGAN and LANCZOS upscalers) <br>
 - Remove images from history <br>
 </details>
