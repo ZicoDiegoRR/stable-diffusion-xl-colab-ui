@@ -111,13 +111,13 @@ class UIWrapper:
                 self.submit_settings.layout.visibility = "hidden"
                 self.model_output.clear_output()
                 
-                if text2img.return_hires_settings()[0] and index == 0:
+                if text2img.return_hires_settings()[0][0] and index == 0:
                     hires = True
                     hires_values = text2img.return_hires_settings()[1]
                     if text2img.return_hires_settings()[1][0] == "Real-ESRGAN":
-                        hires_values = self.upscaler
+                        hires_values[0] = self.upscaler
                 else:
-                    hires = False
+                    hires = None
                     
                 main.run(self.value_list, 
                          values_dictionary_for_generation["lora"], 
