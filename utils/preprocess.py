@@ -1,4 +1,4 @@
-from StableDiffusionXLColabUI.utils import save_file_converter
+from StableDiffusionXLColabUI.utils import save_file_converter, downloader
 from transformers import pipeline as pipe, set_seed
 from transformers.utils import logging
 from google.colab import drive
@@ -149,5 +149,8 @@ def run():
             os.path.join(base_path, "last_generation.json"), 
             os.path.join(f"{base_path}/Saved Parameters", "last_generation.json"),
         )
+
+    # Update the model selection
+    model = downloader.download_file(update=True)
 
     return cfg, ideas_line, gpt2_pipe, base_path
