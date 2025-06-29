@@ -1,3 +1,4 @@
+from StableDiffusionXLColabUI.utils import hires_fix
 from IPython.display import display
 import time
 import os
@@ -19,7 +20,7 @@ def name_generate_and_save(image, img, i, image_save_path, generated_image_raw_f
     return generated_image_savefile
         
 
-def save_image(image, prompt_for_name, prefix, scheduler, seed, base_path):
+def save_image(pipe, image, prompt_for_name, prefix, scheduler, seed, base_path, hires, hires_values):
     current_time = time.localtime()
     formatted_time = time.strftime("[%H-%M-%S %B %d, %Y]", current_time)
     if prefix == "[Text-to-Image]":
@@ -37,7 +38,11 @@ def save_image(image, prompt_for_name, prefix, scheduler, seed, base_path):
     prompt_name = " ".join(split_prompt)
     generated_image_raw_filename = f"{prefix} {formatted_time} {prompt_name}"
     for i, img in enumerate(image.images):
-        generated_image_savefile = name_generate_and_save(image, img, i, image_save_path, generated_image_raw_filename)
+        if hires:
+            img_element = hires_fix.run(pipe, img, hires_values, gen_args)
+        else:
+            img_element = img
+        generated_image_savefile = name_generate_and_save(image, img_element, i, image_save_path, generated_image_raw_filename)
         
         display(img)
         print(f"Scheduler: {''.join(scheduler)}")
