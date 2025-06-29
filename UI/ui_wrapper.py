@@ -118,6 +118,7 @@ class UIWrapper:
                         hires_values[0] = self.upscaler
                 else:
                     hires = None
+                    hires_values = None
                     
                 main.run(self.value_list, 
                          values_dictionary_for_generation["lora"], 
