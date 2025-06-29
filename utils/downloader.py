@@ -12,81 +12,56 @@ def save_param(path, data):
         json.dump(data, file, indent=4)
 
 # Load urls.json
-def load_param(filename):
+def load_param(filename, load_type="load"):
     try:
         with open(filename, 'r') as f:
             params = json.load(f)
         return params
     except FileNotFoundError:
-        return {
-            "VAE": {
-                "keyname_to_url": {
-                    "weight": {
+        if load_type == "load":
+            return {
+                "VAE": {
+                    "keyname_to_url": {
+                        "weight": {
+                        },
+                        "config": {
+                        }
                     },
-                    "config": {
-                    }
-                },
-                "url_to_keyname": {
-                    "weight": {
+                    "url_to_keyname": {
+                        "weight": {
+                        },
+                        "config": {
+                        }
                     },
-                    "config": {
-                    }
+                    "hugging_face": [],
                 },
-                "hugging_face": [],
-            },
-            "Checkpoint": {
-                "keyname_to_url": {
+                "Checkpoint": {
+                    "keyname_to_url": {
+                    },
+                    "url_to_keyname": {
+                    },
+                    "hugging_face": [],
                 },
-                "url_to_keyname": {
+                "LoRAs": {
+                    "keyname_to_url": {
+                    },
+                    "url_to_keyname": {
+                    },
+                    "hugging_face": [],
                 },
-                "hugging_face": [],
-            },
-            "LoRAs": {
-                "keyname_to_url": {
+                "Embeddings": {
+                    "keyname_to_url": {
+                    },
+                    "url_to_keyname": {
+                    },
+                    "hugging_face": [],
                 },
-                "url_to_keyname": {
-                },
-                "hugging_face": [],
-            },
-            "Embeddings": {
-                "keyname_to_url": {
-                },
-                "url_to_keyname": {
-                },
-                "hugging_face": [],
-            },
-        }
+            }
+        elif load_type == "default":
+            return {}
 
 def default_model_for_checkpoint():
-    return {
-        "keyname_to_url": {
-            "ponyDiffusionV6XL_v6StartWithThisOne": "https://civitai.com/api/download/models/290640?type=Model&format=SafeTensor&size=pruned&fp=fp16",
-            "waiNSFWIllustrious_v140": "https://civitai.com/api/download/models/1761560?type=Model&format=SafeTensor&size=pruned&fp=fp16",
-            "illustriousXL20_v20": "https://civitai.com/api/download/models/1546777?type=Model&format=SafeTensor&size=pruned&fp=fp16",
-            "autismmixSDXL_autismmixPony": "https://civitai.com/api/download/models/324619?type=Model&format=SafeTensor&size=pruned&fp=fp16",
-            "juggernautXL_ragnarokBy": "https://civitai.com/api/download/models/1759168?type=Model&format=SafeTensor&size=full&fp=fp16",
-            "noobaiXLNAIXL_epsilonPred11Version": "https://civitai.com/api/download/models/1116447?type=Model&format=SafeTensor&size=full&fp=bf16",
-            "yiffymix_v62Noobxl": "https://civitai.com/api/download/models/1876492?type=Model&format=SafeTensor&size=full&fp=fp16",
-            "novaAnimeXL_ilV5b": "https://civitai.com/api/download/models/1500882?type=Model&format=SafeTensor&size=pruned&fp=fp16",
-            "AnythingXL_xl": "https://civitai.com/api/download/models/384264?type=Model&format=SafeTensor&size=full&fp=fp16",
-            "ponyRealism_V23ULTRA": "https://civitai.com/api/download/models/1920896?type=Model&format=SafeTensor&size=full&fp=fp16",
-            "hassakuXLIllustrious_v22": "https://civitai.com/api/download/models/1697082?type=Model&format=SafeTensor&size=pruned&fp=fp16"
-        },
-        "url_to_keyname": {
-            "https://civitai.com/api/download/models/290640?type=Model&format=SafeTensor&size=pruned&fp=fp16": "ponyDiffusionV6XL_v6StartWithThisOne",
-            "https://civitai.com/api/download/models/1761560?type=Model&format=SafeTensor&size=pruned&fp=fp16": "waiNSFWIllustrious_v140",
-            "https://civitai.com/api/download/models/1546777?type=Model&format=SafeTensor&size=pruned&fp=fp16": "illustriousXL20_v20",
-            "https://civitai.com/api/download/models/324619?type=Model&format=SafeTensor&size=pruned&fp=fp16": "autismmixSDXL_autismmixPony",
-            "https://civitai.com/api/download/models/1759168?type=Model&format=SafeTensor&size=full&fp=fp16": "juggernautXL_ragnarokBy",
-            "https://civitai.com/api/download/models/1116447?type=Model&format=SafeTensor&size=full&fp=bf16": "noobaiXLNAIXL_epsilonPred11Version",
-            "https://civitai.com/api/download/models/1876492?type=Model&format=SafeTensor&size=full&fp=fp16": "yiffymix_v62Noobxl",
-            "https://civitai.com/api/download/models/1500882?type=Model&format=SafeTensor&size=pruned&fp=fp16": "novaAnimeXL_ilV5b",
-            "https://civitai.com/api/download/models/384264?type=Model&format=SafeTensor&size=full&fp=fp16": "AnythingXL_xl",
-            "https://civitai.com/api/download/models/1920896?type=Model&format=SafeTensor&size=full&fp=fp16": "ponyRealism_V23ULTRA",
-            "https://civitai.com/api/download/models/1697082?type=Model&format=SafeTensor&size=pruned&fp=fp16": "hassakuXLIllustrious_v22"
-        },
-        "hugging_face": ["stabilityai/stable-diffusion-xl-base-1.0"]
-    }
+    return load_param("/content/StableDiffusionXLColabUI/json/default_models.json", load_type="default")
 
 def inject_default(saved_urls, default):
     for key, value in default.items():
