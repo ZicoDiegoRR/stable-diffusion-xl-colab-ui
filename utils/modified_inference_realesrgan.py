@@ -71,6 +71,20 @@ class ESRGANWidget:
             face_enhance=self.face.value,
             alpha_upsampler=self.upsampler.value
         )
+        
+    def hires_execute(self, input, factor):
+        run_upscaling(
+            input=input,
+            model_name='RealESRGAN_x4plus',
+            denoise_strength=0,
+            outscale=factor,
+            output="/content/hires",
+            tile=0,
+            tile_pad=10,
+            pre_pad=10,
+            face_enhance=False,
+            alpha_upsampler="realesrgan"
+        )
 
 #too lazy to edit the run_upscaling() function
 class VariableHandlerESRGAN:
@@ -109,7 +123,6 @@ class VariableHandlerESRGAN:
         self.gpu_id = gpu_id
         
 def run_upscaling(
-    tab,
     input, 
     model_name, 
     tile,
@@ -124,7 +137,9 @@ def run_upscaling(
     fp32=False,
     alpha_upsampler="realesrgan",
     ext="auto",
-    gpu_id=None):
+    gpu_id=None,
+    tab=None,
+):
 
     args = VariableHandlerESRGAN()
         
@@ -217,7 +232,9 @@ def run_upscaling(
     else:
         paths = sorted(glob.glob(os.path.join(args.input, '*')))
 
-    tab.clear_output()
+    if tab:
+        tab.clear_output()
+        
     for idx, path in enumerate(paths):
         imgname, extension = os.path.splitext(os.path.basename(path))
 
