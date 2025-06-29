@@ -241,6 +241,7 @@ def run_upscaling(
                 extension = args.ext
             if img_mode == 'RGBA':  # RGBA images should be saved in png format
                 extension = 'png'
+            
             img_filename_with_prompt = f"[Upscaled] {imgname}"
             if (len(img_filename_with_prompt) + len(extension) + 1) > 255:
                 img_filename = f"{img_filename_with_prompt[:245]}.{extension}"
@@ -249,18 +250,22 @@ def run_upscaling(
 
             target_width = img.shape[1] * args.outscale
             target_height = img.shape[0] * args.outscale
-               
-            save_path = os.path.join(args.output, img_filename)
-            cv2.imwrite(save_path, cv2.resize(output, (target_width, target_height)))
 
-            display(
-                make_image_grid([
-                    load_image(input), 
-                    load_image(save_path).resize((img.shape[1], img.shape[0]))
-                ], rows=1, cols=2))
-            print(f"Original resolution: {img.shape[1]}x{img.shape[0]} px")
-            print(f"Upscaled resolution: {target_width}x{target_height} px")
-            print(f"Image is saved at {save_path}.\n")
+            if args.input != "/content/hires/temp.png":
+                save_path = os.path.join(args.output, img_filename)
+                cv2.imwrite(save_path, cv2.resize(output, (target_width, target_height)))
+    
+                display(
+                    make_image_grid([
+                        load_image(input), 
+                        load_image(save_path).resize((img.shape[1], img.shape[0]))
+                    ], rows=1, cols=2))
+                print(f"Original resolution: {img.shape[1]}x{img.shape[0]} px")
+                print(f"Upscaled resolution: {target_width}x{target_height} px")
+                print(f"Image is saved at {save_path}.\n")
+            else:
+                save_path = os.path.join("/content/hires/upscale.png", img_filename)
+                cv2.imwrite(save_path, cv2.resize(output, (target_width, target_height)))
 
     del face_enhancer
     del upsampler
