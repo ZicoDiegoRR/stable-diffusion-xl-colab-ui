@@ -110,6 +110,15 @@ class UIWrapper:
                     
                 self.submit_settings.layout.visibility = "hidden"
                 self.model_output.clear_output()
+                
+                if text2img.return_hires_settings()[0] and index == 0:
+                    hires = True
+                    hires_values = text2img.return_hires_settings()[1]
+                    if text2img.return_hires_settings()[1][0] == "Real-ESRGAN":
+                        hires_values = self.upscaler
+                else:
+                    hires = False
+                    
                 main.run(self.value_list, 
                          values_dictionary_for_generation["lora"], 
                          values_dictionary_for_generation["embeddings"], 
@@ -128,6 +137,8 @@ class UIWrapper:
                          self.base_path,
                          self.controlnet.return_get_image_class(),
                          self.main_parameter,
+                         hires,
+                         hires_values,
                 )
                 self.has_load_model = True
     
