@@ -20,7 +20,7 @@ def name_generate_and_save(image, img, i, image_save_path, generated_image_raw_f
     return generated_image_savefile
         
 
-def save_image(pipe, image, prompt_for_name, prefix, scheduler, seed, base_path, hires, hires_values):
+def save_image(pipe, image, prompt_for_name, prefix, scheduler, seed, base_path, hires, hires_values, gen_args):
     current_time = time.localtime()
     formatted_time = time.strftime("[%H-%M-%S %B %d, %Y]", current_time)
     if prefix == "[Text-to-Image]":
