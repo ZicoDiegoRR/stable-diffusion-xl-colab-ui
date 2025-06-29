@@ -1,0 +1,29 @@
+{
+    "keyname_to_url": {
+        "ponyDiffusionV6XL_v6StartWithThisOne": "https://civitai.com/api/download/models/290640?type=Model&format=SafeTensor&size=pruned&fp=fp16",
+        "waiNSFWIllustrious_v140": "https://civitai.com/api/download/models/1761560?type=Model&format=SafeTensor&size=pruned&fp=fp16",
+        "illustriousXL20_v20": "https://civitai.com/api/download/models/1546777?type=Model&format=SafeTensor&size=pruned&fp=fp16",
+        "autismmixSDXL_autismmixPony": "https://civitai.com/api/download/models/324619?type=Model&format=SafeTensor&size=pruned&fp=fp16",
+        "juggernautXL_ragnarokBy": "https://civitai.com/api/download/models/1759168?type=Model&format=SafeTensor&size=full&fp=fp16",
+        "noobaiXLNAIXL_epsilonPred11Version": "https://civitai.com/api/download/models/1116447?type=Model&format=SafeTensor&size=full&fp=bf16",
+        "yiffymix_v62Noobxl": "https://civitai.com/api/download/models/1876492?type=Model&format=SafeTensor&size=full&fp=fp16",
+        "novaAnimeXL_ilV5b": "https://civitai.com/api/download/models/1500882?type=Model&format=SafeTensor&size=pruned&fp=fp16",
+        "AnythingXL_xl": "https://civitai.com/api/download/models/384264?type=Model&format=SafeTensor&size=full&fp=fp16",
+        "ponyRealism_V23ULTRA": "https://civitai.com/api/download/models/1920896?type=Model&format=SafeTensor&size=full&fp=fp16",
+        "hassakuXLIllustrious_v22": "https://civitai.com/api/download/models/1697082?type=Model&format=SafeTensor&size=pruned&fp=fp16"
+    },
+    "url_to_keyname": {
+        "https://civitai.com/api/download/models/290640?type=Model&format=SafeTensor&size=pruned&fp=fp16": "ponyDiffusionV6XL_v6StartWithThisOne",
+        "https://civitai.com/api/download/models/1761560?type=Model&format=SafeTensor&size=pruned&fp=fp16": "waiNSFWIllustrious_v140",
+        "https://civitai.com/api/download/models/1546777?type=Model&format=SafeTensor&size=pruned&fp=fp16": "illustriousXL20_v20",
+        "https://civitai.com/api/download/models/324619?type=Model&format=SafeTensor&size=pruned&fp=fp16": "autismmixSDXL_autismmixPony",
+        "https://civitai.com/api/download/models/1759168?type=Model&format=SafeTensor&size=full&fp=fp16": "juggernautXL_ragnarokBy",
+        "https://civitai.com/api/download/models/1116447?type=Model&format=SafeTensor&size=full&fp=bf16": "noobaiXLNAIXL_epsilonPred11Version",
+        "https://civitai.com/api/download/models/1876492?type=Model&format=SafeTensor&size=full&fp=fp16": "yiffymix_v62Noobxl",
+        "https://civitai.com/api/download/models/1500882?type=Model&format=SafeTensor&size=pruned&fp=fp16": "novaAnimeXL_ilV5b",
+        "https://civitai.com/api/download/models/384264?type=Model&format=SafeTensor&size=full&fp=fp16": "AnythingXL_xl",
+        "https://civitai.com/api/download/models/1920896?type=Model&format=SafeTensor&size=full&fp=fp16": "ponyRealism_V23ULTRA",
+        "https://civitai.com/api/download/models/1697082?type=Model&format=SafeTensor&size=pruned&fp=fp16": "hassakuXLIllustrious_v22"
+    },
+    "hugging_face": ["stabilityai/stable-diffusion-xl-base-1.0"]
+}
