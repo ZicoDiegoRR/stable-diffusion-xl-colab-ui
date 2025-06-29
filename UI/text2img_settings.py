@@ -88,7 +88,7 @@ class Text2ImgSettings:
                     self.hires_toggle, self.upscaling_method,
                 ]),
                 widgets.HBox([
-                    self.factor, self.upscaling_method,
+                    self.factor, self.denoising_strength,
                 ]),
             ]
         else:
@@ -158,7 +158,7 @@ class Text2ImgSettings:
         self.hires_toggle = widgets.Checkbox(description="Use Hires.Fix", value=False)
         self.upscaling_method = widgets.Dropdown(options=["Real-ESRGAN", "LANCZOS"], description="Upscaler")
         self.factor = widgets.IntSlider(min=1, max=4, description="Factor", value=4)
-        self.denoising_strength = widgets.FloatSlider(description="Denoising Strength", min=0, max=1.0, step=0.01)
+        self.denoising_strength = widgets.FloatSlider(description="Denoising Strength", min=0, max=1.0, step=0.01, value=0.4)
 
         self.hires_section = widgets.VBox([self.hires_toggle])
         self.hires_toggle.observe(self.hires_toggle_handler, names="value")
