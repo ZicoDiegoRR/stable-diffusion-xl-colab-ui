@@ -241,7 +241,6 @@ def download(url, type, hf_token="", civit_token="", key=None, tqdm_bool=True, w
 def download_file(url="", type="", hf_token="", civit_token="", base_path="", subfolder=None, tqdm=True, widget=None, update=False):
     # Load the dictionary from urls.json
     saved_urls = load_param(f"{base_path}/Saved Parameters/URL/urls.json")
-    dict_type = saved_urls[type]
 
     # Default models
     default_model = default_model_for_checkpoint()
@@ -253,6 +252,8 @@ def download_file(url="", type="", hf_token="", civit_token="", base_path="", su
         saved_urls["Checkpoint"]["hugging_face"] = saved_urls["Checkpoint"]["hugging_face"] + default_model["hugging_face"]
 
     if not update:
+        # Get the values
+        dict_type = saved_urls[type]
         os.makedirs(f"{base_path}/Saved Parameters/URL", exist_ok=True)
         os.makedirs(f"/content/{type}", exist_ok=True)
         
