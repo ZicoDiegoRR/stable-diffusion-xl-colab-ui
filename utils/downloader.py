@@ -57,6 +57,41 @@ def load_param(filename):
             },
         }
 
+def default_model_for_checkpoint():
+    return {
+        "keyname_to_url": {
+            "ponyDiffusionV6XL_v6StartWithThisOne": "https://civitai.com/api/download/models/290640?type=Model&format=SafeTensor&size=pruned&fp=fp16",
+            "waiNSFWIllustrious_v140": "https://civitai.com/api/download/models/1761560?type=Model&format=SafeTensor&size=pruned&fp=fp16",
+            "illustriousXL20_v20": "https://civitai.com/api/download/models/1546777?type=Model&format=SafeTensor&size=pruned&fp=fp16",
+            "autismmixSDXL_autismmixPony": "https://civitai.com/api/download/models/324619?type=Model&format=SafeTensor&size=pruned&fp=fp16",
+            "juggernautXL_ragnarokBy": "https://civitai.com/api/download/models/1759168?type=Model&format=SafeTensor&size=full&fp=fp16",
+            "noobaiXLNAIXL_epsilonPred11Version": "https://civitai.com/api/download/models/1116447?type=Model&format=SafeTensor&size=full&fp=bf16",
+            "yiffymix_v62Noobxl": "https://civitai.com/api/download/models/1876492?type=Model&format=SafeTensor&size=full&fp=fp16",
+            "novaAnimeXL_ilV5b": "https://civitai.com/api/download/models/1500882?type=Model&format=SafeTensor&size=pruned&fp=fp16",
+            "AnythingXL_xl": "https://civitai.com/api/download/models/384264?type=Model&format=SafeTensor&size=full&fp=fp16",
+            "ponyRealism_V23ULTRA": "https://civitai.com/api/download/models/1920896?type=Model&format=SafeTensor&size=full&fp=fp16",
+            "hassakuXLIllustrious_v22": "https://civitai.com/api/download/models/1697082?type=Model&format=SafeTensor&size=pruned&fp=fp16"
+        },
+        "url_to_keyname": {
+            "https://civitai.com/api/download/models/290640?type=Model&format=SafeTensor&size=pruned&fp=fp16": "ponyDiffusionV6XL_v6StartWithThisOne",
+            "https://civitai.com/api/download/models/1761560?type=Model&format=SafeTensor&size=pruned&fp=fp16": "waiNSFWIllustrious_v140",
+            "https://civitai.com/api/download/models/1546777?type=Model&format=SafeTensor&size=pruned&fp=fp16": "illustriousXL20_v20",
+            "https://civitai.com/api/download/models/324619?type=Model&format=SafeTensor&size=pruned&fp=fp16": "autismmixSDXL_autismmixPony",
+            "https://civitai.com/api/download/models/1759168?type=Model&format=SafeTensor&size=full&fp=fp16": "juggernautXL_ragnarokBy",
+            "https://civitai.com/api/download/models/1116447?type=Model&format=SafeTensor&size=full&fp=bf16": "noobaiXLNAIXL_epsilonPred11Version",
+            "https://civitai.com/api/download/models/1876492?type=Model&format=SafeTensor&size=full&fp=fp16": "yiffymix_v62Noobxl",
+            "https://civitai.com/api/download/models/1500882?type=Model&format=SafeTensor&size=pruned&fp=fp16": "novaAnimeXL_ilV5b",
+            "https://civitai.com/api/download/models/384264?type=Model&format=SafeTensor&size=full&fp=fp16": "AnythingXL_xl",
+            "https://civitai.com/api/download/models/1920896?type=Model&format=SafeTensor&size=full&fp=fp16": "ponyRealism_V23ULTRA",
+            "https://civitai.com/api/download/models/1697082?type=Model&format=SafeTensor&size=pruned&fp=fp16": "hassakuXLIllustrious_v22"
+        },
+        "hugging_face": [stabilityai/stable-diffusion-xl-base-1.0]
+    }
+
+def inject_default(saved_urls, default):
+    for key, value in default.item():
+        saved_urls[key] = value
+        
 # Filter out any unsafe characters
 def sanitize_filename(filename):
     name, ext = os.path.splitext(filename)
@@ -203,72 +238,83 @@ def download(url, type, hf_token="", civit_token="", key=None, tqdm_bool=True, w
     return full_path
 
 # Validate if the url has been downloaded before (even in previous instance)
-def download_file(url, type, hf_token, civit_token, base_path, subfolder=None, tqdm=True, widget=None):
+def download_file(url="", type="", hf_token="", civit_token="", base_path="", subfolder=None, tqdm=True, widget=None, update=False):
     # Load the dictionary from urls.json
     saved_urls = load_param(f"{base_path}/Saved Parameters/URL/urls.json")
     dict_type = saved_urls[type]
-    os.makedirs(f"{base_path}/Saved Parameters/URL", exist_ok=True)
-    os.makedirs(f"/content/{type}", exist_ok=True)
 
-    # Select the key when loading VAE
-    if subfolder:
-        vae_key = "config"
-    else:
-        vae_key = "weight"
-   
-    # Handle URL input
-    if url.startswith("https://") or url.startswith("http://"):
-        key = dict_type.get("url_to_keyname").get(url) if type != "VAE" else dict_type.get("url_to_keyname").get(vae_key).get(url)
-        if key:
-            if is_exist(f"/content", key, type):
-                returned_path = f"/content/{type}/{search(type, key)}"
+    # Default models
+    default_model = default_model_for_checkpoint()
+    if not all(
+        item in list(saved_urls["Checkpoint"]["keyname_to_url"].keys()) for item in list(default_model["keyname_to_url"].keys())
+    ):
+        inject_default(saved_urls["Checkpoint"]["keyname_to_url"], default_model["keyname_to_url"])
+        inject_default(saved_urls["Checkpoint"]["url_to_keyname"], default_model["url_to_keyname"])
+        saved_urls["Checkpoint"]["hugging_face"] = saved_urls["Checkpoint"]["hugging_face"] + default_model["hugging_face"]
+
+    if not update:
+        os.makedirs(f"{base_path}/Saved Parameters/URL", exist_ok=True)
+        os.makedirs(f"/content/{type}", exist_ok=True)
+        
+        # Select the key when loading VAE
+        if subfolder:
+            vae_key = "config"
+        else:
+            vae_key = "weight"
+       
+        # Handle URL input
+        if url.startswith("https://") or url.startswith("http://"):
+            key = dict_type.get("url_to_keyname").get(url) if type != "VAE" else dict_type.get("url_to_keyname").get(vae_key).get(url)
+            if key:
+                if is_exist(f"/content", key, type):
+                    returned_path = f"/content/{type}/{search(type, key)}"
+                else:
+                    returned_path = download(url, type, hf_token, civit_token, tqdm_bool=tqdm, widget=widget)
             else:
                 returned_path = download(url, type, hf_token, civit_token, tqdm_bool=tqdm, widget=widget)
+                if type == "VAE":
+                    if vae_key == "weight":
+                        vae_name, _ = os.path.splitext(os.path.basename(returned_path))
+                    elif vae_key == "config":
+                        vae_name = subfolder
+    
+                    saved_urls[type]["url_to_keyname"][vae_key][url] = vae_name
+                    saved_urls[type]["keyname_to_url"][vae_key][vae_name] = url
+                else:
+                    file_name, _ = os.path.splitext(os.path.basename(returned_path))
+                    saved_urls[type]["url_to_keyname"][url] = file_name
+                    saved_urls[type]["keyname_to_url"][file_name] = url
+    
+        # Unused, but can handle file from Google Drive
+        elif url.startswith("/content/gdrive/MyDrive"):
+            returned_path = url
+    
+        # Handle HF models
+        elif url.count("/") == 1:
+            returned_path = url
+            if "hugging_face" not in saved_urls[type]:
+                saved_urls[type]["hugging_face"] = []
+            if url not in saved_urls[type]["hugging_face"]:
+                saved_urls[type]["hugging_face"].append(url)
+    
+        # Handle key input
         else:
-            returned_path = download(url, type, hf_token, civit_token, tqdm_bool=tqdm, widget=widget)
-            if type == "VAE":
-                if vae_key == "weight":
-                    vae_name, _ = os.path.splitext(os.path.basename(returned_path))
-                elif vae_key == "config":
-                    vae_name = subfolder
-
-                saved_urls[type]["url_to_keyname"][vae_key][url] = vae_name
-                saved_urls[type]["keyname_to_url"][vae_key][vae_name] = url
+            key = url
+            link = dict_type.get("keyname_to_url").get(key) if type != "VAE" else dict_type.get("keyname_to_url").get(vae_key).get(key)
+            if link and not subfolder:
+                if is_exist(f"/content", key, type):
+                    returned_path = f"/content/{type}/{search(type, key)}"
+                else:
+                    returned_path = download(link, type, hf_token, civit_token, tqdm_bool=tqdm, widget=widget)
+            elif subfolder:
+                if is_exist(f"/content/VAE/{subfolder}", "config", type):
+                    returned_path = f"/content/VAE/{subfolder}/config.json"
+                else:
+                    returned_path = download(link, type, hf_token, civit_token, tqdm_bool=tqdm, widget=widget)
             else:
-                file_name, _ = os.path.splitext(os.path.basename(returned_path))
-                saved_urls[type]["url_to_keyname"][url] = file_name
-                saved_urls[type]["keyname_to_url"][file_name] = url
-
-    # Unused, but can handle file from Google Drive
-    elif url.startswith("/content/gdrive/MyDrive"):
-        returned_path = url
-
-    # Handle HF models
-    elif url.count("/") == 1:
-        returned_path = url
-        if "hugging_face" not in saved_urls[type]:
-            saved_urls[type]["hugging_face"] = []
-        if url not in saved_urls[type]["hugging_face"]:
-            saved_urls[type]["hugging_face"].append(url)
-
-    # Handle key input
-    else:
-        key = url
-        link = dict_type.get("keyname_to_url").get(key) if type != "VAE" else dict_type.get("keyname_to_url").get(vae_key).get(key)
-        if link and not subfolder:
-            if is_exist(f"/content", key, type):
-                returned_path = f"/content/{type}/{search(type, key)}"
-            else:
-                returned_path = download(link, type, hf_token, civit_token, tqdm_bool=tqdm, widget=widget)
-        elif subfolder:
-            if is_exist(f"/content/VAE/{subfolder}", "config", type):
-                returned_path = f"/content/VAE/{subfolder}/config.json"
-            else:
-                returned_path = download(link, type, hf_token, civit_token, tqdm_bool=tqdm, widget=widget)
-        else:
-            print(f"It seems like {url} doesn't exist in both /content/{type} directory and urls.json file. Is it a correct path?")
-            returned_path = ""
+                print(f"It seems like {url} doesn't exist in both /content/{type} directory and urls.json file. Is it a correct path?")
+                returned_path = ""
 
     save_param(f"{base_path}/Saved Parameters/URL/urls.json", saved_urls)
 
-    return returned_path
+    return returned_path if not update else None
