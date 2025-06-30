@@ -56,14 +56,14 @@ class ESRGANWidget:
         ])
         self.base_path = base_path
         
-    def execute_realesrgan(self, tab, factor=self.upscale_factor.value, input=self.input_link.value):
+    def execute_realesrgan(self, tab):
         # execute
         run_upscaling(
             tab=tab,
-            input=input,
+            input=self.input_link.value,
             model_name=self.model_name.value,
             denoise_strength=self.denoising.value,
-            outscale=factor,
+            outscale=self.upscale_factor.value,
             output=f"{self.base_path}/Upscaled",
             tile=self.tile_size.value,
             tile_pad=self.tile_padding.value,
