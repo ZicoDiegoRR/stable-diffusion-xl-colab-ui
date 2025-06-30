@@ -180,7 +180,7 @@ class HistorySystem:
         else:
             self.history_image_display_first.children = [
                 widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), 
-                self.history_image_widget, self.history_image_modification_date, resolution,
+                self.history_image_widget, self.history_image_modification_date, self.resolution,
                 widgets.HBox([self.history_quick_reference_button, self.delete_button_after_click]),
             ]
 
