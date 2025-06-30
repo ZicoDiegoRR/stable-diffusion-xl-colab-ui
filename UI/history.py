@@ -155,24 +155,47 @@ class HistorySystem:
         ))
 
     # Function to show and replace image from history upon clicking a button
-    def history_button_handler(self, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): 
+    def history_button_handler(self, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path): 
         try:
             self.history_image_widget.value = open(path, "rb").read()
             modification_time = time.strftime('%B, %d %Y %H:%M:%S', time.localtime(os.path.getmtime(path)))
             self.history_image_modification_date.value = f"Last modification time: {modification_time}"
+            
+            self.delete_button_after_click._click_handlers.callbacks.clear()
+            self.delete_button_after_click = widgets.Button(
+                description="Delete", 
+                button_style="danger",
+            )
+            self.delete_button_after_click.on_click(lambda b: self.history_delete_handler(
+                path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path,
+            ))
+            
         except Exception as e:
             self.history_image_modification_date.value = f"An error occured when trying to read the image. Reason: {e}"
 
+        else:
+            self.history_image_display_first.children = [
+                widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), 
+                self.history_image_widget, self.history_image_modification_date, 
+                widgets.HBox([self.history_quick_reference_button, self.delete_button_after_click]),
+            ]
+
+            self.history_quick_reference_button._click_handlers.callbacks.clear()
+            self.history_quick_reference_button.on_click(lambda b: self.history_quick_reference_first(
+                path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+            ))
+
+    def history_delete_handler(self, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path):
+        os.remove(path)
+        self.history_image_widget.value = b''
+        self.history_image_modification_date.value = ""
         self.history_image_display_first.children = [
             widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), 
-            self.history_image_widget, self.history_image_modification_date, self.history_quick_reference_button
+            self.history_image_widget,
+            self.history_image_modification_date, 
         ]
-
-        self.history_quick_reference_button._click_handlers.callbacks.clear()
-        self.history_quick_reference_button.on_click(lambda b: self.history_quick_reference_first(
-            path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
-        ))
-
+        self.history_update(text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path)
+        
     # Function to show the pages
     def arrow_handler(self, list_path, text2img, img2img, controlnet, inpaint, ip,
                        lora, embeddings, upscaler, tab, page_index, history_type, change
@@ -207,7 +230,7 @@ class HistorySystem:
         self.assign_children()
 
     # Function to make a grid of buttons
-    def grid(self, list_path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, index, history_type):
+    def grid(self, list_path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, index, history_type, base_path):
         if list_path:
             pages_amount = int(math.ceil(len(list_path)/50))
             if (index + 1) != pages_amount or len(list_path) % 50 == 0:
@@ -234,12 +257,12 @@ class HistorySystem:
 
             previous_button = widgets.Button(
                 description="←", 
-                layout=widgets.Layout(width="50%"), 
+                layout=widgets.Layout(width="auto"), 
                 disabled=bool(index == 0)
             )
             next_button = widgets.Button(
                 description="→", 
-                layout=widgets.Layout(width="50%"), 
+                layout=widgets.Layout(width="auto"), 
                 disabled=bool((index + 1) == pages_amount)
             )
 
@@ -279,27 +302,27 @@ class HistorySystem:
             text2img_list = self.grid(
                 self.text2img_listdir, text2img, img2img, controlnet, inpaint, 
                 ip, lora, embeddings, upscaler, tab, self.text2img_page_index,
-                "text2img",
+                "text2img", base_path,
             )
             controlnet_list = self.grid(
                 self.controlnet_listdir, text2img, img2img, controlnet, inpaint, 
                 ip, lora, embeddings, upscaler, tab, self.controlnet_page_index,
-                "controlnet",
+                "controlnet", base_path,
             )
             inpainting_list = self.grid(
                 self.inpainting_listdir, text2img, img2img, controlnet, inpaint, 
                 ip, lora, embeddings, upscaler, tab, self.inpainting_page_index,
-                "inpaint",
+                "inpaint", base_path,
             )
             img2img_list = self.grid(
                 self.img2img_listdir, text2img, img2img, controlnet, inpaint, 
                 ip, lora, embeddings, upscaler, tab, self.img2img_page_index,
-                "img2img",
+                "img2img", base_path,
             )
             upscale_list = self.grid(
                 self.upscale_listdir, text2img, img2img, controlnet, inpaint, 
                 ip, lora, embeddings, upscaler, tab, self.upscale_page_index,
-                "upscale",
+                "upscale", base_path,
             )
 
         return text2img_list, controlnet_list, inpainting_list, img2img_list, upscale_list
