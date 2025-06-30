@@ -76,6 +76,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 </details>
 
 ## Preview
+These previews were taken before adding the feature for multiple images per generation (can be seen in Feature Table number 28).
 
 <details> <summary> Text-to-image </summary>
 
