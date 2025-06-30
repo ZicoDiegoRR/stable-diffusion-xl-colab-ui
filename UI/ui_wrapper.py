@@ -237,9 +237,9 @@ class UIWrapper:
             print(f"{output_msg} {follow_up_msg}")
     
     # Final phase of merging a pipeline's general parameters to the selected pipeline
-    def merge_final_phase(self, init, destination, index, text2img, img2img, controlnet): # Doing merging
+    def merge_final_phase(self, init, destination, index, text2img, img2img, controlnet, inpaint): # Doing merging
         if destination != "back":
-            all_widgets.merge(init, destination, text2img, img2img, controlnet)
+            all_widgets.merge(init, destination, text2img, img2img, controlnet, inpaint)
             if destination == "text2img":
                 self.ui_tab.selected_index = 0
             elif destination == "img2img":
