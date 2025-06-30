@@ -8,6 +8,15 @@ from PIL import Image
 import math
 import os
 
+# For loading JSON file
+def load_param(filename):
+    try:
+        with open(filename, 'r') as f:
+            params = json.load(f)
+        return params
+    except FileNotFoundError:
+        return {}
+
 class ControlNetSettings:
     # Collect every widget into a single VBox
     def wrap_settings(self):
@@ -88,6 +97,18 @@ class ControlNetSettings:
             self.openpose_strength_slider.value,
             self.batch_size.value,
         ]
+
+    # Function to load the saved URL's keynames
+    def refresh_model(self):
+        saved_models = load_param(
+            f"{self.base_path}/Saved Parameters/URL/urls.json"
+        ).get("VAE", {}).get("keyname_to_url", {}).get("weight")
+        saved_hf_models = saved_models["hugging_face"] if saved_models and "hugging_face" in saved_models else []
+        if not saved_models:
+            model_options = []
+        else:
+            model_options = list(saved_models.keys())
+        return model_options + saved_hf_models
         
      # Function to show or hide scheduler booleans
     def scheduler_dropdown_handler(self, change):
@@ -453,7 +474,7 @@ class ControlNetSettings:
         self.scheduler_dropdown.observe(self.scheduler_dropdown_handler, names="value")
         self.scheduler_dropdown_handler({"new": self.scheduler_dropdown.value})
 
-        self.vae_link_widget = widgets.Text(value=cfg[13] if cfg else "", description="VAE", placeholder="VAE model link")
+        self.vae_link_widget = widgets.Combobox(value=cfg[13] if cfg else "", options=self.refresh_model(), description="VAE", placeholder="VAE model link", ensure_option=False)
         self.vae_config = widgets.Text(value=cfg[14] if cfg else "", placeholder="VAE config link")
         self.vae_section = widgets.HBox([self.vae_link_widget, self.vae_config])
 
