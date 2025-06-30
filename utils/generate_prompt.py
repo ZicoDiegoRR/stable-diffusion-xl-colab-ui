@@ -9,6 +9,9 @@ def generate(starting_text, ideas_line, gpt2_pipe):
         random_seed_for_gpt2 = random.randint(100, 1000000)
         set_seed(random_seed_for_gpt2)
 
+        # Handle prompt with empty line (it breaks the generation)
+        starting_text: str = starting_text.replace("\n", "")
+
         # Handle empty prompt (generating a prompt based on the ideas.txt)
         if starting_text == "":
             starting_text: str = ideas_line[random.randrange(0, len(ideas_line))].replace("\n", "").lower().capitalize()
@@ -29,10 +32,10 @@ def generate(starting_text, ideas_line, gpt2_pipe):
 
         # Return
         if response_end != "":
-            return response_end
+            final_response = response_end
         else:
-            print("Failed to generate prompt.")
-            return starting_text
+            final_response = starting_text
     else:
-        print("Failed to generate prompt.")
-        return starting_text
+        final_response = starting_text
+
+    return final_response
