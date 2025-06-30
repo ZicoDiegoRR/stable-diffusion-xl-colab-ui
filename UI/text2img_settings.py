@@ -2,6 +2,15 @@ from StableDiffusionXLColabUI.utils import generate_prompt
 import ipywidgets as widgets
 import os
 
+# For loading JSON file
+def load_param(filename):
+    try:
+        with open(filename, 'r') as f:
+            params = json.load(f)
+        return params
+    except FileNotFoundError:
+        return {}
+
 class Text2ImgSettings:
     # Collect every widget into a single VBox
     def wrap_settings(self):
@@ -73,6 +82,18 @@ class Text2ImgSettings:
             self.vae_config.value,
             self.batch_size.value,
         ]
+
+    # Function to load the saved URL's keynames
+    def refresh_model(self):
+        saved_models = load_param(
+            f"{self.base_path}/Saved Parameters/URL/urls.json"
+        ).get("VAE", {}).get("keyname_to_url", {}).get("weight")
+        saved_hf_models = saved_models["hugging_face"] if saved_models and "hugging_face" in saved_models else []
+        if not saved_models:
+            model_options = []
+        else:
+            model_options = list(saved_models.keys())
+        return model_options + saved_hf_models
         
      # Function to show or hide scheduler booleans
     def scheduler_dropdown_handler(self, change):
@@ -95,7 +116,9 @@ class Text2ImgSettings:
             self.hires_section.children = [self.hires_toggle]
             
     # Initialize widgets creation
-    def __init__(self, cfg, ideas_line, gpt2_pipe):
+    def __init__(self, cfg, ideas_line, gpt2_pipe, base_path):
+        self.base_path = base_path
+        
         prompt_layout = widgets.Layout(width="50%")
         self.prompt_widget = widgets.Textarea(value=cfg[0] if cfg else "", placeholder="Enter the prompt here.", layout=prompt_layout)
         self.negative_prompt_widget = widgets.Textarea(value=cfg[1] if cfg else "", placeholder="What you don't want to see?", layout=prompt_layout)
@@ -151,7 +174,7 @@ class Text2ImgSettings:
         self.scheduler_dropdown.observe(self.scheduler_dropdown_handler, names="value")
         self.scheduler_dropdown_handler({"new": self.scheduler_dropdown.value})
 
-        self.vae_link_widget = widgets.Text(value=cfg[13] if cfg else "", description="VAE", placeholder="VAE model link")
+        self.vae_link_widget = widgets.Combobox(value=cfg[13] if cfg else "", options=self.refresh_model(), description="VAE", placeholder="VAE model link", ensure_option=False)
         self.vae_config = widgets.Text(value=cfg[14] if cfg else "", placeholder="VAE config link")
         self.vae_section = widgets.HBox([self.vae_link_widget, self.vae_config])
 
