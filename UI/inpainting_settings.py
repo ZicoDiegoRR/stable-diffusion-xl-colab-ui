@@ -1,6 +1,7 @@
 from StableDiffusionXLColabUI.utils import generate_prompt
 import ipywidgets as widgets
 from PIL import Image
+import json
 import os
 
 # For loading JSON file
