@@ -52,26 +52,6 @@ def save_param(path, data):
     with open(path, 'w') as file:
         json.dump(data, file, indent=4)
 
-# Saving the path of the latest generated images
-def save_last(filename, data, type):
-    try:
-        if os.path.exists(filename):
-            with open(filename, 'r') as file:
-                existing_data = json.load(file)
-        else:
-            existing_data = {}
-
-        if type == "[Text-to-Image]":
-            existing_data['text2img'] = data
-        elif type == "[ControlNet]":
-            existing_data['controlnet'] = data
-        elif type == "[Inpainting]":
-            existing_data['inpaint'] = data
-        with open(filename, 'w') as file:
-            json.dump(existing_data, file, indent=4)
-    except Exception as e:
-        print(f"Error occurred: {e}")
-
 # Initializing image generation
 def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_list, dictionary, widgets_change, base_path, get_image_class, main_param, hires, hires_values):
     # Initialization
@@ -370,10 +350,6 @@ def run(values_in_list, lora, embeddings, ip, hf_token, civit_token, ui, seed_li
 
     # Saving the set parameters (second phase)
     save_param(f"{base_path}/Saved Parameters/{main_param}.json", dictionary)
-
-    # Saving the last generated image's path
-    last_generation_json = os.path.join(f"{base_path}/Saved Parameters", "last_generation.json")
-    save_last(last_generation_json, generated_image_savefile, prefix)
 
     torch.cuda.empty_cache()
     gc.collect()
