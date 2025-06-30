@@ -71,6 +71,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 29. | Default model selections (12 models in total)                                                                                |
 | 30. | Hires.Fix with Real-ESRGAN and LANCZOS upscalers (requires higher VRAM for high upscale factor)                              |
 | 31. | Delete button for history system                                                                                             |
+| 32. | Combobox widgets for VAE, checkpoint, LoRA, and Textual Inversion to introduce selections based on previously-inputted URLs  |
 
 </details>
 
