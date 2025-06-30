@@ -249,7 +249,7 @@ def run_upscaling(
                 _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
             else:
                 output, _ = upsampler.enhance(img, outscale=args.outscale)
-        except RuntimeError as error:
+        except Exception as error:
             print('Error', error)
         else:
             if args.ext == 'auto':
