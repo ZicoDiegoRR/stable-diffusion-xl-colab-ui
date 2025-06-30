@@ -43,8 +43,10 @@ def save_image(pipe, image, prompt_for_name, prefix, scheduler, seed, base_path,
         else:
             img_element = img
         generated_image_savefile = name_generate_and_save(image, img_element, i, image_save_path, generated_image_raw_filename)
+        width, height = img_element.size
         
         display(img_element)
         print(f"Scheduler: {''.join(scheduler)}")
         print(f"Seed: {seed}")
+        print(f"Resolution: {width}x{height}")
         print(f"Image is saved at {generated_image_savefile}.\n")
