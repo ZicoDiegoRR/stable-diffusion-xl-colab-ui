@@ -20,7 +20,7 @@ def run(pipe, img, hires_values, gen_args): # [lanczos or realesrgan, factor, de
         hires_image = img2img(**gen_args, image=image, strength=vals[2]).images[0]
         
     except Exception as e:
-        print("Couldn't apply Hires.Fix to the image. Returning the original image instead...")
+        print(f"Couldn't apply Hires.Fix to the image. Reason: {e}\nReturning the original image instead...")
         return img
 
     return hires_image
