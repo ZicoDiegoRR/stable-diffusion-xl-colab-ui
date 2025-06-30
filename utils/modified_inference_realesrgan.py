@@ -281,7 +281,7 @@ def run_upscaling(
                 print(f"Upscaled resolution: {target_width}x{target_height} px")
                 print(f"Image is saved at {save_path}.\n")
             else:
-                save_path = os.path.join("/content/hires/upscale.png", img_filename)
+                save_path = "/content/hires/upscale.png"
                 cv2.imwrite(save_path, cv2.resize(output, (target_width, target_height)))
 
     del face_enhancer
