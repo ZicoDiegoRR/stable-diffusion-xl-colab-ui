@@ -43,7 +43,7 @@ class HistorySystem:
         ]
 
     # Function to input the image as the reference for ControlNet
-    def history_quick_reference_controlnet_selector(self, type, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab):
+    def history_quick_reference_controlnet_selector(self, type, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path):
         if type == "canny":
             controlnet.canny_link_widget.value = path
             controlnet.canny_dropdown.value = "Link"
@@ -59,17 +59,17 @@ class HistorySystem:
             controlnet.openpose_dropdown.value = "Link"
             controlnet.openpose_toggle.value = True
             tab.selected_index = 2
-        self.history_button_handler(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
+        self.history_button_handler(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path)
 
     # Function to input the image as the reference image
-    def history_quick_reference_second(self, type, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): 
+    def history_quick_reference_second(self, type, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path): 
         if type == "img2img":
             img2img.reference_image_link_widget.value = path
-            self.history_button_handler(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
+            self.history_button_handler(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path)
             tab.selected_index = 1
         elif type == "inpainting":
             inpaint.inpainting_image_dropdown.value = path
-            self.history_button_handler(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
+            self.history_button_handler(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path)
             inpaint.inpainting_toggle.value = True
             tab.selected_index = 3
         elif type == "ip":
@@ -79,7 +79,7 @@ class HistorySystem:
               ip.ip_image_link_widget.value = path
             else:
               ip.ip_image_link_widget.value += "," + path
-            self.history_button_handler(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
+            self.history_button_handler(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path)
             tab.selected_index = 6
         elif type == "controlnet":
             self.history_image_display_first.children = [
@@ -99,24 +99,24 @@ class HistorySystem:
             self.history_quick_reference_openpose._click_handlers.callbacks.clear()
 
             self.history_quick_reference_canny.on_click(lambda b: self.history_quick_reference_controlnet_selector(
-                "canny", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+                "canny", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path
             ))
             self.history_quick_reference_depthmap.on_click(lambda b: self.history_quick_reference_controlnet_selector(
-                "depthmap", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+                "depthmap", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path
             ))
             self.history_quick_reference_openpose.on_click(lambda b: self.history_quick_reference_controlnet_selector(
-                "openpose", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+                "openpose", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path
             ))
             self.history_back_button_second.on_click(lambda b: self.history_quick_reference_first(
-                path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+                path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path
             ))
         elif type == "upscale":
             upscaler.input_link.value = path
-            self.history_button_handler(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab)
+            self.history_button_handler(path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path)
             tab.selected_index = 7
 
     # Function to use an image from history to be the reference image of Img2Img, ControlNet, or Inpainting
-    def history_quick_reference_first(self, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab): 
+    def history_quick_reference_first(self, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path): 
         self.history_image_display_first.children = [
             widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), 
             self.history_image_widget, 
@@ -140,22 +140,22 @@ class HistorySystem:
         self.history_quick_reference_upscale._click_handlers.callbacks.clear()
 
         self.history_back_button_first.on_click(lambda b: self.history_button_handler(
-            path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+            path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path
         ))
         self.history_quick_reference_img2img.on_click(lambda b: self.history_quick_reference_second(
-            "img2img", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+            "img2img", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path
         ))
         self.history_quick_reference_controlnet.on_click(lambda b: self.history_quick_reference_second(
-            "controlnet", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+            "controlnet", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path
         ))
         self.history_quick_reference_inpainting.on_click(lambda b: self.history_quick_reference_second(
-            "inpainting", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+            "inpainting", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path
         ))
         self.history_quick_reference_ip_adapter.on_click(lambda b: self.history_quick_reference_second(
-            "ip", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+            "ip", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path
         ))
         self.history_quick_reference_upscale.on_click(lambda b: self.history_quick_reference_second(
-            "upscale", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+            "upscale", path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path
         ))
 
     # Function to show and replace image from history upon clicking a button
@@ -186,7 +186,7 @@ class HistorySystem:
 
             self.history_quick_reference_button._click_handlers.callbacks.clear()
             self.history_quick_reference_button.on_click(lambda b: self.history_quick_reference_first(
-                path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+                path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path
             ))
 
     # Function to delete an image from the history
