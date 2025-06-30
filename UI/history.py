@@ -386,4 +386,4 @@ class HistorySystem:
         for i, title in enumerate(history_accordion_titles):
             self.history_accordion.set_title(i, title)
 
-        self.history_display_vbox = widgets.VBox([self.history_accordion, self.history_image_display_first]
+        self.history_display_vbox = widgets.VBox([self.history_accordion, self.history_image_display_first])
