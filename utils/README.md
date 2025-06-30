@@ -12,6 +12,8 @@ This folder contains the core functional components that power the image generat
   
 - `get_controlnet_image.py` — Processes the ControlNet's images.
 
+- `hires_fix.py` — Applies Hires.Fix to your images.
+
 - `image_saver.py` — Saves generated images to Google Drive (if integration is enabled).
 
 - `ip_adapter_loader.py` — Loads IP-Adapter and handles its images.
