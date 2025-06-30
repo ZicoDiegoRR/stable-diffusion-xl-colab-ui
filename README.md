@@ -67,8 +67,10 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 25. | Preview buttons to display uploaded IP-Adapter's images and URLs, as well as buttons to remove them                          |
 | 26. | `ipycanvas` canvas to create mask images for Inpainting (unstable)                                                           |
 | 27. | Pagination feature in history system                                                                                         |
-| 28. | Multiple images per generation (requires higher VRAM, so it's not free-tier friendly)                                       |
+| 28. | Multiple images per generation (requires higher VRAM, so it's not free-tier friendly)                                        |
 | 29. | Default model selections (12 models in total)                                                                                |
+| 30. | Hires.Fix with Real-ESRGAN and LANCZOS upsamplers (requires higher VRAM for upscaling factor more than 1)                    |
+| 31. | Delete button for history system                                                                                             |
 
 </details>
 
@@ -215,8 +217,8 @@ These steps allow you to reuse the tokens without inputting them manually in the
 - Enable custom upscale factor for Real-ESRGAN ✅ <br>
 - Multiple batches per generation ✅ (requires higher VRAM) <br>
 - Default model selections ✅ <br>
-- Hires.Fix (Real-ESRGAN and LANCZOS upscalers) <br>
-- Remove images from history <br>
+- Hires.Fix (Real-ESRGAN and LANCZOS upscalers) ✅ (requires higher VRAM) <br>
+- Remove images from history ✅ <br>
 </details>
 
 Feel free to open an issue if you found one. Each time you submit an issue will improve this notebook's capability and further enhance your experience.
