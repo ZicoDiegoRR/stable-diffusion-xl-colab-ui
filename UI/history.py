@@ -4,6 +4,16 @@ import math
 import os
 import re
 
+def save_last(base_path, text2img, controlnet, inpaint, img2img):
+    with open(f"{base_path}/Saved Parameters/last_generation.json", "w") as f:
+        image_dict = {
+            "text2img": text2img,
+            "controlnet": controlnet,
+            "inpaint": inpaint,
+            "img2img": img2img,
+        }
+        json.dump(image_dict, f, indent=4)
+
 class HistorySystem:
     # Function to collect every widget into a vbox
     def wrap_settings(self):
@@ -303,6 +313,8 @@ class HistorySystem:
             text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path, grid=True
         )
         self.assign_children()
+
+        save_last(base_path, self.text2img_listdir[0], self.controlnet_listdir[0], self.inpainting_listdir[0], self.img2img_listdir[0])
 
     # Initialize
     def __init__(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path):
