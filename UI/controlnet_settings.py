@@ -5,6 +5,7 @@ from diffusers.utils import load_image, make_image_grid
 import ipywidgets as widgets
 from io import BytesIO
 from PIL import Image
+import json
 import math
 import os
 
