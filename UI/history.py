@@ -5,6 +5,7 @@ import json
 import os
 import re
 
+# Function to save the last-generated images
 def save_last(base_path, text2img, controlnet, inpaint, img2img):
     with open(f"{base_path}/Saved Parameters/last_generation.json", "w") as f:
         image_dict = {
@@ -163,10 +164,6 @@ class HistorySystem:
             self.history_image_modification_date.value = f"Last modification time: {modification_time}"
             
             self.delete_button_after_click._click_handlers.callbacks.clear()
-            self.delete_button_after_click = widgets.Button(
-                description="Delete", 
-                button_style="danger",
-            )
             self.delete_button_after_click.on_click(lambda b: self.history_delete_handler(
                 path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path,
             ))
@@ -186,6 +183,7 @@ class HistorySystem:
                 path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
             ))
 
+    # Function to delete an image from the history
     def history_delete_handler(self, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path):
         os.remove(path)
         self.history_image_widget.value = b''
@@ -250,7 +248,7 @@ class HistorySystem:
                     )
                     path = list_path[k - 1] if k <= len(list_path) else ""
                     grid[i, j].on_click(lambda b, path=path: self.history_button_handler(
-                        path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab
+                        path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path
                     )) if k <= len(list_path) else None
                     
             page_mark = widgets.Label(value=f"Page {index + 1} of {pages_amount}")
@@ -258,12 +256,12 @@ class HistorySystem:
 
             previous_button = widgets.Button(
                 description="←", 
-                layout=widgets.Layout(width="auto"), 
+                layout=widgets.Layout(width="50%"), 
                 disabled=bool(index == 0)
             )
             next_button = widgets.Button(
                 description="→", 
-                layout=widgets.Layout(width="auto"), 
+                layout=widgets.Layout(width="50%"), 
                 disabled=bool((index + 1) == pages_amount)
             )
 
@@ -363,6 +361,10 @@ class HistorySystem:
             widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), self.history_image_widget, 
             self.history_image_modification_date
         ], continuous_update = True)
+        self.delete_button_after_click = widgets.Button(
+                description="Delete", 
+                button_style="danger",
+        )
 
         self.text2img_page_index = 0
         self.controlnet_page_index = 0
@@ -384,4 +386,4 @@ class HistorySystem:
         for i, title in enumerate(history_accordion_titles):
             self.history_accordion.set_title(i, title)
 
-        self.history_display_vbox = widgets.VBox([self.history_accordion, self.history_image_display_first])
+        self.history_display_vbox = widgets.VBox([self.history_accordion, self.history_image_display_first]
