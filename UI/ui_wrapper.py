@@ -276,10 +276,10 @@ class UIWrapper:
         self.main_parameter = "main_parameters"
         
         # Instantiate other classes
-        self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line, gpt2_pipe)
-        self.img2img = Img2ImgSettings(cfg["img2img"], ideas_line, gpt2_pipe)
+        self.text2img = Text2ImgSettings(cfg["text2img"], ideas_line, gpt2_pipe, base_path)
+        self.img2img = Img2ImgSettings(cfg["img2img"], ideas_line, gpt2_pipe, base_path)
         self.controlnet = ControlNetSettings(cfg["controlnet"], ideas_line, gpt2_pipe, base_path)
-        self.inpaint = InpaintingSettings(cfg["inpaint"], ideas_line, gpt2_pipe)
+        self.inpaint = InpaintingSettings(cfg["inpaint"], ideas_line, gpt2_pipe, base_path)
         self.ip = IPAdapterLoader(cfg["ip"])
         self.lora = LoRALoader(cfg["lora"], base_path)
         self.embeddings = TextualInversionLoader(cfg["embeddings"], base_path)
