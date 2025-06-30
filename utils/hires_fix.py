@@ -21,6 +21,7 @@ def run(pipe, img, hires_values, gen_args): # [lanczos or realesrgan, factor, de
     with output:
         try:
             # Upscale and resize
+            print("Upscaling...")
             if vals[0] == "LANCZOS":
                 image = img.resize((width*vals[1], height*vals[1]), Image.LANCZOS)
             else:
@@ -28,9 +29,11 @@ def run(pipe, img, hires_values, gen_args): # [lanczos or realesrgan, factor, de
                 image = Image.open("/content/hires/upscale.png")
     
             # Initiate the Image-to-image pipeline
+            print("Initiating Image-to-image pipeline...")
             img2img = StableDiffusionXLImg2ImgPipeline(**pipe.components)
     
             # Feed the upscaled image to the Image-to-image pipeline
+            print("Refining image with Image-to-image pipeline...")
             hires_image = img2img(**gen_args, image=image, strength=vals[2]).images[0]
             
         except Exception as e:
