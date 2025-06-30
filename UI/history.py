@@ -1,16 +1,17 @@
 import ipywidgets as widgets
 import time
 import math
+import json
 import os
 import re
 
 def save_last(base_path, text2img, controlnet, inpaint, img2img):
     with open(f"{base_path}/Saved Parameters/last_generation.json", "w") as f:
         image_dict = {
-            "text2img": text2img,
-            "controlnet": controlnet,
-            "inpaint": inpaint,
-            "img2img": img2img,
+            "text2img": text2img[0] if text2img else None,
+            "controlnet": controlnet[0] if controlnet else None,
+            "inpaint": inpaint[0] if inpaint else None,
+            "img2img": img2img[0] if img2img else None,
         }
         json.dump(image_dict, f, indent=4)
 
@@ -337,7 +338,7 @@ class HistorySystem:
         )
         self.assign_children()
 
-        save_last(base_path, self.text2img_listdir[0], self.controlnet_listdir[0], self.inpainting_listdir[0], self.img2img_listdir[0])
+        save_last(base_path, self.text2img_listdir, self.controlnet_listdir, self.inpainting_listdir, self.img2img_listdir)
 
     # Initialize
     def __init__(self, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path):
