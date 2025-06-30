@@ -66,6 +66,12 @@ class UIWrapper:
             self.merge_button.disabled = True
             self.reset_generate.submit_button_widget.disabled = True
 
+    def refresh_vae_selection(self):
+        self.text2img.vae_link_widget.options = self.text2img.refresh_model()
+        self.img2img.vae_link_widget.options = self.img2img.refresh_model()
+        self.controlnet.vae_link_widget.options = self.controlnet.refresh_model()
+        self.inpaint.vae_link_widget.options = self.inpaint.refresh_model()
+
     # Reload the combobox options
     def refresh_model(self):
         saved_models = load_param(f"{self.base_path}/Saved Parameters/URL/urls.json").get("Checkpoint")
@@ -149,6 +155,7 @@ class UIWrapper:
     
                 self.refresh_model()
                 self.reload_submit_button()
+                self.refresh_vae_selection()
                 self.lora.construct(self.lora.lora_urls_widget.value)
                 self.embeddings.construct(self.embeddings.ti_urls_widget.value)
             elif index == 7:
