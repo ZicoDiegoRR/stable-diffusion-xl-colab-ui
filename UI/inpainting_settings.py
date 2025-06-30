@@ -3,7 +3,17 @@ import ipywidgets as widgets
 from PIL import Image
 import os
 
+# For loading JSON file
+def load_param(filename):
+    try:
+        with open(filename, 'r') as f:
+            params = json.load(f)
+        return params
+    except FileNotFoundError:
+        return {}
+
 class InpaintingSettings:
+    # Return all of the widgets
     def return_widgets(self):
         return [
             self.prompt_widget,
@@ -27,7 +37,8 @@ class InpaintingSettings:
             self.inpainting_strength_slider,
             self.batch_size,
         ]
-        
+
+    # Wrap everything into a single VBox
     def wrap_settings(self):
         return widgets.VBox([
             self.prompts_section,
@@ -38,6 +49,7 @@ class InpaintingSettings:
             self.vae_section,
         ])
 
+    # Collect every value of the widgets
     def collect_values(self):
         return [
             self.prompt_widget.value,
@@ -61,9 +73,24 @@ class InpaintingSettings:
             self.inpainting_strength_slider.value,
             self.batch_size.value,
         ]
+
+    # Check if the image is safe to load
     def check_if_link(self, value, img_type):
         return value.startswith(("/content/gdrive/MyDrive", "https://", "http://")) or os.path.exists(value)
 
+    # Function to load the saved URL's keynames
+    def refresh_model(self):
+        saved_models = load_param(
+            f"{self.base_path}/Saved Parameters/URL/urls.json"
+        ).get("VAE", {}).get("keyname_to_url", {}).get("weight")
+        saved_hf_models = saved_models["hugging_face"] if saved_models and "hugging_face" in saved_models else []
+        if not saved_models:
+            model_options = []
+        else:
+            model_options = list(saved_models.keys())
+        return model_options + saved_hf_models
+
+    # Handle uploaded Inpainting images
     def reference_image_upload_handler(self, change):
         os.makedirs("/content/inpaint/", exist_ok=True)
         for filename, file_info in self.inpainting_image_upload.value.items():
@@ -71,6 +98,7 @@ class InpaintingSettings:
                 up.write(file_info["content"])
             self.inpainting_image_dropdown.value = f"/content/inpaint/{filename}"
 
+    # Handle uploaded mask images
     def mask_image_upload_handler(self, change):
         os.makedirs("/content/mask", exist_ok=True)
         for filename, file_info in self.inpainting_image_upload.value.items():
@@ -85,11 +113,14 @@ class InpaintingSettings:
         else:
             self.scheduler_settings.children = [self.scheduler_dropdown]
 
+    # Return the create mask button
     def get_mask_create_button(self):
         return self.mask_create_button
             
     # Initialize widgets creation
-    def __init__(self, cfg, ideas_line, gpt2_pipe):
+    def __init__(self, cfg, ideas_line, gpt2_pipe, base_path):
+        self.base_path = base_path
+        
         prompt_layout = widgets.Layout(width="50%")
         self.prompt_widget = widgets.Textarea(value=cfg[0] if cfg else "", placeholder="Enter the prompt here.", layout=prompt_layout)
         self.negative_prompt_widget = widgets.Textarea(value=cfg[1] if cfg else "", placeholder="What you don't want to see?", layout=prompt_layout)
@@ -145,7 +176,7 @@ class InpaintingSettings:
         self.scheduler_dropdown.observe(self.scheduler_dropdown_handler, names="value")
         self.scheduler_dropdown_handler({"new": self.scheduler_dropdown.value})
 
-        self.vae_link_widget = widgets.Text(value=cfg[13] if cfg else "", description="VAE", placeholder="VAE model link")
+        self.vae_link_widget = widgets.Combobox(value=cfg[13] if cfg else "", options=self.refresh_model(), description="VAE", placeholder="VAE model link", ensure_option=False)
         self.vae_config = widgets.Text(value=cfg[14] if cfg else "", placeholder="VAE config link")
         self.vae_section = widgets.HBox([self.vae_link_widget, self.vae_config])
 
