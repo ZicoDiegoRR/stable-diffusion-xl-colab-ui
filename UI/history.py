@@ -1,4 +1,5 @@
 import ipywidgets as widgets
+from PIL import Image
 import time
 import math
 import json
@@ -83,7 +84,7 @@ class HistorySystem:
         elif type == "controlnet":
             self.history_image_display_first.children = [
                 widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), 
-                self.history_image_widget, self.history_image_modification_date, 
+                self.history_image_widget, self.history_image_modification_date, self.resolution,
                 widgets.HBox([
                     self.history_quick_reference_canny, 
                     self.history_quick_reference_depthmap,
@@ -120,6 +121,7 @@ class HistorySystem:
             widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), 
             self.history_image_widget, 
             self.history_image_modification_date, 
+            self.resolution, 
             widgets.HBox([
                 self.history_quick_reference_img2img, 
                 self.history_quick_reference_controlnet, 
@@ -159,9 +161,13 @@ class HistorySystem:
     # Function to show and replace image from history upon clicking a button
     def history_button_handler(self, path, text2img, img2img, controlnet, inpaint, ip, lora, embeddings, upscaler, tab, base_path): 
         try:
-            self.history_image_widget.value = open(path, "rb").read()
+            image = open(path, "rb")
+            self.history_image_widget.value = image.read()
             modification_time = time.strftime('%B, %d %Y %H:%M:%S', time.localtime(os.path.getmtime(path)))
+
+            width, height = Image.open(path).size
             self.history_image_modification_date.value = f"Last modification time: {modification_time}"
+            self.resolution.value = f"Resolution: {width}x{height}"
             
             self.delete_button_after_click._click_handlers.callbacks.clear()
             self.delete_button_after_click.on_click(lambda b: self.history_delete_handler(
@@ -174,7 +180,7 @@ class HistorySystem:
         else:
             self.history_image_display_first.children = [
                 widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), 
-                self.history_image_widget, self.history_image_modification_date, 
+                self.history_image_widget, self.history_image_modification_date, resolution,
                 widgets.HBox([self.history_quick_reference_button, self.delete_button_after_click]),
             ]
 
@@ -356,6 +362,7 @@ class HistorySystem:
         self.history_accordion = widgets.Accordion(continuous_update = True)
         self.history_image_modification_date = widgets.HTML()
         self.history_image_widget = widgets.Image()
+        self.resolution = widgets.Label()
 
         self.history_image_display_first = widgets.VBox([
             widgets.HTML(value="Image will show up here. (from the newest to the oldest)"), self.history_image_widget, 
