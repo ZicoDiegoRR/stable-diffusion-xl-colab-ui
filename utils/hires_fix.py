@@ -2,6 +2,7 @@ from diffusers import StableDiffusionXLImg2ImgPipeline
 from IPython.display import display
 import ipywidgets as widgets
 from PIL import Image
+import time
 import os
 
 def run(pipe, img, hires_values, gen_args): # [lanczos or realesrgan, factor, denoising strength]
@@ -42,6 +43,7 @@ def run(pipe, img, hires_values, gen_args): # [lanczos or realesrgan, factor, de
             hires_image = img
 
     # Clearing the generation output
+    time.sleep(4)
     output.clear_output()
     del output
 
