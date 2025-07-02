@@ -17,6 +17,10 @@ def save_last(base_path, text2img, controlnet, inpaint, img2img):
         }
         json.dump(image_dict, f, indent=4)
 
+# Function to check if the file is an image
+def img_check(path):
+    return path.endswith((".png", ".jfif", ".jpe", ".jpg", ".jpeg", ".webp", ".ico", ".bmp"))
+
 class HistorySystem:
     # Function to collect every widget into a vbox
     def wrap_settings(self):
@@ -26,7 +30,7 @@ class HistorySystem:
     def list_images(self, path): 
         if os.path.exists(path):
             return sorted(
-                [os.path.join(path, element) for element in os.listdir(path) if element.endswith(".png") and os.path.isfile(os.path.join(path, element))], 
+                [os.path.join(path, element) for element in os.listdir(path) if img_check(element) and os.path.isfile(os.path.join(path, element))], 
                 key=os.path.getmtime, reverse=True
             )
         else:
