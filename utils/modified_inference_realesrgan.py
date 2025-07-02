@@ -246,7 +246,7 @@ def run_upscaling(
         imgname, extension = os.path.splitext(os.path.basename(path))
 
         img = load_path(path)
-        if img:
+        if img is not None:
             if len(img.shape) == 3 and img.shape[2] == 4:
                 img_mode = 'RGBA'
             else:
