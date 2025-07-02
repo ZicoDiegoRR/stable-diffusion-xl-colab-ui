@@ -41,25 +41,41 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 
 <details> <summary>Feature Table:</summary>
   
-| Features                                                                                   |  V1 |  V2  | V2.5 | Beta V3 |
-|--------------------------------------------------------------------------------------------|-----|------|------|---------|
-| Base pipelines (ControlNet, VAE, Inpainting, Text2Img)                                     | ✅  | ✅  | ✅   | ✅      |
-| Base adapters (LoRA, IP-Adapter)                                                           | ✅  | ✅  | ✅   | ✅      |
-| IPyWidgets                                                                                 | ❌  | ✅  | ✅   | ✅      |
-| Saving and loading parameters                                                              | ❌  | ✅  | ✅   | ✅      |
-| Interactive UI                                                                             | ❌  | ✅  | ✅   | ✅      |
-| Linking widgets                                                                            | ❌  | ❌  | ✅   | ✅      |
-| History system                                                                             | ❌  | ❌  | ✅   | ✅      |
-| Upload images directly                                                                     | ❌  | ❌  | ✅   | ✅      |
-| Image-to-image                                                                             | ❌  | ❌  | ❌   | ✅      |
-| Textual inversion or embeddings                                                            | ❌  | ❌  | ❌   | ✅      |
-| Send images from history to Image-to-image, ControlNet, Inpainting, and/or IP-Adapter      | ❌  | ❌  | ❌   | ✅      |
-| Reset button (defaulting the parameters)                                                   | ❌  | ❌  | ❌   | ✅      |
-| Compatibility with saved parameters from previous versions                                 | ❌  | ❌  | ❌   | ✅      |
-| Preset system (saving and loading custom parameters)                                       | ❌  | ❌  | ❌   | ✅      |
-| GPT-2 Prompt Generator                                                                     | ❌  | ❌  | ❌   | ✅      |
-| Hugging Face token integration                                                             | ❌  | ❌  | ❌   | ✅      |
-| Real-ESRGAN Image Upscaling                                                                | ❌  | ❌  | ❌   | ✅      |
+| No. | Features                                                                              | V1 | V2 | V2.5 | Beta V3 | V3 |
+|-----|---------------------------------------------------------------------------------------|----|----|------|---------|----|
+| 1   | Base pipelines (ControlNet, VAE, Inpainting, Text2Img)                                | ✅  | ✅  | ✅    | ✅       | ✅  |
+| 2   | Base adapters (LoRA, IP-Adapter)                                                      | ✅  | ✅  | ✅    | ✅       | ✅  |
+| 3   | IPyWidgets                                                                            | ❌  | ✅  | ✅    | ✅       | ✅  |
+| 4   | Saving and loading parameters                                                         | ❌  | ✅  | ✅    | ✅       | ✅  |
+| 5   | Interactive UI                                                                        | ❌  | ✅  | ✅    | ✅       | ✅  |
+| 6   | Linking widgets                                                                       | ❌  | ❌  | ✅    | ✅       | ✅  |
+| 7   | History system                                                                        | ❌  | ❌  | ✅    | ✅       | ✅  |
+| 8   | Upload images directly                                                                | ❌  | ❌  | ✅    | ✅       | ✅  |
+| 9   | Image-to-image                                                                        | ❌  | ❌  | ❌    | ✅       | ✅  |
+| 10  | Textual inversion or embeddings                                                       | ❌  | ❌  | ❌    | ✅       | ✅  |
+| 11  | Send images from history to Image-to-image, ControlNet, Inpainting, and/or IP-Adapter | ❌  | ❌  | ❌    | ✅       | ✅  |
+| 12  | Reset button (defaulting the parameters)                                              | ❌  | ❌  | ❌    | ✅       | ✅  |
+| 13  | Compatibility with saved parameters from previous versions                            | ❌  | ❌  | ❌    | ✅       | ✅  |
+| 14  | Preset system (saving, loading, renaming, and deleting custom parameter presets)      | ❌  | ❌  | ❌    | ✅       | ✅  |
+| 15  | GPT-2 Prompt Generator                                                                | ❌  | ❌  | ❌    | ✅       | ✅  |
+| 16  | Hugging Face token integration                                                        | ❌  | ❌  | ❌    | ✅       | ✅  |
+| 17  | Real-ESRGAN Image Upscaling                                                           | ❌  | ❌  | ❌    | ✅       | ✅  |
+| 18  | Modular programming                                                                   | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 19  | New parameter saving system & legacy conversion                                       | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 20  | URL saving system for model/image sources                                             | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 21  | One-model-for-all-pipelines system                                                    | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 22  | Preview button for ControlNet-converted image                                         | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 23  | `components` integration for shared tensor memory                                     | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 24  | `ControlNetUnion` memory-efficient implementation                                     | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 25  | Corrupted-download deletion logic                                                     | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 26  | Preview & remove buttons for IP-Adapter uploads                                       | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 27  | `ipycanvas` drawing for inpainting masks (unstable)                                   | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 28  | Pagination in history system                                                          | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 29  | Multiple images per generation                                                        | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 30  | Default model selections (12 models preloaded)                                        | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 31  | Hires.Fix with Real-ESRGAN and LANCZOS upscaling                                      | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 32  | Delete button for history system                                                      | ❌  | ❌  | ❌    | ❌       | ✅  |
+| 33  | Combobox widgets for VAE, checkpoint, LoRA, and embeddings from URLs                  | ❌  | ❌  | ❌    | ❌       | ✅  |
 </details>
 
 
