@@ -132,13 +132,16 @@ class PresetSystem:
         preset_cfg = self.list_or_dict(preset_raw_cfg, param_path)
         
         every_widgets = all_widgets.import_widgets(text2img, img2img, controlnet, inpaint, ip, lora, embeddings)
-        for key, items in every_widgets.items():
-            for i in range(len(items)):
-                items[i].value = preset_cfg[key][i]
+        try:
+            for key, items in every_widgets.items():
+                for i in range(len(items)):
+                    items[i].value = preset_cfg[key][i]
                 
-        lora.construct(preset_cfg["lora"])
-        embeddings.construct(preset_cfg["embeddings"])
-        self.show_message(self.load_output, f"Loaded {name}.json.", "success")
+            lora.construct(preset_cfg["lora"])
+            embeddings.construct(preset_cfg["embeddings"])
+            self.show_message(self.load_output, f"Loaded {name}.json.", "success")
+        except Exception as error:
+            self.show_message(self.load_output, f"Failed to load {name}.json.\nReason: {error}", "error")
 
     # Final phase of renaming preset if another file with the same name exists
     def rename_preset_evaluate(self, result, old, new):
