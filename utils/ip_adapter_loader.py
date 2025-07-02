@@ -2,6 +2,9 @@ from diffusers.utils import load_image, make_image_grid
 from transformers import CLIPVisionModelWithProjection
 import re
 
+def check_safety(url):
+    return url.startswith(("https://", "http://")) or os.path.exists(url)
+
 def load(
     pipeline,
     IP_Adapter,
@@ -19,7 +22,12 @@ def load(
     adapter_image = []
     simple_Url = [word for word in re.split(r"\s*,\s*", IP_Image_Link) if word]
     for link in simple_Url:
-        adapter_image.append(load_image(link))
+        if check_safety(link):
+            try:   
+                img_load = load_image(link)
+                adapter_image.append(img_load)
+            except Exception as e:
+                print(f"Skipped {link}. Reason: {e}")
 
     # Creating the display
     adapter_display = [element for element in adapter_image]
