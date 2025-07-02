@@ -1,12 +1,11 @@
 # A modified version of inference_realesrgan.py from https://github.com/xinntao/Real-ESRGAN/blob/master/inference_realesrgan.py for project purpose
 # The libraries will be downloaded after running the first cell 
 
-import ipywidgets as widgets
-from basicsr.utils.download_util import load_file_from_url
-from StableDiffusionXLColabUI.utils import downloader
 from diffusers.utils import load_image, make_image_grid
-from IPython.display import display
+from StableDiffusionXLColabUI.utils import downloader
 from basicsr.archs.rrdbnet_arch import RRDBNet
+from IPython.display import display
+import ipywidgets as widgets
 import torch
 import glob
 import cv2
@@ -17,6 +16,14 @@ os.chdir("/content/RealESRGAN")
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 os.chdir("/content")
+
+def load_path(path):
+    try:
+        img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
+        return img
+    except Exception as e:
+        print(f"Couldn't load {path}. Reason: {e}\nSkipped {path}.")
+        return None
 
 class ESRGANWidget:
     # upload handler
@@ -238,51 +245,52 @@ def run_upscaling(
     for idx, path in enumerate(paths):
         imgname, extension = os.path.splitext(os.path.basename(path))
 
-        img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
-        if len(img.shape) == 3 and img.shape[2] == 4:
-            img_mode = 'RGBA'
-        else:
-            img_mode = None
-
-        try:
-            if args.face_enhance:
-                _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
+        img = load_path(path)
+        if img:
+            if len(img.shape) == 3 and img.shape[2] == 4:
+                img_mode = 'RGBA'
             else:
-                output, _ = upsampler.enhance(img, outscale=args.outscale)
-        except Exception as error:
-            print('Error', error)
-        else:
-            if args.ext == 'auto':
-                extension = extension[1:]
-            else:
-                extension = args.ext
-            if img_mode == 'RGBA':  # RGBA images should be saved in png format
-                extension = 'png'
-            
-            img_filename_with_prompt = f"[Upscaled] {imgname}"
-            if (len(img_filename_with_prompt) + len(extension) + 1) > 255:
-                img_filename = f"{img_filename_with_prompt[:245]}.{extension}"
-            else:
-                img_filename = f"{img_filename_with_prompt}.{extension}"
-
-            target_width = img.shape[1] * args.outscale
-            target_height = img.shape[0] * args.outscale
-
-            if args.input != "/content/hires/temp.png":
-                save_path = os.path.join(args.output, img_filename)
-                cv2.imwrite(save_path, cv2.resize(output, (target_width, target_height)))
+                img_mode = None
     
-                display(
-                    make_image_grid([
-                        load_image(input), 
-                        load_image(save_path).resize((img.shape[1], img.shape[0]))
-                    ], rows=1, cols=2))
-                print(f"Original resolution: {img.shape[1]}x{img.shape[0]} px")
-                print(f"Upscaled resolution: {target_width}x{target_height} px")
-                print(f"Image is saved at {save_path}.\n")
+            try:
+                if args.face_enhance:
+                    _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
+                else:
+                    output, _ = upsampler.enhance(img, outscale=args.outscale)
+            except Exception as error:
+                print('Error', error)
             else:
-                save_path = "/content/hires/upscale.png"
-                cv2.imwrite(save_path, cv2.resize(output, (target_width, target_height)))
+                if args.ext == 'auto':
+                    extension = extension[1:]
+                else:
+                    extension = args.ext
+                if img_mode == 'RGBA':  # RGBA images should be saved in png format
+                    extension = 'png'
+                
+                img_filename_with_prompt = f"[Upscaled] {imgname}"
+                if (len(img_filename_with_prompt) + len(extension) + 1) > 255:
+                    img_filename = f"{img_filename_with_prompt[:245]}.{extension}"
+                else:
+                    img_filename = f"{img_filename_with_prompt}.{extension}"
+    
+                target_width = img.shape[1] * args.outscale
+                target_height = img.shape[0] * args.outscale
+    
+                if args.input != "/content/hires/temp.png":
+                    save_path = os.path.join(args.output, img_filename)
+                    cv2.imwrite(save_path, cv2.resize(output, (target_width, target_height)))
+        
+                    display(
+                        make_image_grid([
+                            load_image(input), 
+                            load_image(save_path).resize((img.shape[1], img.shape[0]))
+                        ], rows=1, cols=2))
+                    print(f"Original resolution: {img.shape[1]}x{img.shape[0]} px")
+                    print(f"Upscaled resolution: {target_width}x{target_height} px")
+                    print(f"Image is saved at {save_path}.\n")
+                else:
+                    save_path = "/content/hires/upscale.png"
+                    cv2.imwrite(save_path, cv2.resize(output, (target_width, target_height)))
 
     del face_enhancer
     del upsampler
