@@ -62,7 +62,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 | 17  | Real-ESRGAN Image Upscaling                                                           | ❌  | ❌  | ❌    | ✅  |
 | 18  | Modular programming                                                                   | ❌  | ❌  | ❌    | ✅  |
 | 19  | New parameter saving system & legacy conversion                                       | ❌  | ❌  | ❌    | ✅  |
-| 20  | URL saving system for model/image sources                                             | ❌  | ❌  | ❌    | ✅  |
+| 20  | URL saving system for model       sources                                             | ❌  | ❌  | ❌    | ✅  |
 | 21  | One-model-for-all-pipelines system                                                    | ❌  | ❌  | ❌    | ✅  |
 | 22  | Preview button for ControlNet-converted image                                         | ❌  | ❌  | ❌    | ✅  |
 | 23  | `components` integration for shared tensor memory                                     | ❌  | ❌  | ❌    | ✅  |
