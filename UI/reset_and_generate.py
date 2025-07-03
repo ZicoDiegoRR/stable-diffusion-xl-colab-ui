@@ -14,7 +14,7 @@ def param_default():
                       0.7, "", False, 0.7, "", False, 0.7, 1
                       ],
         "inpaint": ["", "", "", 1024, 1024, 12, 6, 2, "Default (defaulting to the model)", 
-                     False, False, False, False, "", "","pre-generated text2image image", 
+                     False, False, False, False, "", "", "", 
                     "", False, 0.9, 1
                    ],
         "ip": ["", 0.8, "None"],
