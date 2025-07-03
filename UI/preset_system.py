@@ -214,7 +214,7 @@ class PresetSystem:
             self.delete_preset_selection_dropdown_label, 
             self.delete_preset_selection_dropdown, 
             self.delete_preset_button, 
-            widgets.HTML(value="Clicking the button will delete your selected saved preset from Google Drive.")]
+            widgets.HTML(value="Clicking the button will delete your selected saved preset.")]
 
         self.delete_preset_button._click_handlers.callbacks.clear()
         self.delete_preset_button.on_click(lambda b: self.delete_preset_on_click(self.delete_preset_selection_dropdown.value))
@@ -231,7 +231,7 @@ class PresetSystem:
             self.delete_preset_selection_dropdown_label, 
             self.delete_preset_selection_dropdown, 
             widgets.HBox([self.delete_preset_button, self.delete_back_button]), 
-            widgets.HTML(value="Clicking the button will delete your selected saved preset from Google Drive.")]
+            widgets.HTML(value="Clicking the button will delete your selected saved preset.")]
 
         self.delete_back_button.on_click(lambda b: self.delete_preset_evaluate("back", name))
         self.delete_preset_button.on_click(lambda b: self.delete_preset_evaluate("delete", name))
@@ -297,7 +297,7 @@ class PresetSystem:
             self.delete_preset_selection_dropdown_label, 
             self.delete_preset_selection_dropdown, 
             self.delete_preset_button, 
-            widgets.HTML(value="Clicking the button will delete your selected saved preset from Google Drive.")
+            widgets.HTML(value="Clicking the button will delete your selected saved preset.")
         ])
 
         self.reset_options()
