@@ -1,10 +1,17 @@
 from StableDiffusionXLColabUI.UI.mask_canvas import MaskCanvas
 from IPython.display import display, clear_output
-from google.colab import output
 import ipywidgets as widgets
 from PIL import Image
 import subprocess
 import os
+
+# To subtitute the output method from Google Colab
+class OutputSubstitute:
+    def disable_custom_widget_manager(self):
+        pass
+
+    def enable_custom_widget_manager(self):
+        pass
 
 # Initialize Real-ESRGAN
 def initialize_realesrgan():
@@ -43,6 +50,13 @@ def start():
     # Import the preprocess module and UI
     from StableDiffusionXLColabUI.utils import preprocess
     from StableDiffusionXLColabUI.UI.ui_wrapper import UIWrapper
+
+    # Import the widget manager (if exist)
+    try:
+        from google.colab import output
+    except Exception as e:
+        print("It seems like the output module from Google Colab doesn't exist. Are you using this repository somewhere else?\nAborting custom widget manager...")
+        output = OutputSubstitute()
 
     # Setting the environment
     os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
