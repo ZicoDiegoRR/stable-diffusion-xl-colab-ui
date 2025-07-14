@@ -163,8 +163,7 @@ class MaskCanvas:
     def clear(self):
         self.foreground.sync_image_data = True
         self.foreground.clear()
-        self.collected_points = []
-        self.collected_brushes = []
+        self.collected_brushes.append(" ")
         self.foreground.sync_image_data = False
 
     # Reload the canvas (deprecated)
