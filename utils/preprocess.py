@@ -1,7 +1,6 @@
 from StableDiffusionXLColabUI.utils import save_file_converter, downloader
 from transformers import pipeline as pipe, set_seed
 from transformers.utils import logging
-from google.colab import drive
 import requests
 import shutil
 import time
@@ -80,8 +79,10 @@ def run():
     add_mod_real_esrgan()
     
     # Loading the saved config for the IPyWidgets
+    os.makedirs("/content", exist_ok=True)
     if not os.path.exists("/content/gdrive/MyDrive"):
         try:
+            from google.colab import drive
             drive.mount('/content/gdrive', force_remount=True)
             google_drive_use = True
         except Exception as e:
