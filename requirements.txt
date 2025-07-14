@@ -9,3 +9,6 @@ compel==2.0.3
 controlnet-aux-openpose-fix
 ipycanvas
 ipywidgets==7.7.1
+facexlib
+gfpgan
+basicsr-fixed
