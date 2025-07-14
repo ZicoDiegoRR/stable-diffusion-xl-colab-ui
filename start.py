@@ -12,6 +12,12 @@ def initialize_realesrgan():
     subprocess.run(["python", "setup.py", "develop"])
     os.chdir("/content")
 
+# Generate
+def generate(args, instances):
+    instances[1].reset_preview()
+    instances[0].generate_value(**args)
+
+# Plugging the inputted image into the canvas
 def create_mask(mask, colab_ui):
     try:
         image = Image.open(colab_ui.inpaint.inpainting_image_dropdown.value)
@@ -23,6 +29,7 @@ def create_mask(mask, colab_ui):
         with colab_ui.inpaint_output:
             print(e)
 
+# Enabling the button after finished drawing
 def submit(colab_ui):
     colab_ui.inpaint.mask_image_widget.value = "/content/mask/temp.png"
     colab_ui.draw = False
@@ -65,3 +72,20 @@ def start():
     # Display (second)
     display(mask.wrap_settings())
     display(colab_ui.generation_output)
+
+    # Assign a click event
+    colab_ui.reset_generate.submit_button_widget.on_click(
+        lambda b: generate(
+            {
+                "index": colab_ui.ui_tab.selected_index, 
+                "text2img": colab_ui.text2img,
+                "img2img": colab_ui.img2img,
+                "controlnet": colab_ui.controlnet,
+                "inpaint": colab_ui.inpaint,
+                "ip": colab_ui.ip,
+                "lora": colab_ui.lora,
+                "embeddings": colab_ui.embeddings,
+            },
+            (colab_ui, mask),
+        )
+    )
