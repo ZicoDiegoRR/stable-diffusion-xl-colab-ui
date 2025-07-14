@@ -418,17 +418,6 @@ class UIWrapper:
         self.preset_settings = self.preset_system.wrap_settings()
         self.ui_bottom = widgets.HBox([self.submit_settings, self.preset_settings])
 
-        self.reset_generate.submit_button_widget.on_click(lambda b: self.generate_value(
-            self.ui_tab.selected_index, 
-            self.text2img,
-            self.img2img,
-            self.controlnet,
-            self.inpaint,
-            self.ip,
-            self.lora,
-            self.embeddings,
-        ))
-
         self.ui = widgets.VBox([self.ui_tab, self.ui_bottom])
 
         self.ui_tab.observe(self.checking_the_selected_tab_index, names="selected_index")
