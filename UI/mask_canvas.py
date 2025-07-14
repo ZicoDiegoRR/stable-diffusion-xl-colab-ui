@@ -65,6 +65,10 @@ class MaskCanvas:
     def black_image(self, width, height):
         return Image.new("RGB", (width, height), color=(0, 0, 0, 255))
 
+    # Remove the display preview
+    def reset_preview(self):
+        self.mask_ui.children = [self.canvas_settings]
+
     # Collect every widget into a single VBox
     def wrap_settings(self):
         return self.mask_ui
