@@ -104,6 +104,11 @@ The resolution is too big. [Consider checking it manually.](docs/v1/v1.png) </de
 
 ![history_v2.5](docs/v2.5/history.png) </details>
 
+<details> <summary> <b>V3:</b> </summary>
+
+Check out the preview from the main branch [here](https://github.com/ZicoDiegoRR/stable-diffusion-xl-colab-ui/tree/main#preview).
+</details>
+
 ## License
 This project is open-source and free to use under the MIT License.
 
