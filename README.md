@@ -88,7 +88,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 
 <details> <summary> <b>V1:</b> </summary> <br>
   
-The resolution is too big. [Consider checking it manually.](docs/v1/v1.png) </details>
+The resolution is too big. [Consider checking it directly](docs/v1/v1.png).</details>
 
 <details> <summary> <b>V2:</b> </summary> <br>
   
