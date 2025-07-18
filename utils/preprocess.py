@@ -61,7 +61,7 @@ def list_or_dict(cfg, path):
     if isinstance(cfg, list):
         new_cfg = save_file_converter.old_to_new(cfg)
             
-    if isinstance(cfg, dict):
+    if isinstance(new_cfg, dict):
         if len(cfg["inpaint"]) < 19:
             new_cfg = save_file_converter.new_inpaint(cfg)
                 
