@@ -96,7 +96,7 @@ The resolution is too big. [Consider checking it directly](docs/v1/v1.png).</det
 
 ![advanced_settings_v2](docs/v2/advanced_settings.png) </details>
 
-<details> <summary> <b>V2.5:</b> </summary> <br>
+<details> <summary> <b>V2.1:</b> </summary> <br>
   
 ![general_settings_v2.1](docs/v2.1/general_settings.png)
 
