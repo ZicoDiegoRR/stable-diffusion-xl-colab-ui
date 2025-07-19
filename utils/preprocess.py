@@ -59,14 +59,14 @@ def default_params():
 def list_or_dict(cfg, path):
     new_cfg = cfg
     if isinstance(cfg, list):
+        # Converting the save format from a list to a dictionary
         new_cfg = save_file_converter.old_to_new(cfg)
-            
-    if isinstance(new_cfg, dict):
-        if len(cfg["inpaint"]) < 19:
-            new_cfg = save_file_converter.new_inpaint(cfg)
+        
+    if len(new_cfg["inpaint"]) < 19:
+        new_cfg = save_file_converter.new_inpaint(new_cfg)
                 
-        if len(cfg["text2img"]) < 16:
-            new_cfg = save_file_converter.add_batch_size(cfg)
+    if len(new_cfg["text2img"]) < 16:
+        new_cfg = save_file_converter.add_batch_size(new_cfg)
 
     save_param(path, new_cfg)   
     return new_cfg
