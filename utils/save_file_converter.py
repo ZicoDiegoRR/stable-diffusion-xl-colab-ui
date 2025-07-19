@@ -38,7 +38,7 @@ def old_to_new(cfg):
         "",
         False,
         0.7,
-        "pre-generated text2image image",
+        "",
         "",
         False,
         0.9,
