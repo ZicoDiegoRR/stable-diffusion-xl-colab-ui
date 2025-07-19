@@ -5,18 +5,18 @@ This is the legacy branch of this repository to contain the old versions of the 
 ## Features Overview
 - **Image Generation:** Uses Transformers and Diffusers as the major components for image generation, along with ControlNet, Inpainting, and IP-Adapter.
 - **Download and Load:** Ability to download and load images, checkpoint, LoRA weights, and VAE using direct URLs.
-- **Textual Inversion:** Ability to load embeddings for more output control. (Beta V3 only)
-- **Image-to-Image:** Turn your images into something more creative and unique. (Beta V3 only)
-- **Prompt Generator:** Generate creative prompt powered by GPT-2. (Model by [Gustavosta](https://huggingface.co/Gustavosta)) (Beta V3 only)
-- **Image Upscaling:** Using [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) made by [xinntao](https://github.com/xinntao) and Real-ESRGAN's contributors. (Beta V3 only)
+- **Textual Inversion:** Ability to load embeddings for more output control. (Beta V3 and above only)
+- **Image-to-Image:** Turn your images into something more creative and unique. (Beta V3 and above only)
+- **Prompt Generator:** Generate creative prompt powered by GPT-2. (Model by [Gustavosta](https://huggingface.co/Gustavosta)) (Beta V3 and above only)
+- **Image Upscaling:** Using [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) made by [xinntao](https://github.com/xinntao) and Real-ESRGAN's contributors. (Beta V3 and above only)
 - **Google Drive Integration:** Can connect to your Google Drive or disable it.
 - **User-Friendly UI:** Simplified complexity with an easy-to-understand user interface.
 - **IPyWidgets:** Simplified UI so that you don't need to scroll up and down. (Beta V2 and above only)
-- **Built-in History System:** Can show all of your previously generated images in Google Drive without opening it, just with a few simple clicks. (V2.5 and above only)
+- **Built-in History System:** Can show all of your previously generated images in Google Drive without opening it, just with a few simple clicks. (V2.1 and above only)
 - **CivitAI Token Support:** Pass your CivitAI token for additional functionality, but remember **never share it with anyone.**
-- **Hugging Face Token Support:** Pass your Hugging Face token for accessing private files, but remember **never share it with anyone.** (Beta V3 only)
+- **Hugging Face Token Support:** Pass your Hugging Face token for accessing private files, but remember **never share it with anyone.** (Beta V3 and above only)
 - **Simplicity:** Consists of two cells only.
-- **Written Guide:** Can keep you on track with the flow of this notebook. 
+- **Written Guide:** Can keep you on track with the flow of this notebook. (Before V3 only)
 
 ## Usage
 This notebook is designed for artistic purposes and to spark inspiration. **Please use it responsibly.** Creating deepfakes and uploading them online are strictly prohibited.
@@ -28,7 +28,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 
 - **V1:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/18cUHh7H1c4qUijSD50uQUNl0Fq8wq7nY)
 - **V2:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1CQeZADunh6tEZCBOleDkZY96osYkRk5I)
-- **V2.5:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/13sfGKPhbCvNon0rpVvImUwVpZ3lkcuit)
+- **V2.1:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/13sfGKPhbCvNon0rpVvImUwVpZ3lkcuit)
 - **V3 (current version):** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ZicoDiegoRR/stable_diffusion_xl_colab_ui/blob/main/V3.ipynb)
 </details>
 
@@ -41,7 +41,7 @@ Simply open the notebook on Google Colab to start using it. No installation is n
 
 <details> <summary>Feature Table:</summary>
   
-| No. | Features                                                                              | V1 | V2 | V2.5 | V3 |
+| No. | Features                                                                              | V1 | V2 | V2.1 | V3 |
 |-----|---------------------------------------------------------------------------------------|----|----|------|----|
 | 1   | Base pipelines (ControlNet, VAE, Inpainting, Text2Img)                                | ✅  | ✅  | ✅    | ✅  |
 | 2   | Base adapters (LoRA, IP-Adapter)                                                      | ✅  | ✅  | ✅    | ✅  |
@@ -98,11 +98,11 @@ The resolution is too big. [Consider checking it directly](docs/v1/v1.png).</det
 
 <details> <summary> <b>V2.5:</b> </summary> <br>
   
-![general_settings_v2.5](docs/v2.5/general_settings.png)
+![general_settings_v2.1](docs/v2.1/general_settings.png)
 
-![advanced_settings_v2.5](docs/v2.5/advanced_settings.png)
+![advanced_settings_v2.1](docs/v2.1/advanced_settings.png)
 
-![history_v2.5](docs/v2.5/history.png) </details>
+![history_v2.1](docs/v2.1/history.png) </details>
 
 <details> <summary> <b>V3:</b> </summary>
 <br>
