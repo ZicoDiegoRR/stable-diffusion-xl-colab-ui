@@ -65,5 +65,7 @@ def scheduler(
         pipeline.scheduler = DDIMScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
     elif Scheduler == "PNDM":
         pipeline.scheduler = PNDMScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
+    else:
+        pipeline.scheduler = None
         
     return Scheduler_used
