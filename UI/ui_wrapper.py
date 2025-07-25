@@ -10,7 +10,6 @@ from StableDiffusionXLColabUI.UI.preset_system import PresetSystem
 from StableDiffusionXLColabUI.UI.lora_settings import LoRALoader
 from StableDiffusionXLColabUI.UI.history import HistorySystem
 from StableDiffusionXLColabUI.UI import all_widgets
-from diffusers.utils import load_image
 import ipywidgets as widgets
 import json
 import os
