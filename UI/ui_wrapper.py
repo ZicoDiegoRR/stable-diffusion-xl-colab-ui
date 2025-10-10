@@ -124,29 +124,32 @@ class UIWrapper:
                 else:
                     hires = None
                     hires_values = None
-                    
-                main.run(self.value_list, 
-                         values_dictionary_for_generation["lora"], 
-                         values_dictionary_for_generation["embeddings"], 
-                         values_dictionary_for_generation["ip"],
-                         self.hf_token.value, 
-                         self.civit_token.value, 
-                         self.generation_output, 
-                         [self.seed, self.freeze.value],
-                         values_dictionary_for_generation,
-                         [
-                            [selected_class.vae_link_widget, selected_class.vae_config],
-                            selected_class.model_widget,
-                            self.lora.lora_urls_widget,
-                            self.embeddings.ti_urls_widget,
-                         ],
-                         self.base_path,
-                         self.controlnet.return_get_image_class(),
-                         self.main_parameter,
-                         hires,
-                         hires_values,
-                )
-                self.has_load_model = True
+
+                try:
+                    main.run(self.value_list, 
+                             values_dictionary_for_generation["lora"], 
+                             values_dictionary_for_generation["embeddings"], 
+                             values_dictionary_for_generation["ip"],
+                             self.hf_token.value, 
+                             self.civit_token.value, 
+                             self.generation_output, 
+                             [self.seed, self.freeze.value],
+                             values_dictionary_for_generation,
+                             [
+                                [selected_class.vae_link_widget, selected_class.vae_config],
+                                selected_class.model_widget,
+                                self.lora.lora_urls_widget,
+                                self.embeddings.ti_urls_widget,
+                             ],
+                             self.base_path,
+                             self.controlnet.return_get_image_class(),
+                             self.main_parameter,
+                             hires,
+                             hires_values,
+                    )
+                    self.has_load_model = True
+                except Exception as e:
+                    print(f"Generation interrupted by an error.\n Error: {e}")
     
                 # Unused failsafe, but could be useful in rare moments
                 if self.model_widget.value.startswith(("https://", "http://")):
