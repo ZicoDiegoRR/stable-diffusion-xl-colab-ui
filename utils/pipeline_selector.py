@@ -14,13 +14,13 @@ from StableDiffusionXLColabUI.utils import downloader
 # Will raise an error if the program fails to load the model
 def raise_error(Model_path, hf_token, civit_token):
     if not os.path.exists(Model_path):
-        Error = f"Model {Model_path} doesn't exist."
+        Error = f"Model '{Model_path}' doesn't exist."
         Warning = ""
     else:
-        Error = f"The model {Model_path} contains unsupported file or the download was corrupted. "
-        if not civit_token and "civitai.com" in Model:
+        Error = f"The model '{Model_path}' contains unsupported file or the download was corrupted. "
+        if not civit_token and "civitai.com" in Model_path:
             Warning = "You inputted a CivitAI's link, but your token is empty. It's possible that you got unauthorized access during the download."
-        elif "huggingface.co" in Model or Model.count("/") == 1:
+        elif "huggingface.co" in Model_path or Model_path.count("/") == 1:
             if not hf_token:
                 Token_Error = "but the Hugging Face's token is empty. Are you trying to access a private model or the repository doesnt have model_index.json?"
             else:
