@@ -5,7 +5,7 @@ import os
 import re
 
 def name_generate_and_save(image, img, i, image_save_path, generated_image_raw_filename):
-    if len(generated_image_raw_filename) > 255:
+    if len(generated_image_raw_filename) > 251:
         truncate_length = 251 - len(f"_{i}") if len(image.images) != 1 else 251
         generated_image_filename = generated_image_raw_filename[:truncate_length]  
     else:
