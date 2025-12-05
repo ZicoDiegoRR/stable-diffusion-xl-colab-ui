@@ -14,6 +14,8 @@ from diffusers import (
     PNDMScheduler,
 )
 
+init_scheduler = None
+
 def scheduler(
     pipeline,
     V_Prediction,
@@ -29,6 +31,10 @@ def scheduler(
         "use_karras_sigmas": Karras,
         "rescale_betas_zero_snr": Rescale_betas_to_zero_SNR
     }
+
+    global init_scheduler
+    if init_scheduler is None:
+        init_scheduler = pipeline.scheduler
     
     if SGMUniform:
       scheduler_args["timestep_spacing"] = "trailing"
@@ -66,6 +72,6 @@ def scheduler(
     elif Scheduler == "PNDM":
         pipeline.scheduler = PNDMScheduler.from_config(pipeline.scheduler.config, **scheduler_args)
     else:
-        pipeline.scheduler = None
+        pipeline.scheduler = init_scheduler
         
     return Scheduler_used
