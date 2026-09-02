@@ -2,4 +2,3 @@
 torch
 torchvision
 torchaudio
-xformers
