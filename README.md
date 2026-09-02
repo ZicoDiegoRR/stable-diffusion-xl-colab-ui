@@ -8,7 +8,7 @@ This is a simple Google Colab notebook made by an 18-years-old junior programmer
 - **Textual Inversion:** Ability to load embeddings for more output control. 
 - **Image-to-Image:** Turn your images into something more creative and unique. 
 - **Prompt Generator:** Generate creative prompt powered by GPT-2. (Model by [Gustavosta](https://huggingface.co/Gustavosta))
-- **Image Upscaling:** Using [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) made by [xinntao](https://github.com/xinntao) and Real-ESRGAN's contributors. 
+- **Image Upscaling:** Using [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) made by [xinntao](https://github.com/xinntao) and Real-ESRGAN's contributors. (using the [forked version](https://github.com/ZicoDiegoRR/Real-ESRGAN-with-New-BasicSR) to use `new-basicsr` instead)
 - **Google Drive Integration:** Can connect to your Google Drive or disable it.
 - **User-Friendly UI:** Simplified complexity with an easy-to-understand user interface.
 - **IPyWidgets:** Simplified UI so that you don't need to scroll up and down. 
