@@ -11,3 +11,4 @@ ipycanvas
 ipywidgets==7.7.1
 xformers
 pillow
+new-basicsr
